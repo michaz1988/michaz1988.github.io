@@ -292,7 +292,7 @@
 	</extension>
 </addon>
 
-<addon id="script.module.xstream1" name="xStream Scraper" provider-name="michaz1988" version="0.2.2">
+<addon id="script.module.xstream1" name="xStream Scraper" provider-name="michaz1988" version="0.2.3">
 	<requires>
 		<import addon="plugin.video.vavooto"/>
         <import addon="script.module.requests"/>
