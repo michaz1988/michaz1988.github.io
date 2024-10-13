@@ -34,6 +34,35 @@
 	</extension>
 </addon>
 
+<addon id="skin.mimic.lr" name="Mimic-LR" version="999.2" provider-name="Randall,michaz">
+	<requires>
+		<import addon="xbmc.gui" version="5.15.0" />
+		<import addon="resource.images.studios.white" version="0.0.25" />
+		<import addon="script.skinshortcuts" version="1.1.4" />
+		<import addon="script.toolbox" version="2.0.0" />
+		<import addon="script.image.resource.select" version="3.0.2" />
+	</requires>
+	<extension point="xbmc.gui.skin" debugging="false" effectslowdown="0.75">
+		<res width="1920" height="1080" aspect="16:9" default="true" folder="1080i" />
+	</extension>
+
+	<extension point="xbmc.addon.metadata">
+		<summary lang="en_GB">Mimic-LR</summary>
+		<description lang="en_GB">Mimic reborn</description>
+		<platform>all</platform>
+		<license>CC BY-NC-SA 4.0</license>
+		<forum>http://forum.kodi.tv/forumdisplay.php?fid=218</forum>
+		<website></website>
+		<email></email>
+		<source>https://github.com/randallspicher/skin.mimic.lr/tree/Matrix</source>
+		<assets>
+			<icon>resources/icon.png</icon>
+			<fanart>resources/fanart.png</fanart>
+		</assets>
+		<news></news>
+	</extension>
+</addon>
+
 <addon id="repository.michaz" name="Michaz Repository" provider-name="Michaz" version="4.5">
 	<extension point="xbmc.addon.repository" name="Michaz Repository">
 		<dir>
@@ -292,27 +321,6 @@
 	</extension>
 </addon>
 
-<addon id="script.module.xstream1" name="xStream Scraper" provider-name="michaz1988" version="0.2.5">
-	<requires>
-		<import addon="plugin.video.vavooto"/>
-        <import addon="script.module.requests"/>
-        <import addon="script.module.six"/>
-        <import addon="script.module.resolveurl"/>
-        <import addon="plugin.video.xstream"/>
-        <!-- for remote debug -->
-        <import addon="script.module.pydevd" optional="true"/>
-    </requires>
-    <extension point="xbmc.python.pluginsource" library="main.py">
-        <provides>video</provides>
-    </extension>
-    <extension point="xbmc.addon.metadata">
-        <assets>
-            <icon>icon.png</icon>
-            <screenshot>icon.png</screenshot>
-        </assets>
-    </extension>
-</addon>
-
 <addon id="plugin.video.xtream-codes" name="Xtream-Codes IPTV" version="3.4" provider-name="michaz">
   <requires>
     <import addon="script.module.six" />
@@ -421,6 +429,27 @@ Xship 2021.07.01
 </extension>
 </addon>
 
+<addon id="script.module.xstream2" name="xStream Scraper" provider-name="michaz1988" version="0.2.5">
+	<requires>
+		<import addon="plugin.video.vavooto"/>
+        <import addon="script.module.requests"/>
+        <import addon="script.module.six"/>
+        <import addon="script.module.resolveurl"/>
+        <import addon="plugin.video.xstream"/>
+        <!-- for remote debug -->
+        <import addon="script.module.pydevd" optional="true"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="main.py">
+        <provides>video</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <assets>
+            <icon>icon.png</icon>
+            <screenshot>icon.png</screenshot>
+        </assets>
+    </extension>
+</addon>
+
 <addon id="plugin.video.stalker" name="IPTV Stalker" version="2.2.0" provider-name="michaz">
 	<requires>
 		<import addon="script.module.six"/>
@@ -438,35 +467,6 @@ Xship 2021.07.01
 		<assets>
             <icon>icon.png</icon>
         </assets>
-	</extension>
-</addon>
-
-<addon id="skin.mimic.lr" name="Mimic-LR" version="999.2" provider-name="Randall,michaz">
-	<requires>
-		<import addon="xbmc.gui" version="5.15.0" />
-		<import addon="resource.images.studios.white" version="0.0.25" />
-		<import addon="script.skinshortcuts" version="1.1.4" />
-		<import addon="script.toolbox" version="2.0.0" />
-		<import addon="script.image.resource.select" version="3.0.2" />
-	</requires>
-	<extension point="xbmc.gui.skin" debugging="false" effectslowdown="0.75">
-		<res width="1920" height="1080" aspect="16:9" default="true" folder="1080i" />
-	</extension>
-
-	<extension point="xbmc.addon.metadata">
-		<summary lang="en_GB">Mimic-LR</summary>
-		<description lang="en_GB">Mimic reborn</description>
-		<platform>all</platform>
-		<license>CC BY-NC-SA 4.0</license>
-		<forum>http://forum.kodi.tv/forumdisplay.php?fid=218</forum>
-		<website></website>
-		<email></email>
-		<source>https://github.com/randallspicher/skin.mimic.lr/tree/Matrix</source>
-		<assets>
-			<icon>resources/icon.png</icon>
-			<fanart>resources/fanart.png</fanart>
-		</assets>
-		<news></news>
 	</extension>
 </addon>
 </addons>
