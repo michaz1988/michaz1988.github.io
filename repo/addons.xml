@@ -63,7 +63,7 @@
 	</extension>
 </addon>
 
-<addon id="repository.michaz" name="Michaz Repository" provider-name="Michaz" version="4.5">
+<addon id="repository.michaz" name="Michaz Repository" provider-name="Michaz" version="4.6">
 	<extension point="xbmc.addon.repository" name="Michaz Repository">
 		<dir>
 			<info compressed="false">https://michaz1988.github.io/repo/addons.xml</info>
