@@ -321,7 +321,7 @@
 	</extension>
 </addon>
 
-<addon id="script.module.xstreamscraper" name="xStream Scraper" provider-name="michaz1988" version="0.2.7">
+<addon id="script.module.xstreamscraper" name="xStream Scraper" provider-name="michaz1988" version="0.2.8">
 	<requires>
 		<import addon="plugin.video.vavooto"/>
         <import addon="script.module.requests"/>
@@ -334,6 +334,7 @@
     <extension point="xbmc.python.pluginsource" library="main.py">
         <provides>video</provides>
     </extension>
+    <extension point="xbmc.service" library="service.py" start="startup" />
     <extension point="xbmc.addon.metadata">
         <assets>
             <icon>icon.png</icon>
