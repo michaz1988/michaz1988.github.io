@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="repository.michaz" name="Michaz Repository" provider-name="Michaz" version="4.6">
+<addon id="repository.michaz" name="Michaz Repository" provider-name="Michaz" version="4.7">
 	<extension point="xbmc.addon.repository" name="Michaz Repository">
 		<dir>
 			<info compressed="false">https://michaz1988.github.io/repo/addons.xml</info>
@@ -22,9 +22,9 @@
             <datadir zip="true">https://raw.githubusercontent.com/streamxstream/xStreamRepo/repo/omega/</datadir>
         </dir>
 		<dir>
-			<info compressed="false">https://slyguy.uk/.repo/addons.xml</info>
-			<checksum>https://slyguy.uk/.repo/addons.xml.md5</checksum>
-			<datadir zip="true">https://slyguy.uk/.repo/</datadir>
+			<info compressed="false">https://slyguy.uk/.repo/repository.slyguy/addons.xml</info>
+			<checksum>https://slyguy.uk/.repo/repository.slyguy/addons.xml.md5</checksum>
+			<datadir zip="true">https://slyguy.uk/.repo/repository.slyguy/</datadir>
 		</dir>
 		<dir>
 			<info compressed="false">https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/repo/zips/addons.xml</info>
