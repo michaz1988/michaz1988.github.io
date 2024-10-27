@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="plugin.video.tvnow.de" name="TvNow" version="0.6.1+matrix.0" provider-name="Pati">
+  <requires>
+    <import addon="xbmc.python" version="3.0.0"/>
+    <import addon="script.module.requests" version="2.9.1"/>
+    <import addon="inputstream.adaptive" version="1.0.8"/>
+    <import addon="script.module.routing" version="0.2.0"></import>
+    <import addon="script.module.pycryptodome" version="3.4.3"/>
+    <import addon="script.module.inputstreamhelper" version="0.4.2"/>
+    <import addon="script.module.beautifulsoup4"/>
+    <import addon="script.module.mechanicalsoup"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="addon.py">
+    <provides>video</provides>
+  </extension>
+  <!--<extension point="xbmc.service" library="service.py"/>-->
+  <extension point="xbmc.addon.metadata">
+    <summary lang="de">Plugin für TvNow Deutschland</summary>
+    <summary lang="en_gb">Plugin for TvNow Germany</summary>
+    <description lang="de"></description>
+    <description lang="en_gb"></description>
+    <disclaimer lang="en_gb"></disclaimer>
+    <language></language>
+    <platform>all</platform>
+    <license></license>
+    <forum></forum>
+    <website></website>
+    <email></email>
+    <source></source>
+    <assets>
+      <icon>resources/icon.png</icon>
+    </assets>
+  </extension>
+</addon>

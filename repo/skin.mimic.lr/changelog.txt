@@ -1,0 +1,41 @@
+7.0.6
+* Add support for extended TheMovieDB info dialogs via script.embuary.info
+* Make more animated stuff obey the "suppress animations" setting to reduce cpu on low-end devices
+* Revamp script.extendedInfo views, and try to limit animations because of the huge CPU hit
+* fix some widget display info when showing episodes in a widget (display show and episode number)
+* fix PVR recordings watched status overlay not appearing when running Nexus
+* Add support for colorpicker button and dialog so that subtitle color settings work
+
+7.0.5
+* Fix Video OSD subtitle button, also let it show for PVR (for when closed captions search is configured)
+* Some cleanup on some codec and source flags images
+* Add HDR to the Flags [Nexus only]
+
+7.0.4
+* Set watched icon check-mark to be focus color instead of normal text color so it stands out
+* add support for selecting weather icon packs
+* add support for animated weather icon packs
+* fix mixed up descriptions on skin settings menu
+* add setting to suppress animations for CPU (currently applies to spinning progress bar)
+
+
+7.0.3
+* rebuild BusyDialog.xml so that it works
+* make dimming of unfocused items optional
+* work-around to make items in widgets using grouped playlists clickable
+* fix and clean up display of some of the flag info on info side-bar for albums
+* big overhaul of color schemes, enable some more flexibility (allow scheme to 
+	differentiate between the focus highlight color, title color, normal text 
+	color, alt-color, and label colors, instead of just "normal" and "hilight")
+* weather screen updates
+
+
+7.0.2
+* multiple fixes
+
+7.0.1
+* fixes and updates for official release
+
+7.0.0
+* rename, and bump version to 7 to keep it inline with the next "Mimic" number
+* add "watched" icons to the views which were missing them

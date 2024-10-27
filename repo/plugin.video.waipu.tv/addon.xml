@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<addon id="plugin.video.waipu.tv" name="Waipu.tv / O2 TV" version="3.10.4" provider-name="flubshi, MiRo, michaz">
+<requires>
+  <import addon="xbmc.python" version="3.0.0"/>
+  <import addon="script.module.requests" version="2.12.4"/>
+  <import addon="script.module.inputstreamhelper" version="0.5.2"/>
+  <import addon="script.module.dateutil" version="2.7.3" />
+  <import addon="script.module.mechanize" version="0.4.3" />
+  <import addon="script.module.routing" version="0.2.0"/>
+</requires>
+<extension point="xbmc.python.pluginsource" library="main.py">
+  <provides>video</provides>
+</extension>
+<extension point="xbmc.addon.metadata">
+  <summary lang="de">waipu.tv und O2 TV Kodi Video Plugin</summary>
+  <summary lang="en">waipu.tv and O2 TV Kodi Video Plugin</summary>
+  <description lang="en">An waipu.tv and O2 TV video plugin for Kodi mediacenter. Note: This is not an official waipu plugin and not related to Exaring AG or waipu.tv. It was developed by volunteers.</description>
+  <description lang="de">Genießen Sie über 100 TV-Sender von Waipu.tv oder O2 TV im Live-Stream. Hinweis: Dies ist kein offizielles Waipu-Plugin und steht nicht in Verbindung zur Exaring AG oder zu waipu.tv. Es wurde von Freiwilligen entwickelt.</description>
+  <platform>all</platform>
+  <license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
+  <forum>https://www.kodinerds.net/index.php/Thread/64586-Release-Video-Plugin-Waipu-tv-und-O2-TV-kodinerds-repo/</forum>
+  <website>https://www.waipu.tv/</website>
+  <source>https://github.com/flubshi/plugin.video.waipu.tv</source>
+  <assets>
+    <icon>icon.png</icon>
+    <fanart>fanart.jpg</fanart>
+    <screenshot>resources/screenshots/screenshot-01.jpg</screenshot>
+    <screenshot>resources/screenshots/screenshot-02.jpg</screenshot>
+    <screenshot>resources/screenshots/screenshot-03.jpg</screenshot>
+  </assets>
+  <news>
+- 0.10.4 Version bump for Leia dependency
+- 0.10.3 Improve Logging
+- 0.10.2 Version bump for Leia dependency
+- 0.10.1 Make addon python2 backwards compatible
+- 0.10.0 Improve session handling; implement device ID; set correct user agent
+- 0.9.1 Fix import in O2 login
+- 0.9.0 add folder structure and delete of recordings (thanks @mking2203)
+- 0.8.4 Implement new API changes
+- 0.8.3 Implement access eu network; adapt inputstream call
+- 0.8.2 Internal clean up
+- 0.8.1 Fix O2 TV
+- 0.8.0 Python3 compatibility
+- 0.3.3 fix internal imports
+  </news>
+</extension>
+</addon>

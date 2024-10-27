@@ -1,0 +1,665 @@
+# XBMC Media Center language file
+# Addon Name: Takealug EPG Grabber
+# Addon id: service.takealug.epg-grabber
+# Addon version: 0.0.7
+# Addon Provider: DeBaschdi
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC-Addons\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: 2020-05-01 00:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Bastian Kleinschmidt\n"
+"Language-Team: LANGUAGE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgctxt "Addon Summary"
+msgid "EPG Grabber"
+msgstr "EPG Grabber"
+
+msgctxt "Addon Description"
+msgid "Grabbs EPG Data from Different IPTV Sources and generate an xmltv Guide"
+msgstr "Grabbt EPG Daten von verschiedenen IPTV Quellen und erstellt eine guide.xml"
+
+#############################
+# settings.xml              #
+#############################
+
+## Misc Settings ## 32100 -32109
+
+msgctxt "#32100"
+msgid "Misc Settings"
+msgstr "Verschiedene Einstellungen"
+
+msgctxt "#32101"
+msgid "Manual EPG Download"
+msgstr "Manueller EPG Download"
+
+msgctxt "#32102"
+msgid "Run EPG Grabber Manual"
+msgstr "Starte EPG Grabber Manuell"
+
+msgctxt "#32103"
+msgid "Write EPG in xmltv.sock"
+msgstr ""
+
+## Global Settings ## 32110 - 32129
+
+msgctxt "#32110"
+msgid "Global Settings"
+msgstr "Globale Einstellungen"
+
+msgctxt "#32111"
+msgid "Automatic EPG Grab"
+msgstr "Automatischer EPG Grab"
+
+msgctxt "#32112"
+msgid "Enable Auto EPG Grab"
+msgstr "Aktiviere automatischen EPG Grab"
+
+msgctxt "#32113"
+msgid "Grab EPG daily at"
+msgstr "Grab EPG täglich um"
+
+msgctxt "#32114"
+msgid "Grab EPG immediately if EPG is older than"
+msgstr "Grabbe EPG sofort, wenn es älter ist als"
+
+msgctxt "#32115"
+msgid "Save generated guide.xml to Disk"
+msgstr "Speichere Erstellte guide.xml ab"
+
+msgctxt "#32116"
+msgid "EPG Storage Path"
+msgstr "EPG Speicherort"
+
+msgctxt "#32117"
+msgid "Addon Settings"
+msgstr "Addon Einstellungen"
+
+msgctxt "#32118"
+msgid "Enable Rating Mapper"
+msgstr "Aktiviere Rating Mapper"
+
+msgctxt "#32119"
+msgid "Tvheadend"
+msgstr "Tvheadend"
+
+msgctxt "#32120"
+msgid "Enable local TVH xmltv.sock"
+msgstr "Aktiviere lokales TVH xmltv.sock"
+
+msgctxt "#32121"
+msgid "Choose xmltv.sock File"
+msgstr "Wähle das xmltv.sock File aus"
+
+msgctxt "#32122"
+msgid "Number of concurrent downloads (threads)"
+msgstr "Anzahl der gleichzeitigen Downloads (Threads)"
+
+msgctxt "#32123"
+msgid "Enable Multithreading (Linux Only)"
+msgstr "Aktiviere Multithreading (Nur für Linux)"
+
+
+## Provider Settings ## 32130 - 32299
+
+# Basics 32130 -32139
+
+msgctxt "#32130"
+msgid "Provider Divers"
+msgstr "Provider Divers"
+
+msgctxt "#32131"
+msgid "Provider Selection"
+msgstr "Provider Auswahl"
+
+msgctxt "#32132"
+msgid "Episode Format"
+msgstr "Episoden Format"
+
+msgctxt "#32133"
+msgid "Channel ID Format"
+msgstr "Kanal ID Format"
+
+msgctxt "#32134"
+msgid "Genre Format"
+msgstr "Genre Format"
+
+msgctxt "#32135"
+msgid "Days to Grab"
+msgstr "Tage die gegrabbt werden sollen"
+
+msgctxt "#32136"
+msgid "Select Channels to Grab"
+msgstr "Wähle Kanäle zum grabben aus"
+
+msgctxt "#32137"
+msgid "Provider Horizon"
+msgstr "Provider Horizon"
+
+msgctxt "#32138"
+msgid "Provider Zattoo"
+msgstr "Provider Zattoo"
+
+# Provider Specific 32140 -32299
+
+msgctxt "#32140"
+msgid "Magenta TV (DE)"
+msgstr "Magenta TV (DE)"
+
+msgctxt "#32141"
+msgid "Enable Provider Magenta TV (DE)"
+msgstr "Aktiviere Provider Magenta TV (DE)"
+
+msgctxt "#32142"
+msgid "Horizon (DE)"
+msgstr "Horizon (DE)"
+
+msgctxt "#32143"
+msgid "Enable Provider Horizon (DE)"
+msgstr "Aktiviere Provider Horizon (DE)"
+
+msgctxt "#32144"
+msgid "Horizon (AT)"
+msgstr "Horizon (AT)"
+
+msgctxt "#32145"
+msgid "Enable Provider Horizon (AT)"
+msgstr "Aktiviere Provider Horizon (AT)"
+
+msgctxt "#32146"
+msgid "Horizon (CH)"
+msgstr "Horizon (CH)"
+
+msgctxt "#32147"
+msgid "Enable Provider Horizon (CH)"
+msgstr "Aktiviere Provider Horizon (CH)"
+
+msgctxt "#32148"
+msgid "Horizon (NL)"
+msgstr "Horizon (NL)"
+
+msgctxt "#32149"
+msgid "Enable Provider Horizon (NL)"
+msgstr "Aktiviere Provider Horizon (NL)"
+
+msgctxt "#32150"
+msgid "Horizon (PL)"
+msgstr "Horizon (PL)"
+
+msgctxt "#32151"
+msgid "Enable Provider Horizon (PL)"
+msgstr "Aktiviere Provider Horizon (PL)"
+
+msgctxt "#32152"
+msgid "Horizon (IE)"
+msgstr "Horizon (IE)"
+
+msgctxt "#32153"
+msgid "Enable Provider Horizon (IE)"
+msgstr "Aktiviere Provider Horizon (IE)"
+
+msgctxt "#32154"
+msgid "Horizon (SK)"
+msgstr "Horizon (SK)"
+
+msgctxt "#32155"
+msgid "Enable Provider Horizon (SK)"
+msgstr "Aktiviere Provider Horizon (SK)"
+
+msgctxt "#32156"
+msgid "Horizon (CZ)"
+msgstr "Horizon (CZ)"
+
+msgctxt "#32157"
+msgid "Enable Provider Horizon (CZ)"
+msgstr "Aktiviere Provider Horizon (CZ)"
+
+msgctxt "#32158"
+msgid "Horizon (HU)"
+msgstr "Horizon (HU)"
+
+msgctxt "#32159"
+msgid "Enable Provider Horizon (HU)"
+msgstr "Aktiviere Provider Horizon (HU)"
+
+msgctxt "#32160"
+msgid "Horizon (RO)"
+msgstr "Horizon (RO)"
+
+msgctxt "#32161"
+msgid "Enable Provider Horizon (RO)"
+msgstr "Aktiviere Provider Horizon (RO)"
+
+msgctxt "#32162"
+msgid "TV Spielfilm (DE)"
+msgstr "TV Spielfilm (DE)"
+
+msgctxt "#32163"
+msgid "Enable Provider TV Spielfilm (DE)"
+msgstr "Aktiviere Provider TV Spielfilm (DE)"
+
+msgctxt "#32164"
+msgid "Swisscom (CH)"
+msgstr "Swisscom (CH)"
+
+msgctxt "#32165"
+msgid "Enable Provider Swisscom (CH)"
+msgstr "Aktiviere Provider Swisscom (CH)"
+
+msgctxt "#32166"
+msgid "Horizon (GB)"
+msgstr "Horizon (GB)"
+
+msgctxt "#32167"
+msgid "Enable Provider Horizon (GB)"
+msgstr "Aktiviere Provider Horizon (GB)"
+
+msgctxt "#32168"
+msgid "Zattoo (DE)"
+msgstr "Zattoo (DE)"
+
+msgctxt "#32169"
+msgid "Enable Provider Zattoo (DE)"
+msgstr "Aktiviere Provider Zattoo (DE)"
+
+msgctxt "#32170"
+msgid "Zattoo (CH)"
+msgstr "Zattoo (CH)"
+
+msgctxt "#32171"
+msgid "Enable Provider Zattoo (CH)"
+msgstr "Aktiviere Provider Zattoo (CH)"
+
+msgctxt "#32172"
+msgid "1und1 (DE)"
+msgstr "1und1 (DE)"
+
+msgctxt "#32173"
+msgid "Enable Provider 1und1 (DE)"
+msgstr "Aktiviere Provider 1und1 (DE)"
+
+msgctxt "#32174"
+msgid "Quickline Mobil-TV (CH)"
+msgstr "Quickline Mobil-TV (CH)"
+
+msgctxt "#32175"
+msgid "Enable Provider Quickline Mobil-TV (CH)"
+msgstr "Aktiviere Provider Quickline Mobil-TV (CH)"
+
+msgctxt "#32176"
+msgid "M-net TVplus (DE)"
+msgstr "M-net TVplus (DE)"
+
+msgctxt "#32177"
+msgid "Enable Provider M-net TVplus (DE)"
+msgstr "Aktiviere Provider M-net TVplus (DE)"
+
+msgctxt "#32178"
+msgid "WALY.TV (CH)"
+msgstr "WALY.TV (CH)"
+
+msgctxt "#32179"
+msgid "Enable Provider WALY.TV (CH)"
+msgstr "Aktiviere Provider WALY.TV (CH)"
+
+msgctxt "#32180"
+msgid "Meine Welt unterwegs (AT)"
+msgstr "Meine Welt unterwegs (AT)"
+
+msgctxt "#32181"
+msgid "Enable Provider Meine Welt unterwegs (AT)"
+msgstr "Aktiviere Provider Meine Welt unterwegs (AT)"
+
+msgctxt "#32182"
+msgid "BBV TV (DE)"
+msgstr "BBV TV (DE)"
+
+msgctxt "#32183"
+msgid "Enable Provider BBV TV (DE)"
+msgstr "Aktiviere Provider BBV TV (DE)"
+
+msgctxt "#32184"
+msgid "VTX TV (CH)"
+msgstr "VTX TV (CH)"
+
+msgctxt "#32185"
+msgid "Enable Provider VTX TV (CH)"
+msgstr "Aktiviere Provider VTX TV (CH)"
+
+msgctxt "#32186"
+msgid "myVision mobile TV (CH)"
+msgstr "myVision mobile TV (CH)"
+
+msgctxt "#32187"
+msgid "Enable Provider myVision mobile TV (CH)"
+msgstr "Aktiviere Provider myVision mobile TV (CH)"
+
+msgctxt "#32188"
+msgid "Glattvision+ (CH)"
+msgstr "Glattvision+ (CH)"
+
+msgctxt "#32189"
+msgid "Enable Provider Glattvision+ (CH)"
+msgstr "Aktiviere Provider Glattvision+ (CH)"
+
+msgctxt "#32190"
+msgid "SAK TV (CH)"
+msgstr "SAK TV (CH)"
+
+msgctxt "#32191"
+msgid "Enable Provider SAK TV (CH)"
+msgstr "Aktiviere Provider SAK TV (CH)"
+
+msgctxt "#32192"
+msgid "NetTV (CH)"
+msgstr "NetTV (CH)"
+
+msgctxt "#32193"
+msgid "Enable Provider Net TV (CH)"
+msgstr "Aktiviere Provider Net TV (CH)"
+
+msgctxt "#32194"
+msgid "EWE TV App (DE)"
+msgstr "EWE TV App (DE)"
+
+msgctxt "#32195"
+msgid "Enable Provider EWE TV App (DE)"
+msgstr "Aktiviere Provider EWE TV App (DE)"
+
+msgctxt "#32196"
+msgid "Quantum TV (CH)"
+msgstr "Quantum TV (CH)"
+
+msgctxt "#32197"
+msgid "Enable Provider Quantum TV (CH)"
+msgstr "Aktiviere Provider Quantum TV (CH)"
+
+msgctxt "#32198"
+msgid "Salt TV (CH)"
+msgstr "Salt TV (CH)"
+
+msgctxt "#32199"
+msgid "Enable Provider Salt TV (CH)"
+msgstr "Aktiviere Provider Salt TV (CH)"
+
+msgctxt "#32200"
+msgid "SWB TV App (DE)"
+msgstr "SWB TV App (DE)"
+
+msgctxt "#32201"
+msgid "Enable Provider SWB TV App (DE)"
+msgstr "Aktiviere Provider SWB TV App (DE)"
+
+msgctxt "#32202"
+msgid "eir TV (CH)"
+msgstr "eir TV (CH)"
+
+msgctxt "#32203"
+msgid "Enable Provider eir TV (IE)"
+msgstr "Aktiviere Provider eir TV (IE)"
+
+msgctxt "#32204"
+msgid "Username"
+msgstr "Benutzername"
+
+msgctxt "#32205"
+msgid "Password"
+msgstr "Passwort"
+
+###################################
+# Values 32300 - 32349            #
+###################################
+
+#####################################
+# Notifications / LOG 32350 - 32399 #
+#####################################
+
+msgctxt "#32350"
+msgid "EPG File (guide.xml) Created"
+msgstr "EPG Datei (guide.xml) Erstellt!"
+
+msgctxt "#32351"
+msgid "Can not copy guide.xml to Destination!"
+msgstr "Kann guide.xml nicht zum Ziel Kopieren!"
+
+msgctxt "#32352"
+msgid "Timestamp of last generated guide.xml is"
+msgstr "Zeitstempel der zuletzt erstellten guide.xml ist"
+
+msgctxt "#32353"
+msgid "Waiting for next EPG grab at"
+msgstr "Warte auf den nächsten EPG grab am"
+
+msgctxt "#32354"
+msgid "guide.xml is older than"
+msgstr "guide.xml ist älter als"
+
+msgctxt "#32355"
+msgid "hours, initiate automatic EPG grab"
+msgstr "stunden, starte automatischen EPG Grab"
+
+msgctxt "#32356"
+msgid "EPG Grab time has reached, initiate Automatic EPG grab"
+msgstr "EPG Grab Zeit wurde erreicht, leite automatischen EPG Grab ein"
+
+msgctxt "#32357"
+msgid "Initialize automatic EPG Grab..."
+msgstr "Initialisiere automatischen EPG Grab...."
+
+msgctxt "#32358"
+msgid "Tried to start Grabber 3x without success, giving up"
+msgstr "Der Grabber wurde 3x erfolgslos gestartet, ich gebe auf... "
+
+msgctxt "#32359"
+msgid "You need to setup an Storage Path first"
+msgstr "Du musst zu erst einen Speicherpfad einstellen"
+
+msgctxt "#32360"
+msgid "You need to enable at least 1 Grabber In Provider Settings"
+msgstr "Du musst mindestens einen Grabber in den Provider Einstellungen aktivieren"
+
+msgctxt "#32361"
+msgid "Broadcastfiles to be downloaded... "
+msgstr "Sender Daten die heruntergeladen werden müssen..."
+
+msgctxt "#32362"
+msgid "Create XML Channels..."
+msgstr "Erstelle XML Kanäle..."
+
+msgctxt "#32363"
+msgid "Broadcast Files downloaded!"
+msgstr "Senderdaten heruntergeladen!"
+
+msgctxt "#32364"
+msgid "XML Channels Created!"
+msgstr "XML Kanäle erstellt!"
+
+msgctxt "#32365"
+msgid "Create XML EPG Broadcast..."
+msgstr "Erstelle XML EPG Senderdaten..."
+
+msgctxt "#32366"
+msgid "XML EPG Broadcast Created"
+msgstr "XML EPG Senderdaten erstellt!"
+
+msgctxt "#32367"
+msgid "no Programminformation for Channel"
+msgstr "Keine Programminformationen für Kanal"
+
+msgctxt "#32368"
+msgid "with ID"
+msgstr "mit der ID"
+
+msgctxt "#32369"
+msgid "avaivible!"
+msgstr "vorhanden!"
+
+msgctxt "#32370"
+msgid "EPG for Provider"
+msgstr "EPG vom Provider"
+
+msgctxt "#32371"
+msgid "Grabbed!"
+msgstr "Gegrabbt!"
+
+msgctxt "#32372"
+msgid "Warnings Found, please check Logfile"
+msgstr "Warnungen gefunden, bitte überprüfe das Kodilog"
+
+msgctxt "#32373"
+msgid "Channelname has Changed from"
+msgstr "Kanalname hat sich geändert von"
+
+msgctxt "#32374"
+msgid "to"
+msgstr "zu"
+
+msgctxt "#32375"
+msgid "no more exist, removing from Selected List"
+msgstr "existiert nicht mehr, entferne von der Liste"
+
+msgctxt "#32376"
+msgid "Initialize manual EPG Grab..."
+msgstr "Initialisiere manuellen EPG Grab...."
+
+msgctxt "#32378"
+msgid "No valid TVH Socked found, check Location"
+msgstr "Kein gültiges TVH Socked gefunden, überprüfe deine Einstellungen"
+
+msgctxt "#32379"
+msgid "Can´t write EPG in TVH Socked"
+msgstr "Kann den EPG nicht in das Socked schreiben"
+
+msgctxt "#32380"
+msgid "Write EPG in TVH Socked..."
+msgstr "Schreibe epg in das TVH Socked..."
+
+msgctxt "#32381"
+msgid "Multithreading only works on Linux, please disable it."
+msgstr "Multithreading funktioniert nur unter Linux, bitte deaktiviere es."
+
+msgctxt "#32382"
+msgid "Manifest Data to be downloaded... "
+msgstr "Manifest Daten die heruntergeladen werden müssen..."
+
+msgctxt "#32383"
+msgid "Manifest Files downloaded!"
+msgstr "Manifest Daten heruntergeladen!"
+
+msgctxt "#32383"
+msgid "Manifest Files downloaded!"
+msgstr "Manifest Daten heruntergeladen!"
+
+msgctxt "#32384"
+msgid "Login success !"
+msgstr "Login erfolgreich!"
+
+msgctxt "#32385"
+msgid "Waiting for Network Connection..."
+msgstr "Warte auf Netzwerkverbindung..."
+
+msgctxt "#32386"
+msgid "Network connection established"
+msgstr "Netzwerkverbindung hergestellt"
+
+msgctxt "#32387"
+msgid "Please Check your internet Connection"
+msgstr "Bitte überprüfe deine Internetverbindung"
+
+#####################################
+# Messages 32400 - 32499            #
+#####################################
+
+msgctxt "#32400"
+msgid "Channel ID Duplicates Detected"
+msgstr "Doppelt vorhandene Kanäle erkannt"
+
+msgctxt "#32401"
+msgid "Start manual grabbing EPG Data ?"
+msgstr "Sollen die EPG Daten manuell gegrabbt und erstellt werden?"
+
+msgctxt "#32402"
+msgid "New Channellist saved!"
+msgstr "Neue Kanalliste abgespeichert!"
+
+msgctxt "#32403"
+msgid "You need to Select at least 1 Channel!"
+msgstr "Du musst mindestens einen Kanal auswählen"
+
+msgctxt "#32404"
+msgid "Channellist unchanged!"
+msgstr "Kanalliste unverändert!"
+
+msgctxt "#32405"
+msgid "No channel list currently configured, Do you want to create one ?"
+msgstr "Keine Kanalliste aktuell konfiguriert, willst du eine erstellen ?"
+
+msgctxt "#32406"
+msgid "Select Channels to Grab"
+msgstr "Wähle Kanäle zum Grabben aus"
+
+msgctxt "#32407"
+msgid ""
+msgstr ""
+
+msgctxt "#32408"
+msgid "Write guide.xml now in Tvheadend socked ?"
+msgstr "Schreibe guide.xml jetzt in das TVH Socked ?"
+
+msgctxt "#32409"
+msgid "You must first activate the socket in the global settings, make sure that you have created a guide.xml"
+msgstr "Du musst zuerst das Socket in den Globalen Einstellungen aktivieren, stell sicher das du eine guide.xml erstellt hast"
+
+msgctxt "#32410"
+msgid "Wrong Username or Password"
+msgstr "Falscher Benutzername oder Passwort"
+
+msgctxt "#32411"
+msgid "Error while searching Token"
+msgstr "Kein Token auffindbar"
+
+msgctxt "#32412"
+msgid "Token is invalid"
+msgstr "Token ist ungültig"
+
+msgctxt "#32413"
+msgid "Error while Login"
+msgstr "Fehler während des Logins"
+
+msgctxt "#32414"
+msgid "To start the manual download, the automatic download must be disabled"
+msgstr "Um den manuellen Download zu starten muss der Automatische Download deaktiviert sein"
+
+#####################################
+# Progress 32500 -32549             #
+#####################################
+
+msgctxt "#32500"
+msgid "Downloading Broadcast Files for"
+msgstr "Lade Senderdaten für"
+
+msgctxt "#32501"
+msgid "Percent remain"
+msgstr "Prozent verbleibend"
+
+msgctxt "#32502"
+msgid "Create XML Channels for"
+msgstr "Erstelle XML Kanäle für"
+
+msgctxt "#32503"
+msgid "Create XML Broadcast for"
+msgstr "Erstelle XML Senderdaten für"
+
+msgctxt "#32504"
+msgid "Downloading Manifest Data for Day"
+msgstr "Lade Manifest Daten für Tag"
+
+#####################################
+# List Items, Labels 32550 -32599   #
+#####################################

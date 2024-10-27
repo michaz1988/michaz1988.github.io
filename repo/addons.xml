@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addons>
+<addon id="plugin.video.vavooto" name="VAVOO.TO" version="6.4" provider-name="kasi,michaz">
+	<requires>
+		<import addon="script.module.requests"/>
+		<import addon="script.module.resolveurl"/>
+		<import addon="inputstream.ffmpegdirect" optional="true" />
+		<import addon="script.module.futures" optional="true" />
+		<import addon="script.module.infotagger" optional="true" />
+		<!-- only for debug -->
+		<import addon="script.module.pydevd" optional="true"/>
+	</requires>
+	<extension point="xbmc.python.pluginsource" library="main.py">
+		<provides>video</provides>
+	</extension>
+	<extension point="xbmc.python.module" library="resources" />
+	<extension point="xbmc.addon.metadata">
+		<assets>
+			<icon>icon.png</icon>
+		</assets>
+	</extension>
+</addon>
+
+<addon id="script.module.vavoo" name="Vavoosign" version="0.1.3.2" provider-name="michaz1988">
+	<requires>
+		<import addon="script.module.requests"/>
+	</requires>
+	<extension point="xbmc.python.module" library="lib" />
+	<extension point="xbmc.addon.metadata">
+		<assets>
+			<icon>icon.png</icon>
+		</assets>
+	</extension>
+</addon>
+
+<addon id="skin.mimic.lr" name="Mimic-LR" version="999.2" provider-name="Randall,michaz">
+	<requires>
+		<import addon="xbmc.gui" version="5.15.0" />
+		<import addon="resource.images.studios.white" version="0.0.25" />
+		<import addon="script.skinshortcuts" version="1.1.4" />
+		<import addon="script.toolbox" version="2.0.0" />
+		<import addon="script.image.resource.select" version="3.0.2" />
+	</requires>
+	<extension point="xbmc.gui.skin" debugging="false" effectslowdown="0.75">
+		<res width="1920" height="1080" aspect="16:9" default="true" folder="1080i" />
+	</extension>
+
+	<extension point="xbmc.addon.metadata">
+		<summary lang="en_GB">Mimic-LR</summary>
+		<description lang="en_GB">Mimic reborn</description>
+		<platform>all</platform>
+		<license>CC BY-NC-SA 4.0</license>
+		<forum>http://forum.kodi.tv/forumdisplay.php?fid=218</forum>
+		<website></website>
+		<email></email>
+		<source>https://github.com/randallspicher/skin.mimic.lr/tree/Matrix</source>
+		<assets>
+			<icon>resources/icon.png</icon>
+			<fanart>resources/fanart.png</fanart>
+		</assets>
+		<news></news>
+	</extension>
+</addon>
+
+<addon id="repository.michaz" name="Michaz Repository" provider-name="Michaz" version="4.8">
+	<extension point="xbmc.addon.repository" name="Michaz Repository">
+		<dir>
+			<info compressed="false">https://michaz1988.github.io/repo/addons.xml</info>
+			<checksum>https://michaz1988.github.io/repo/addons.xml.md5</checksum>
+			<datadir zip="true">https://michaz1988.github.io/repo/</datadir>
+		</dir>
+		<dir minversion="18.9.701" maxversion="19.9.700">
+            <info compressed="false">https://raw.githubusercontent.com/streamxstream/xStreamRepo/repo/matrix/addons.xml</info>
+			<checksum verify="sha256">https://raw.githubusercontent.com/streamxstream/xStreamRepo/repo/matrix/addons.xml.sha256</checksum>
+            <datadir zip="true">https://raw.githubusercontent.com/streamxstream/xStreamRepo/repo/matrix/</datadir>
+        </dir>
+         <dir minversion="19.9.701" maxversion="20.9.700">
+            <info compressed="false">https://raw.githubusercontent.com/streamxstream/xStreamRepo/repo/nexus/addons.xml</info>
+			<checksum verify="sha256">https://raw.githubusercontent.com/streamxstream/xStreamRepo/repo/nexus/addons.xml.sha256</checksum>
+            <datadir zip="true">https://raw.githubusercontent.com/streamxstream/xStreamRepo/repo/nexus/</datadir>
+        </dir>
+		<dir minversion="20.9.910">
+            <info compressed="false">https://raw.githubusercontent.com/streamxstream/xStreamRepo/repo/omega/addons.xml</info>
+			<checksum verify="sha256">https://raw.githubusercontent.com/streamxstream/xStreamRepo/repo/omega/addons.xml.sha256</checksum>
+            <datadir zip="true">https://raw.githubusercontent.com/streamxstream/xStreamRepo/repo/omega/</datadir>
+        </dir>
+		<dir>
+			<info compressed="false">https://slyguy.uk/.repo/repository.slyguy/addons.xml</info>
+			<checksum>https://slyguy.uk/.repo/repository.slyguy/addons.xml.md5</checksum>
+			<datadir zip="true">https://slyguy.uk/.repo/repository.slyguy/</datadir>
+		</dir>
+		<dir>
+			<info compressed="false">https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/repo/zips/addons.xml</info>
+			<checksum>https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/repo/zips/addons.xml.md5</checksum>
+			<datadir zip="true">https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/repo/zips/</datadir>
+		</dir>
+		<dir minversion="18.0" maxversion="18.9.0">
+			<info compressed="false">https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/leia/zips/addons.xml</info>
+			<checksum>https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/leia/zips/addons.xml.md5</checksum>
+			<datadir zip="true">https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/leia/zips/</datadir>
+		</dir>
+		<dir minversion="18.9.0" maxversion="19.9.0">
+			<info compressed="false">https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/matrix/zips/addons.xml</info>
+			<checksum>https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/matrix/zips/addons.xml.md5</checksum>
+			<datadir zip="true">https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/matrix/zips/</datadir>
+		</dir>
+		<dir minversion="19.9.1">
+			<info compressed="false">https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/nexusrepo/zips/addons.xml</info>
+			<checksum>https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/nexusrepo/zips/addons.xml.md5</checksum>
+			<datadir zip="true">https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/nexusrepo/zips/</datadir>
+		</dir>
+		<dir>
+			<info compressed="true">https://repo.kodinerds.net/addons/addons.xml</info>
+			<checksum>https://repo.kodinerds.net/addons/addons.xml.md5</checksum>
+			<datadir zip="true">https://repo.kodinerds.net/addons</datadir>
+			<hashes>false</hashes>
+		</dir>
+		<dir minversion="21.9.0">
+			<info compressed="true">https://repo.kodinerds.net/addons/omega/addons.xml</info>
+			<checksum>https://repo.kodinerds.net/addons/omega/addons.xml.md5</checksum>
+			<datadir zip="true">https://repo.kodinerds.net/addons/omega/zip/</datadir>
+			<hashes>false</hashes>
+		</dir>
+		<dir minversion="20.0.0" maxversion="21.9.0">
+			<info compressed="true">https://repo.kodinerds.net/addons/nexus/addons.xml</info>
+			<checksum>https://repo.kodinerds.net/addons/nexus/addons.xml.md5</checksum>
+			<datadir zip="true">https://repo.kodinerds.net/addons/nexus/zip/</datadir>
+			<hashes>false</hashes>
+		</dir>
+		<dir minversion="19.0.0" maxversion="21.9.0">
+			<info compressed="true">https://repo.kodinerds.net/addons/matrix/addons.xml</info>
+			<checksum>https://repo.kodinerds.net/addons/matrix/addons.xml.md5</checksum>
+			<datadir zip="true">https://repo.kodinerds.net/addons/matrix/zip/</datadir>
+			<hashes>false</hashes>
+		</dir>
+		<dir minversion="18.0.0" maxversion="18.9.0">
+			<info compressed="true">https://repo.kodinerds.net/addons/leia/addons.xml</info>
+			<checksum>https://repo.kodinerds.net/addons/leia/addons.xml.md5</checksum>
+			<datadir zip="true">https://repo.kodinerds.net/addons/leia/zip/</datadir>
+			<hashes>false</hashes>
+		</dir>
+		<dir minversion="17.0.0" maxversion="18.9.0">
+			<info compressed="true">https://repo.kodinerds.net/addons/krypton/addons.xml</info>
+			<checksum>https://repo.kodinerds.net/addons/krypton/addons.xml.md5</checksum>
+			<datadir zip="true">https://repo.kodinerds.net/addons/krypton/zip/</datadir>
+			<hashes>false</hashes>
+		</dir>
+		<dir>
+			<info compressed="false">https://raw.githubusercontent.com/Gujal00/smrzips/master/addons.xml</info>
+			<checksum>https://raw.githubusercontent.com/Gujal00/smrzips/master/addons.xml.md5</checksum>
+			<datadir zip="true">https://raw.githubusercontent.com/Gujal00/smrzips/master/zips/</datadir>
+		</dir>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<platform>all</platform>
+		<description lang="en">Addons by Michaz</description>
+		<website>https://michaz1988.github.io</website>
+		<assets>
+			<icon>icon.png</icon>
+		</assets>
+	</extension>
+</addon>
+
+<addon id="repository.skinbase.nexus" name="[COLOR orange]G[/COLOR]UIDO[COLOR orange]S[/COLOR] [COLOR orange]S[/COLOR]KINBAS[COLOR orange]E[/COLOR] Only Skins for [COLOR orange]Kodi 19+20[/COLOR] " version="3.0.02" provider-name="[COLOR orange]SKINBASE[/COLOR] | [COLOR skyblue]Kodiman[/COLOR] | [COLOR orange]HSK-DE[/COLOR]">
+	<extension point="xbmc.addon.repository" name="GUIDOS SKINBASE REPO">
+	<dir>
+		<info compressed="false">https://raw.github.com/kaffepausse71/SKINBASE.NEXUS/master/addons.xml</info>
+		<checksum>https://raw.github.com/kaffepausse71/SKINBASE.NEXUS/master/addons.xml.md5</checksum>
+		<datadir zip="true">https://raw.github.com/kaffepausse71/SKINBASE.NEXUS/master/</datadir>
+	</dir>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary>[COLOR orange]G[/COLOR]uido[COLOR orange]s[/COLOR] [COLOR orange]S[/COLOR]KINBAS[COLOR orange]E[/COLOR] Repo</summary>
+        <description lang="de_DE">In Guidos SKINBASE findet ihr Skins ab Kodi Version 16 aus aller Welt. Von den Standard Skins bis hin zu stark Modifizierten. Die Skins sind für die jeweiligen Kodi Versionen farblich markiert.  Viel Spass wünschen euch das SKINBASE TEAM.</description>
+		<description lang="en_GB">In Guido's SKINBASE you will find skins from Kodi version 16 from all over the world. From the standard skins to heavily modified ones. The skins are color coded for the respective Kodi versions. The SKINBASE TEAM wish you a lot of fun.</description>
+        <platform>all</platform>
+		<assets>
+			<icon>icon.png</icon>
+			<fanart>icon.png</fanart>
+		</assets>
+	</extension>
+</addon>
+
+<addon id="repository.sandmann79.plugins" name="Sandmann79s Repository" version="2.0.0" provider-name="Sandmann79">
+	<requires>
+		<import addon="xbmc.addon" version="12.0.0"/>
+	</requires>
+	<extension point="xbmc.addon.repository" name="Sandmann79s Repository">
+		<dir minversion="18.9.9">
+			<info compressed="false">https://raw.githubusercontent.com/Sandmann79/xbmc/master/packages-py3/addons.xml</info>
+			<checksum>https://raw.githubusercontent.com/Sandmann79/xbmc/master/packages-py3/addons.xml.md5</checksum>
+			<datadir zip="true">https://raw.githubusercontent.com/Sandmann79/xbmc/master/packages-py3/</datadir>
+			<hashes>false</hashes>
+		</dir>
+		<dir maxversion="18.9.0">
+			<info compressed="false">https://raw.githubusercontent.com/Sandmann79/xbmc/master/packages/addons.xml</info>
+			<checksum>https://raw.githubusercontent.com/Sandmann79/xbmc/master/packages/addons.xml.md5</checksum>
+			<datadir zip="true">https://raw.githubusercontent.com/Sandmann79/xbmc/master/packages/</datadir>
+			<hashes>false</hashes>
+		</dir>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary>Sandmann79s Repository</summary>
+		<description>Sandmann79s repository for Kodi add-ons</description>
+		<platform>all</platform>
+	</extension>
+</addon>
+
+<addon id="repository.randalls.repo.matrix" name="Randall's Repo (Matrix)" version="1.0.1" provider-name="Randall">
+    <extension point="xbmc.addon.repository" name="Example Repository">
+        <dir>
+            <info compressed="true">https://raw.githubusercontent.com/randallspicher/randalls-repo/Matrix/addons.xml.gz</info>
+            <checksum>https://raw.githubusercontent.com/randallspicher/randalls-repo/Matrix/addons.xml.gz.md5</checksum>
+            <datadir zip="true">https://raw.githubusercontent.com/randallspicher/randalls-repo/Matrix/</datadir>
+        </dir>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary>Randall's Repo (Matrix)</summary>
+        <description>This is where to get my plugins</description>
+        <disclaimer>This is a hobby.  Use at your own risk.</disclaimer>
+        <platform>all</platform>
+        <assets>
+            <icon>icon.png</icon>
+            <fanart>fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon>
+
+<addon id="plugin.video.tools" name="Tools" version="8.0.7" provider-name="Michaz">
+    <requires>
+        <import addon="script.module.requests"/>
+        <import addon="script.module.routing"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="lib/main.py">
+        <provides>video executable</provides>
+    </extension>
+    <!--<extension point="xbmc.service" library="lib/service.py" start="login">
+        <provides>service</provides>
+    </extension>-->
+    <extension point="xbmc.addon.metadata">
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+    </extension>
+</addon>
+
+<addon id="plugin.video.tvnow.de" name="TvNow" version="0.6.1+matrix.0" provider-name="Pati">
+  <requires>
+    <import addon="xbmc.python" version="3.0.0"/>
+    <import addon="script.module.requests" version="2.9.1"/>
+    <import addon="inputstream.adaptive" version="1.0.8"/>
+    <import addon="script.module.routing" version="0.2.0"></import>
+    <import addon="script.module.pycryptodome" version="3.4.3"/>
+    <import addon="script.module.inputstreamhelper" version="0.4.2"/>
+    <import addon="script.module.beautifulsoup4"/>
+    <import addon="script.module.mechanicalsoup"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="addon.py">
+    <provides>video</provides>
+  </extension>
+  <!--<extension point="xbmc.service" library="service.py"/>-->
+  <extension point="xbmc.addon.metadata">
+    <summary lang="de">Plugin für TvNow Deutschland</summary>
+    <summary lang="en_gb">Plugin for TvNow Germany</summary>
+    <description lang="de"></description>
+    <description lang="en_gb"></description>
+    <disclaimer lang="en_gb"></disclaimer>
+    <language></language>
+    <platform>all</platform>
+    <license></license>
+    <forum></forum>
+    <website></website>
+    <email></email>
+    <source></source>
+    <assets>
+      <icon>resources/icon.png</icon>
+    </assets>
+  </extension>
+</addon>
+
+<addon id="script.module.mechanicalsoup"
+	name="MechanicalSoup"
+	version="0.12.0"
+	provider-name="Matthew Hickford, Dan Hemberger, Matthieu Moy">
+	<requires>
+		<import addon="xbmc.python" version="3.0.0"/>
+		<import addon="script.module.requests" version="2.22.0"/>
+		<import addon="script.module.beautifulsoup4" version="4.6.3"/>
+		<import addon="script.module.six" version="1.14.0"/>
+	</requires>
+	<extension point="xbmc.python.module" library="lib" />
+	<extension point="xbmc.addon.metadata">
+		<summary lang="en_GB">A Python library for automating interaction with websites.</summary>
+		<forum></forum>
+		<website>https://mechanicalsoup.readthedocs.io/</website>
+		<license>MIT</license>
+		<platform>all</platform>
+		<source>https://github.com/MechanicalSoup/MechanicalSoup</source>
+        <assets>
+            <icon>icon.png</icon>
+        </assets>
+	</extension>
+</addon>
+
+<addon id="repository.castagnait" name="CastagnaIT Repository for Kodi 19.x (MATRIX)" provider-name="castagnait" version="1.0.1+matrix">
+	<extension name="CastagnaIT Repository" point="xbmc.addon.repository">
+		<dir>
+			<info>https://github.com/CastagnaIT/repository.castagnait/raw/matrix/addons.xml</info>
+			<checksum>https://github.com/CastagnaIT/repository.castagnait/raw/matrix/addons.xml.md5</checksum>
+			<datadir zip="true">https://github.com/CastagnaIT/repository.castagnait/raw/matrix/zip</datadir>
+		</dir>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary>CastagnaIT Repository for Kodi 19.x (MATRIX)</summary>
+		<description>Castagna IT repository for Kodi 19.x add-ons</description>
+		<platform>all</platform>
+		<assets>
+			<icon>icon.jpg</icon>
+		</assets>
+	</extension>
+</addon>
+
+<addon id="script.module.xstreamscraper" name="xStream Scraper" provider-name="michaz1988" version="1.1">
+	<requires>
+		<import addon="plugin.video.vavooto"/>
+        <import addon="script.module.requests"/>
+        <import addon="script.module.six"/>
+        <import addon="script.module.resolveurl"/>
+        <import addon="plugin.video.xstream"/>
+        <!-- for remote debug -->
+        <import addon="script.module.pydevd" optional="true"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="main.py">
+        <provides>video</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <assets>
+            <icon>icon.png</icon>
+            <screenshot>icon.png</screenshot>
+        </assets>
+    </extension>
+</addon>
+
+<addon id="plugin.video.xtream-codes" name="Xtream-Codes IPTV" version="3.4" provider-name="michaz">
+  <requires>
+    <import addon="script.module.six" />
+	<import addon="inputstream.ffmpegdirect" version="1.21.8" optional="true" />
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="init.py">
+        <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <assets>
+            <icon>icon.png</icon>
+        </assets>
+    <platform>all</platform>
+  </extension>
+</addon>
+
+<addon id="plugin.video.xship" version="2023.06.01" name="Xship" provider-name="Xship-Team">
+    <requires>
+        <import addon="script.module.requests"/>
+        <import addon="script.module.vavoo"/>
+        <import addon="script.module.resolveurl" version="5.1.54"/>
+        <!-- for remote debug -->
+        <import addon="script.module.pydevd" optional="true"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>video</provides>
+    </extension>
+    <!--<extension point="xbmc.service" library="service.py" start="startup" />-->
+    <extension point="xbmc.addon.metadata">
+        <summary lang="de">xShip</summary>
+        <description lang="de">
+Mit diesem Addon kannst du auf alle angebotenen Streams verschiedenster deutscher Quellen zugreifen.
+Beachte, dass Addon kein offizieller Teil des verwendeten Media Players ist, und daher nicht von den offiziellen Support-Kanälen abgedeckt wird.
+Es handelt sich lediglich um eine Drittanbieter-Erweiterung, die dem System hinzugefügt wurde.
+        </description>
+        <disclaimer lang="de">Die von diesem Addon dargestellten Inhalte werden von den Erstellern der Software weder gehostet oder verbreitet, noch stehen die Ersteller in irgendeiner Beziehung zu den Content-Anbietern.</disclaimer>
+        <license>GNU GPLv3</license>
+        <platform>all</platform>
+        <assets>
+            <icon>icon.png</icon>
+            <fanart>fanart.jpg</fanart>
+            <screenshot>fanart.jpg</screenshot>
+            <!--<screenshot>resources/media/screenshots/screenshot-02.jpg</screenshot>
+            <screenshot>resources/media/screenshots/screenshot-03.jpg</screenshot>-->
+        </assets>
+        <news>
+Xship 2021.07.01
+- englsiche Anbieter entfernt
+- die hohe CPU Last in der Episodenliste beseitigt
+- fix bookmarks in player.py
+- update movie4k-click
+- update kinoger
+- Sourcecode cleaned
+- edit sourcesFilter
+- settings.xml
+- neue Fuktion, Hoster ausschließen
+- streamworld
+        </news>
+    </extension>
+</addon>
+
+<addon id="plugin.video.waipu.tv" name="Waipu.tv / O2 TV" version="3.10.4" provider-name="flubshi, MiRo, michaz">
+<requires>
+  <import addon="xbmc.python" version="3.0.0"/>
+  <import addon="script.module.requests" version="2.12.4"/>
+  <import addon="script.module.inputstreamhelper" version="0.5.2"/>
+  <import addon="script.module.dateutil" version="2.7.3" />
+  <import addon="script.module.mechanize" version="0.4.3" />
+  <import addon="script.module.routing" version="0.2.0"/>
+</requires>
+<extension point="xbmc.python.pluginsource" library="main.py">
+  <provides>video</provides>
+</extension>
+<extension point="xbmc.addon.metadata">
+  <summary lang="de">waipu.tv und O2 TV Kodi Video Plugin</summary>
+  <summary lang="en">waipu.tv and O2 TV Kodi Video Plugin</summary>
+  <description lang="en">An waipu.tv and O2 TV video plugin for Kodi mediacenter. Note: This is not an official waipu plugin and not related to Exaring AG or waipu.tv. It was developed by volunteers.</description>
+  <description lang="de">Genießen Sie über 100 TV-Sender von Waipu.tv oder O2 TV im Live-Stream. Hinweis: Dies ist kein offizielles Waipu-Plugin und steht nicht in Verbindung zur Exaring AG oder zu waipu.tv. Es wurde von Freiwilligen entwickelt.</description>
+  <platform>all</platform>
+  <license>GNU GENERAL PUBLIC LICENSE. Version 3, June 2007</license>
+  <forum>https://www.kodinerds.net/index.php/Thread/64586-Release-Video-Plugin-Waipu-tv-und-O2-TV-kodinerds-repo/</forum>
+  <website>https://www.waipu.tv/</website>
+  <source>https://github.com/flubshi/plugin.video.waipu.tv</source>
+  <assets>
+    <icon>icon.png</icon>
+    <fanart>fanart.jpg</fanart>
+    <screenshot>resources/screenshots/screenshot-01.jpg</screenshot>
+    <screenshot>resources/screenshots/screenshot-02.jpg</screenshot>
+    <screenshot>resources/screenshots/screenshot-03.jpg</screenshot>
+  </assets>
+  <news>
+- 0.10.4 Version bump for Leia dependency
+- 0.10.3 Improve Logging
+- 0.10.2 Version bump for Leia dependency
+- 0.10.1 Make addon python2 backwards compatible
+- 0.10.0 Improve session handling; implement device ID; set correct user agent
+- 0.9.1 Fix import in O2 login
+- 0.9.0 add folder structure and delete of recordings (thanks @mking2203)
+- 0.8.4 Implement new API changes
+- 0.8.3 Implement access eu network; adapt inputstream call
+- 0.8.2 Internal clean up
+- 0.8.1 Fix O2 TV
+- 0.8.0 Python3 compatibility
+- 0.3.3 fix internal imports
+  </news>
+</extension>
+</addon>
+
+<addon id="plugin.video.stalker" name="IPTV Stalker" version="2.2.0" provider-name="michaz">
+	<requires>
+		<import addon="script.module.six"/>
+		<import addon="script.module.simplejson"/>
+		<import addon="script.module.requests"/>
+	</requires>
+	<extension point="xbmc.python.pluginsource" library="addon.py">
+		<provides>video</provides>
+	</extension>
+	<extension point="xbmc.service" library="server.py" start="startup" />
+	<extension point="xbmc.addon.metadata">
+		<summary lang="de">Stalker Kodi Video Plugin</summary>
+		<summary lang="en">Stalker Kodi Video Plugin</summary>
+		<platform>all</platform>
+		<assets>
+            <icon>icon.png</icon>
+        </assets>
+	</extension>
+</addon>
+</addons>

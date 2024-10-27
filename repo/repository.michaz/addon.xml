@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="repository.michaz" name="Michaz Repository" provider-name="Michaz" version="4.8">
+	<extension point="xbmc.addon.repository" name="Michaz Repository">
+		<dir>
+			<info compressed="false">https://michaz1988.github.io/repo/addons.xml</info>
+			<checksum>https://michaz1988.github.io/repo/addons.xml.md5</checksum>
+			<datadir zip="true">https://michaz1988.github.io/repo/</datadir>
+		</dir>
+		<dir minversion="18.9.701" maxversion="19.9.700">
+            <info compressed="false">https://raw.githubusercontent.com/streamxstream/xStreamRepo/repo/matrix/addons.xml</info>
+			<checksum verify="sha256">https://raw.githubusercontent.com/streamxstream/xStreamRepo/repo/matrix/addons.xml.sha256</checksum>
+            <datadir zip="true">https://raw.githubusercontent.com/streamxstream/xStreamRepo/repo/matrix/</datadir>
+        </dir>
+         <dir minversion="19.9.701" maxversion="20.9.700">
+            <info compressed="false">https://raw.githubusercontent.com/streamxstream/xStreamRepo/repo/nexus/addons.xml</info>
+			<checksum verify="sha256">https://raw.githubusercontent.com/streamxstream/xStreamRepo/repo/nexus/addons.xml.sha256</checksum>
+            <datadir zip="true">https://raw.githubusercontent.com/streamxstream/xStreamRepo/repo/nexus/</datadir>
+        </dir>
+		<dir minversion="20.9.910">
+            <info compressed="false">https://raw.githubusercontent.com/streamxstream/xStreamRepo/repo/omega/addons.xml</info>
+			<checksum verify="sha256">https://raw.githubusercontent.com/streamxstream/xStreamRepo/repo/omega/addons.xml.sha256</checksum>
+            <datadir zip="true">https://raw.githubusercontent.com/streamxstream/xStreamRepo/repo/omega/</datadir>
+        </dir>
+		<dir>
+			<info compressed="false">https://slyguy.uk/.repo/repository.slyguy/addons.xml</info>
+			<checksum>https://slyguy.uk/.repo/repository.slyguy/addons.xml.md5</checksum>
+			<datadir zip="true">https://slyguy.uk/.repo/repository.slyguy/</datadir>
+		</dir>
+		<dir>
+			<info compressed="false">https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/repo/zips/addons.xml</info>
+			<checksum>https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/repo/zips/addons.xml.md5</checksum>
+			<datadir zip="true">https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/repo/zips/</datadir>
+		</dir>
+		<dir minversion="18.0" maxversion="18.9.0">
+			<info compressed="false">https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/leia/zips/addons.xml</info>
+			<checksum>https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/leia/zips/addons.xml.md5</checksum>
+			<datadir zip="true">https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/leia/zips/</datadir>
+		</dir>
+		<dir minversion="18.9.0" maxversion="19.9.0">
+			<info compressed="false">https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/matrix/zips/addons.xml</info>
+			<checksum>https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/matrix/zips/addons.xml.md5</checksum>
+			<datadir zip="true">https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/matrix/zips/</datadir>
+		</dir>
+		<dir minversion="19.9.1">
+			<info compressed="false">https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/nexusrepo/zips/addons.xml</info>
+			<checksum>https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/nexusrepo/zips/addons.xml.md5</checksum>
+			<datadir zip="true">https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/nexusrepo/zips/</datadir>
+		</dir>
+		<dir>
+			<info compressed="true">https://repo.kodinerds.net/addons/addons.xml</info>
+			<checksum>https://repo.kodinerds.net/addons/addons.xml.md5</checksum>
+			<datadir zip="true">https://repo.kodinerds.net/addons</datadir>
+			<hashes>false</hashes>
+		</dir>
+		<dir minversion="21.9.0">
+			<info compressed="true">https://repo.kodinerds.net/addons/omega/addons.xml</info>
+			<checksum>https://repo.kodinerds.net/addons/omega/addons.xml.md5</checksum>
+			<datadir zip="true">https://repo.kodinerds.net/addons/omega/zip/</datadir>
+			<hashes>false</hashes>
+		</dir>
+		<dir minversion="20.0.0" maxversion="21.9.0">
+			<info compressed="true">https://repo.kodinerds.net/addons/nexus/addons.xml</info>
+			<checksum>https://repo.kodinerds.net/addons/nexus/addons.xml.md5</checksum>
+			<datadir zip="true">https://repo.kodinerds.net/addons/nexus/zip/</datadir>
+			<hashes>false</hashes>
+		</dir>
+		<dir minversion="19.0.0" maxversion="21.9.0">
+			<info compressed="true">https://repo.kodinerds.net/addons/matrix/addons.xml</info>
+			<checksum>https://repo.kodinerds.net/addons/matrix/addons.xml.md5</checksum>
+			<datadir zip="true">https://repo.kodinerds.net/addons/matrix/zip/</datadir>
+			<hashes>false</hashes>
+		</dir>
+		<dir minversion="18.0.0" maxversion="18.9.0">
+			<info compressed="true">https://repo.kodinerds.net/addons/leia/addons.xml</info>
+			<checksum>https://repo.kodinerds.net/addons/leia/addons.xml.md5</checksum>
+			<datadir zip="true">https://repo.kodinerds.net/addons/leia/zip/</datadir>
+			<hashes>false</hashes>
+		</dir>
+		<dir minversion="17.0.0" maxversion="18.9.0">
+			<info compressed="true">https://repo.kodinerds.net/addons/krypton/addons.xml</info>
+			<checksum>https://repo.kodinerds.net/addons/krypton/addons.xml.md5</checksum>
+			<datadir zip="true">https://repo.kodinerds.net/addons/krypton/zip/</datadir>
+			<hashes>false</hashes>
+		</dir>
+		<dir>
+			<info compressed="false">https://raw.githubusercontent.com/Gujal00/smrzips/master/addons.xml</info>
+			<checksum>https://raw.githubusercontent.com/Gujal00/smrzips/master/addons.xml.md5</checksum>
+			<datadir zip="true">https://raw.githubusercontent.com/Gujal00/smrzips/master/zips/</datadir>
+		</dir>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<platform>all</platform>
+		<description lang="en">Addons by Michaz</description>
+		<website>https://michaz1988.github.io</website>
+		<assets>
+			<icon>icon.png</icon>
+		</assets> 
+	</extension>
+</addon>

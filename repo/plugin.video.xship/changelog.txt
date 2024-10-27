@@ -1,0 +1,98 @@
+xShip Changelog
+
+"2022.01.13"
+- fix anicloud & serienstream
+- edit serienstream
+- edit RH
+- remove xcine
+
+"2022.01.10"
+- "urlresolver" entfernt
+
+"2022.01.07"
+- wechsel von UrlResolver zu ResolveUrl
+
+"2021.12.23~nightly1"
+- alleserien entfernt
+- hd-streams.org entfernt
+
+"2021.12.18~nightly1"
+- add kinofox
+
+"2021.12.08~nightly1"
+- add anicloud
+
+"2021.10.28~nightly2"
+- Neuer und eigener URLResolver Tokken 
+
+"2021.09.29~nightly1"
+- Kodi 20
+
+"2021.07.29~nightly1"
+- edit services.py /settings (Wartung On/Off)
+
+"2021.07.20~nightly1"
+- edit services.py
+
+"2021.07.18~nightly1"
+- kinoger.py überarbeitet thx anis
+
+"2021.07.17~nightly1"
+- add playtube.ws to  self.hostblockDict in soures.py
+
+"2021.07.15~nightly1"
+- add menu Filme/Filme-Neu
+
+"2021.07.13~nightly1"
+- Suche nach "aliases" für den Titel erweitert
+
+"2021.07.07~nightly1"
+- update playcount (status gesehen/ungesehen)
+- update player.py
+- update utils.py
+
+Xship 2021-07-01
+  Update:
+- englsiche Anbieter entfernt
+- die hohe CPU Last in der Episodenliste beseitigt
+- fix bookmarks in player.py
+- update movie4k-click
+- update kinoger
+- Sourcecode cleaned
+- edit sourcesFilter
+- settings.xml
+
+  Neu:
+ - neue Fuktion: Hoster ausschließen - siehe auch unter Einstellungen/Wiedergabe
+- streamworld
+
+Xship 2021-06-01
+  Update:
+- tvshows.py
+- playcountDB.py
+- control.py
+- navigator.py
+- settings.xml
+  
+  Neu:
+- kkiste
+- kinox
+- kinoger
+
+Xship 2021-05-11:
+  Update:
+- auch mit Kodi 17 verwendbar
+- source_utils.py
+- service.py
+- player.py
+- sources.py
+- utils.py
+- control.py
+- default.py
+- add support for "json player" in "TheMovieDb Helper"
+- Indexseiten
+- RequestHandler
+
+xShip 2021-05-01:
+- Public Release
+

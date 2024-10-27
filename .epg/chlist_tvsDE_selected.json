@@ -1,0 +1,1111 @@
+{
+    "channellist": [
+        {
+            "contentId": "ARD",
+            "name": "Das Erste",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/ARD.png"
+                }
+            ]
+        },
+        {
+            "contentId": "ZDF",
+            "name": "ZDF",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/ZDF.png"
+                }
+            ]
+        },
+        {
+            "contentId": "RTL",
+            "name": "RTL",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/RTL.png"
+                }
+            ]
+        },
+        {
+            "contentId": "SAT1",
+            "name": "SAT.1",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SAT1.png"
+                }
+            ]
+        },
+        {
+            "contentId": "PRO7",
+            "name": "ProSieben",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/PRO7.png"
+                }
+            ]
+        },
+        {
+            "contentId": "K1",
+            "name": "kabel eins",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/K1.png"
+                }
+            ]
+        },
+        {
+            "contentId": "RTL2",
+            "name": "RTL II",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/RTL2.png"
+                }
+            ]
+        },
+        {
+            "contentId": "VOX",
+            "name": "VOX",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/VOX.png"
+                }
+            ]
+        },
+        {
+            "contentId": "3SAT",
+            "name": "3sat",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/3SAT.png"
+                }
+            ]
+        },
+        {
+            "contentId": "ARTE",
+            "name": "ARTE",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/ARTE.png"
+                }
+            ]
+        },
+        {
+            "contentId": "TELE5",
+            "name": "Tele 5",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/TELE5.png"
+                }
+            ]
+        },
+        {
+            "contentId": "DMAX",
+            "name": "DMAX",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/DMAX.png"
+                }
+            ]
+        },
+        {
+            "contentId": "SIXX",
+            "name": "sixx",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SIXX.png"
+                }
+            ]
+        },
+        {
+            "contentId": "RTL-N",
+            "name": "NITRO",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/RTL-N.png"
+                }
+            ]
+        },
+        {
+            "contentId": "RTLPL",
+            "name": "RTLplus",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/RTLPL.png"
+                }
+            ]
+        },
+        {
+            "contentId": "SAT1G",
+            "name": "SAT.1 Gold",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SAT1G.png"
+                }
+            ]
+        },
+        {
+            "contentId": "PRO7M",
+            "name": "ProSieben MAXX",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/PRO7M.png"
+                }
+            ]
+        },
+        {
+            "contentId": "CC",
+            "name": "Comedy Central",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/CC.png"
+                }
+            ]
+        },
+        {
+            "contentId": "WDR",
+            "name": "WDR",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/WDR.png"
+                }
+            ]
+        },
+        {
+            "contentId": "N3",
+            "name": "NDR",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/N3.png"
+                }
+            ]
+        },
+        {
+            "contentId": "BR",
+            "name": "BR",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/BR.png"
+                }
+            ]
+        },
+        {
+            "contentId": "SWR",
+            "name": "SWR/SR",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SWR.png"
+                }
+            ]
+        },
+        {
+            "contentId": "HR",
+            "name": "HR",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/HR.png"
+                }
+            ]
+        },
+        {
+            "contentId": "MDR",
+            "name": "MDR",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/MDR.png"
+                }
+            ]
+        },
+        {
+            "contentId": "RBB",
+            "name": "RBB",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/RBB.png"
+                }
+            ]
+        },
+        {
+            "contentId": "SPORT",
+            "name": "SPORT1",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SPORT.png"
+                }
+            ]
+        },
+        {
+            "contentId": "S1PLU",
+            "name": "SPORT1+",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/S1PLU.png"
+                }
+            ]
+        },
+        {
+            "contentId": "ES1",
+            "name": "eSports1",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/ES1.png"
+                }
+            ]
+        },
+        {
+            "contentId": "EURO",
+            "name": "Eurosport 1",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/EURO.png"
+                }
+            ]
+        },
+        {
+            "contentId": "EURO2",
+            "name": "Eurosport 2",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/EURO2.png"
+                }
+            ]
+        },
+        {
+            "contentId": "EX-SP",
+            "name": "EXTREME SPORTS",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/EX-SP.png"
+                }
+            ]
+        },
+        {
+            "contentId": "SPO-D",
+            "name": "sportdigital Fussball",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SPO-D.png"
+                }
+            ]
+        },
+        {
+            "contentId": "DAZN",
+            "name": "DAZN",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/DAZN.png"
+                }
+            ]
+        },
+        {
+            "contentId": "SNHD",
+            "name": "Sky Sport News",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SNHD.png"
+                }
+            ]
+        },
+        {
+            "contentId": "AMS",
+            "name": "Auto Motor Sport",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/AMS.png"
+                }
+            ]
+        },
+        {
+            "contentId": "KIKA",
+            "name": "KiKA",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/KIKA.png"
+                }
+            ]
+        },
+        {
+            "contentId": "SUPER",
+            "name": "SUPER RTL",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SUPER.png"
+                }
+            ]
+        },
+        {
+            "contentId": "TOGGO",
+            "name": "TOGGO plus",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/TOGGO.png"
+                }
+            ]
+        },
+        {
+            "contentId": "RIC",
+            "name": "RiC",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/RIC.png"
+                }
+            ]
+        },
+        {
+            "contentId": "NICK",
+            "name": "nick",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/NICK.png"
+                }
+            ]
+        },
+        {
+            "contentId": "FFTV",
+            "name": "Fix & Foxi",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/FFTV.png"
+                }
+            ]
+        },
+        {
+            "contentId": "NICKJ",
+            "name": "Nick Jr.",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/NICKJ.png"
+                }
+            ]
+        },
+        {
+            "contentId": "NICKT",
+            "name": "Nicktoons",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/NICKT.png"
+                }
+            ]
+        },
+        {
+            "contentId": "DISNE",
+            "name": "Disney Channel",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/DISNE.png"
+                }
+            ]
+        },
+        {
+            "contentId": "PHOEN",
+            "name": "PHOENIX",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/PHOEN.png"
+                }
+            ]
+        },
+        {
+            "contentId": "ALPHA",
+            "name": "ARD alpha",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/ALPHA.png"
+                }
+            ]
+        },
+        {
+            "contentId": "FES",
+            "name": "ONE",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/FES.png"
+                }
+            ]
+        },
+        {
+            "contentId": "2NEO",
+            "name": "ZDFneo",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/2NEO.png"
+                }
+            ]
+        },
+        {
+            "contentId": "ZINFO",
+            "name": "ZDFinfo",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/ZINFO.png"
+                }
+            ]
+        },
+        {
+            "contentId": "DWTV",
+            "name": "DW (Europe)",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/DWTV.png"
+                }
+            ]
+        },
+        {
+            "contentId": "ANIXE",
+            "name": "ANIXE",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/ANIXE.png"
+                }
+            ]
+        },
+        {
+            "contentId": "TLC",
+            "name": "TLC",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/TLC.png"
+                }
+            ]
+        },
+        {
+            "contentId": "WDWTV",
+            "name": "Welt der Wunder TV",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/WDWTV.png"
+                }
+            ]
+        },
+        {
+            "contentId": "VOXUP",
+            "name": "VOXup",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/VOXUP.png"
+                }
+            ]
+        },
+        {
+            "contentId": "TAG24",
+            "name": "tagesschau24",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/TAG24.png"
+                }
+            ]
+        },
+        {
+            "contentId": "NTV",
+            "name": "n-tv",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/NTV.png"
+                }
+            ]
+        },
+        {
+            "contentId": "WELT",
+            "name": "WELT",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/WELT.png"
+                }
+            ]
+        },
+        {
+            "contentId": "N24DOKU",
+            "name": "N24 Doku",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/N24DOKU.png"
+                }
+            ]
+        },
+        {
+            "contentId": "K1DOKU",
+            "name": "kabel eins Doku",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/K1DOKU.png"
+                }
+            ]
+        },
+        {
+            "contentId": "DMC",
+            "name": "DELUXE MUSIC",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/DMC.png"
+                }
+            ]
+        },
+        {
+            "contentId": "DMF",
+            "name": "Deutsches Musik Fernsehen",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/DMF.png"
+                }
+            ]
+        },
+        {
+            "contentId": "MTV",
+            "name": "MTV",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/MTV.png"
+                }
+            ]
+        },
+        {
+            "contentId": "MTV-L",
+            "name": "MTV Live HD",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/MTV-L.png"
+                }
+            ]
+        },
+        {
+            "contentId": "VH1",
+            "name": "VH1 Classic",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/VH1.png"
+                }
+            ]
+        },
+        {
+            "contentId": "123TV",
+            "name": "123.tv",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/123TV.png"
+                }
+            ]
+        },
+        {
+            "contentId": "ATV",
+            "name": "ATV",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/ATV.png"
+                }
+            ]
+        },
+        {
+            "contentId": "ATV2",
+            "name": "ATV II",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/ATV2.png"
+                }
+            ]
+        },
+        {
+            "contentId": "ORF1",
+            "name": "ORF 1",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/ORF1.png"
+                }
+            ]
+        },
+        {
+            "contentId": "ORF2",
+            "name": "ORF 2",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/ORF2.png"
+                }
+            ]
+        },
+        {
+            "contentId": "ORF3",
+            "name": "ORF III",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/ORF3.png"
+                }
+            ]
+        },
+        {
+            "contentId": "ORFSP",
+            "name": "ORF SPORT +",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/ORFSP.png"
+                }
+            ]
+        },
+        {
+            "contentId": "OE24TV",
+            "name": "oe24.TV",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/OE24TV.png"
+                }
+            ]
+        },
+        {
+            "contentId": "PULS4",
+            "name": "PULS 4",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/PULS4.png"
+                }
+            ]
+        },
+        {
+            "contentId": "SF1",
+            "name": "SRF 1",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SF1.png"
+                }
+            ]
+        },
+        {
+            "contentId": "SF2",
+            "name": "SRF zwei",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SF2.png"
+                }
+            ]
+        },
+        {
+            "contentId": "CIN",
+            "name": "Sky Cinema Premieren",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/CIN.png"
+                }
+            ]
+        },
+        {
+            "contentId": "CIN24",
+            "name": "Sky Cinema Premieren +24",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/CIN24.png"
+                }
+            ]
+        },
+        {
+            "contentId": "SKY-CR",
+            "name": "Sky Crime",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SKY-CR.png"
+                }
+            ]
+        },
+        {
+            "contentId": "SKY-A",
+            "name": "Sky Action",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SKY-A.png"
+                }
+            ]
+        },
+        {
+            "contentId": "SKY-C",
+            "name": "Sky Cinema Fun",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SKY-C.png"
+                }
+            ]
+        },
+        {
+            "contentId": "SKY-N",
+            "name": "Sky Cinema Classics",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SKY-N.png"
+                }
+            ]
+        },
+        {
+            "contentId": "SKY-H",
+            "name": "Sky Cinema Best Of",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SKY-H.png"
+                }
+            ]
+        },
+        {
+            "contentId": "SKYCS",
+            "name": "Sky Cinema Special HD",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SKYCS.png"
+                }
+            ]
+        },
+        {
+            "contentId": "SKYTH",
+            "name": "Sky Cinema Thriller",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SKYTH.png"
+                }
+            ]
+        },
+        {
+            "contentId": "TNT-F",
+            "name": "TNT Film",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/TNT-F.png"
+                }
+            ]
+        },
+        {
+            "contentId": "KINOW",
+            "name": "KinoweltTV",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/KINOW.png"
+                }
+            ]
+        },
+        {
+            "contentId": "SPO-A",
+            "name": "Sky Sport Austria",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SPO-A.png"
+                }
+            ]
+        },
+        {
+            "contentId": "SKY1",
+            "name": "Sky One",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SKY1.png"
+                }
+            ]
+        },
+        {
+            "contentId": "SKYAT",
+            "name": "Sky Atlantic HD",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SKYAT.png"
+                }
+            ]
+        },
+        {
+            "contentId": "SKY-K",
+            "name": "Sky Krimi",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SKY-K.png"
+                }
+            ]
+        },
+        {
+            "contentId": "UNIVE",
+            "name": "Universal Channel HD",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/UNIVE.png"
+                }
+            ]
+        },
+        {
+            "contentId": "HISHD",
+            "name": "History HD",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/HISHD.png"
+                }
+            ]
+        },
+        {
+            "contentId": "SP-GE",
+            "name": "Spiegel Geschichte",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SP-GE.png"
+                }
+            ]
+        },
+        {
+            "contentId": "MOVTV",
+            "name": "Motorvision TV",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/MOVTV.png"
+                }
+            ]
+        },
+        {
+            "contentId": "HDDIS",
+            "name": "Discovery HD",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/HDDIS.png"
+                }
+            ]
+        },
+        {
+            "contentId": "N-GHD",
+            "name": "Nat Geo HD",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/N-GHD.png"
+                }
+            ]
+        },
+        {
+            "contentId": "N-GW",
+            "name": "NAT GEO WILD",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/N-GW.png"
+                }
+            ]
+        },
+        {
+            "contentId": "13TH",
+            "name": "13th Street Universal",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/13TH.png"
+                }
+            ]
+        },
+        {
+            "contentId": "SCIFI",
+            "name": "Syfy",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SCIFI.png"
+                }
+            ]
+        },
+        {
+            "contentId": "TNT-S",
+            "name": "TNT Serie",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/TNT-S.png"
+                }
+            ]
+        },
+        {
+            "contentId": "TNT-C",
+            "name": "TNT Comedy",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/TNT-C.png"
+                }
+            ]
+        },
+        {
+            "contentId": "CRIN",
+            "name": "CRIME + INVESTIGATION",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/CRIN.png"
+                }
+            ]
+        },
+        {
+            "contentId": "ROM",
+            "name": "Romance TV",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/ROM.png"
+                }
+            ]
+        },
+        {
+            "contentId": "HEIMA",
+            "name": "Heimatkanal",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/HEIMA.png"
+                }
+            ]
+        },
+        {
+            "contentId": "C-NET",
+            "name": "Cartoon Network",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/C-NET.png"
+                }
+            ]
+        },
+        {
+            "contentId": "CLASS",
+            "name": "Classica",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/CLASS.png"
+                }
+            ]
+        },
+        {
+            "contentId": "APLAN",
+            "name": "Animal Planet",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/APLAN.png"
+                }
+            ]
+        },
+        {
+            "contentId": "AXN",
+            "name": "AXN",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/AXN.png"
+                }
+            ]
+        },
+        {
+            "contentId": "GEO",
+            "name": "GEO Television",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/GEO.png"
+                }
+            ]
+        },
+        {
+            "contentId": "JUKE",
+            "name": "Jukebox",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/JUKE.png"
+                }
+            ]
+        },
+        {
+            "contentId": "MTV-B",
+            "name": "MTV Base",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/MTV-B.png"
+                }
+            ]
+        },
+        {
+            "contentId": "K1CLA",
+            "name": "kabel eins classics",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/K1CLA.png"
+                }
+            ]
+        },
+        {
+            "contentId": "SAT1E",
+            "name": "SAT.1 emotions",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SAT1E.png"
+                }
+            ]
+        },
+        {
+            "contentId": "PRO7F",
+            "name": "ProSieben Fun",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/PRO7F.png"
+                }
+            ]
+        },
+        {
+            "contentId": "RTL-C",
+            "name": "RTL Crime",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/RTL-C.png"
+                }
+            ]
+        },
+        {
+            "contentId": "RTL-L",
+            "name": "RTL Living",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/RTL-L.png"
+                }
+            ]
+        },
+        {
+            "contentId": "PASS",
+            "name": "RTL Passion",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/PASS.png"
+                }
+            ]
+        },
+        {
+            "contentId": "SILVE",
+            "name": "Silverline",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SILVE.png"
+                }
+            ]
+        },
+        {
+            "contentId": "SONY",
+            "name": "Sony Channel",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SONY.png"
+                }
+            ]
+        },
+        {
+            "contentId": "SPTVW",
+            "name": "Spiegel TV Wissen",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SPTVW.png"
+                }
+            ]
+        },
+        {
+            "contentId": "TRACE",
+            "name": "Trace TV",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/TRACE.png"
+                }
+            ]
+        },
+        {
+            "contentId": "SKY-D",
+            "name": "Sky Documentaries",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SKY-D.png"
+                }
+            ]
+        },
+        {
+            "contentId": "SKY-NA",
+            "name": "Sky Nature",
+            "pictures": [
+                {
+                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SKY-NA.png"
+                }
+            ]
+        }
+    ]
+}

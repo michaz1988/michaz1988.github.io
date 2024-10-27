@@ -1,0 +1,76 @@
+{
+    "channellist": [
+        {
+            "contentId": "148",
+            "name": "Cartoonito",
+            "pictures": [
+                {
+                    "href": "http://ngiss.t-online.de/cm1s/media/f609f4d13fd7e77d4c7b654a363ed5bc08e15c7a.png"
+                }
+            ]
+        },
+        {
+            "contentId": "5577",
+            "name": "Sky Showcase",
+            "pictures": [
+                {
+                    "href": "http://ngiss.t-online.de/cm1s/media/09629b5939190f0df366f958f199d6d499b2c4bd.png"
+                }
+            ]
+        },
+        {
+            "contentId": "264",
+            "name": "Sky Atlantic",
+            "pictures": [
+                {
+                    "href": "http://ngiss.t-online.de/cm1s/media/e9fd1abc76e3b402cf5ae4f65bf6798741cd214e.png"
+                }
+            ]
+        },
+        {
+            "contentId": "3756",
+            "name": "Sky Replay",
+            "pictures": [
+                {
+                    "href": "http://ngiss.t-online.de/cm1s/media/5727b8cc057a36b525abafb23b46d02bb24fed70.png"
+                }
+            ]
+        },
+        {
+            "contentId": "572",
+            "name": "Sky Cinema Family",
+            "pictures": [
+                {
+                    "href": "http://ngiss.t-online.de/cm1s/media/4af8c51b0aae80d28cb887cd75fe15508aea515f.png"
+                }
+            ]
+        },
+        {
+            "contentId": "6210",
+            "name": "Sky Cinema Highlights",
+            "pictures": [
+                {
+                    "href": "http://ngiss.t-online.de/cm1s/media/fac7ce5d53b31cab6f240ec100656f2c3e099dba.png"
+                }
+            ]
+        },
+        {
+            "contentId": "110",
+            "name": "AXN Black",
+            "pictures": [
+                {
+                    "href": "http://ngiss.t-online.de/cm1s/media/df6a8f84c2ecbe26b090e37b782db46b9d98b1bb.png"
+                }
+            ]
+        },
+        {
+            "contentId": "188",
+            "name": "AXN White",
+            "pictures": [
+                {
+                    "href": "http://ngiss.t-online.de/cm1s/media/cf1405ca89e285dadb2b62c136abc44c214f811e.png"
+                }
+            ]
+        }
+    ]
+}
