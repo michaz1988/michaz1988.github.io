@@ -11,7 +11,7 @@ jobs:
     permissions: write-all
     steps:
       - name: checkout repo content
-        uses: actions/checkout@v2 # checkout the repository content to github runner
+        uses: actions/checkout@v4 # checkout the repository content to github runner
       - name: execute py script # run service.py
         run: python -c "import os; os.chdir('.epg'); import service"     
       - name: commit files
