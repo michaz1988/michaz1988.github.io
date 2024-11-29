@@ -210,7 +210,7 @@ plugin://plugin.video.vavooto/?name=WDR
 #EXTINF:-1 tvg-id="WELT" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1086.png",WELT
 plugin://plugin.video.joyn/?mode=play_video&video_id=welt-de&stream_type=LIVE
 #EXTINF:-1 tvg-id="Welt der Wunder TV" group-title="Standart" tvg-logo="https://images.waipu.tv/api/channels/WELTDERWUNDER/logosd.png?width=100&height=100",WELT DER WUNDER
-plugin://plugin.video.vavooto/?name=WELT+DER+Wunder
+plugin://plugin.video.vavooto/?name=WELT+DER+WUNDER
 #EXTINF:-1 tvg-id="ZDF" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1063.png",ZDF
 plugin://plugin.video.vavooto/?name=ZDF
 #EXTINF:-1 tvg-id="ZDFinfo" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1013.png",ZDF info
