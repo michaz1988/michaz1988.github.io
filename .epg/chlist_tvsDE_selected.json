@@ -442,15 +442,6 @@
             ]
         },
         {
-            "contentId": "DWTV",
-            "name": "DW (Europe)",
-            "pictures": [
-                {
-                    "href": "http://live.tvspielfilm.de/static/images/channels/large/DWTV.png"
-                }
-            ]
-        },
-        {
             "contentId": "ANIXE",
             "name": "ANIXE",
             "pictures": [
@@ -685,15 +676,6 @@
             ]
         },
         {
-            "contentId": "CIN24",
-            "name": "Sky Cinema Premieren +24",
-            "pictures": [
-                {
-                    "href": "http://live.tvspielfilm.de/static/images/channels/large/CIN24.png"
-                }
-            ]
-        },
-        {
             "contentId": "SKY-CR",
             "name": "Sky Crime",
             "pictures": [
@@ -712,47 +694,11 @@
             ]
         },
         {
-            "contentId": "SKY-C",
-            "name": "Sky Cinema Fun",
-            "pictures": [
-                {
-                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SKY-C.png"
-                }
-            ]
-        },
-        {
             "contentId": "SKY-N",
             "name": "Sky Cinema Classics",
             "pictures": [
                 {
                     "href": "http://live.tvspielfilm.de/static/images/channels/large/SKY-N.png"
-                }
-            ]
-        },
-        {
-            "contentId": "SKY-H",
-            "name": "Sky Cinema Best Of",
-            "pictures": [
-                {
-                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SKY-H.png"
-                }
-            ]
-        },
-        {
-            "contentId": "SKYCS",
-            "name": "Sky Cinema Special HD",
-            "pictures": [
-                {
-                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SKYCS.png"
-                }
-            ]
-        },
-        {
-            "contentId": "SKYTH",
-            "name": "Sky Cinema Thriller",
-            "pictures": [
-                {
-                    "href": "http://live.tvspielfilm.de/static/images/channels/large/SKYTH.png"
                 }
             ]
         },

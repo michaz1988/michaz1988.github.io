@@ -277,7 +277,9 @@ def download_thread(tvsDE_chlist_selected, multi, list):
                 day_to_start += timedelta(days=1)
                 tvs_data_url = 'https://live.tvspielfilm.de/static/broadcast/list/{}/{}'.format(contentID, day_to_grab)
                 try: tvs_data = requests.get(tvs_data_url, headers=tvsDE_header).json()
-                except: tvs_data = ""
+                except: 
+                    tvs_data = ""
+                    log("Sender %s funktioniert nicht mehr"% contentID)
                 temp.append(tvs_data)
 
         with open(broadcast_files, 'w', encoding='utf-8') as playbill:
