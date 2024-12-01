@@ -13,7 +13,7 @@ jobs:
       - name: checkout repo content
         uses: actions/checkout@v4 # checkout the repository content to github runner
       - name: execute py script # run service.py
-        run: python -c "import os; os.chdir('.epg'); import service"     
+        run: python -c "import os; os.chdir('.epg'); import c"     
       - name: commit files
         run: |
           git config --local user.email "michaz1988@gmail.com"

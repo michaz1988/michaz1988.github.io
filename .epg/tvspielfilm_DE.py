@@ -102,15 +102,19 @@ def get_channellist():
         temp = data['channellist']
 
         for channels in tvsDE_channels:
-            ch_id = channels['id']
+            ch_id = channels['contentId']
             ch_title = channels['name']
+            category = channels['category']
+            ch_title_short = channels['nameShort']
             try:
-                hdimage = channels['image_large']['url']
+                hdimage = base_url+channels['imageLarge']
             except:
                 hdimage = ""
             # channel to be appended
             y = {"contentId": ch_id,
                  "name": ch_title,
+                 "nameShort": ch_title,
+                 "category": category,
                  "pictures": [{"href": hdimage}]}
 
             # appending channels to data['channellist']
