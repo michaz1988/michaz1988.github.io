@@ -23,7 +23,7 @@ plugin://plugin.video.vavooto/?name=AUTO+MOTOR+SPORT
 plugin://plugin.video.vavooto/?name=BR
 #EXTINF:-1 tvg-id="C-NET" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1032.png",Cartoon Network
 plugin://plugin.video.vavooto/?name=CARTOON+NETWORK
-#EXTINF:-1 tvg-id="Cartoonito" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/lightbg/100x100/451.png",Cartoonito
+#EXTINF:-1 tvg-id="148" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/lightbg/100x100/451.png",Cartoonito
 plugin://plugin.video.vavooto/?name=CARTOONITO
 #EXTINF:-1 tvg-id="CC" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1073.png",Comedy Central
 plugin://plugin.video.vavooto/?name=VIVA
