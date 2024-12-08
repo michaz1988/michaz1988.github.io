@@ -448,7 +448,6 @@ for channels in magentaDE_channels["channellist"]:
 		
 epg.append('\n<!--  {}  PROGRAMME LIST -->'.format('ZAPPN'))
 api_headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0', 'Content-type': 'application/json;charset=utf-8', 'X-Api-Date-Format': 'iso', 'X-Api-Camel-Case': 'true', 'referer': 'https://streaming.simplitv.at/'}
-data_headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0', 'Accept': 'application/json'}
 time_start = str(now.strftime("%Y-%m-%dT%H:%M:00.000Z"))
 time_end = str((now + timedelta(days=2)).strftime("%Y-%m-%dT%H:%M:00.000Z"))
 epg_url = "https://api.app.simplitv.at/v1/EpgTile/FilterProgramTiles?$headers=%7B%22Content-Type%22:%22application%2Fjson%3Bcharset%3Dutf-8%22,%22X-Api-Date-Format%22:%22iso%22,%22X-Api-Camel-Case%22:true%7D"
@@ -460,9 +459,9 @@ epg_data = requests.post(prg_url, timeout=5, headers=api_headers, json=prg_post,
 for program in epg_data:
 	item_starttime = datetime.strptime(program["start"].split('+')[0], '%Y-%m-%dT%H:%M:%S').strftime('%Y%m%d%H%M%S')
 	item_endtime = datetime.strptime(program["stop"].split('+')[0], '%Y-%m-%dT%H:%M:%S').strftime('%Y%m%d%H%M%S')
-	items_genre = program['categories'][-1]['name'] if len(program.get("categories", [])) > 0 else ""
+	items_genre = ', '.join([i.get('name', "") for i in program.get('categories', []) if i["typeCodename"] != "genre"])
 	item_country = ', '.join([i['name'] for i in program['countries']]) if len(program.get("countries", [])) > 0 else ""
-	item_description = program.get("description", "").replace("\n\n", "")
+	item_description = program.get("description", "").strip("\n\n").strip("<br /><br />")
 	item_title = program.get("title", "")
 	try: item_picture = program["images"][0]["url"]
 	except: item_picture = ""
@@ -474,9 +473,12 @@ for program in epg_data:
 	if len(program.get("people", [])) > 0:
 		c = {}
 		for i in program["people"]:
-			if not c.get('[B]'+i["roleName"]+'[/B]', False):
-				c['[B]'+i["roleName"]+'[/B]'] = []
-			c['[B]'+i["roleName"]+'[/B]'].append(i["fullName"])
+			if i["roleCodename"] == "director":
+				items_director = i["fullName"]
+			else:
+				if not c.get('[B]'+i["roleName"]+'[/B]', False):
+					c['[B]'+i["roleName"]+'[/B]'] = []
+				c['[B]'+i["roleName"]+'[/B]'].append(i["fullName"])
 		items_actor = '; '.join([i+': '+', '.join([a for a in c[i]]) for i in c.keys()])
 	else: items_actor = ""
 	epg.append(xml_broadcast('onscreen', "PULS24", item_title, item_starttime, item_endtime, item_description, item_country, item_picture, item_subtitle, items_genre, item_date, item_season, item_episode, item_agerating, item_starrating, items_director, items_producer, items_actor, False, "de"))
@@ -542,7 +544,7 @@ for contentID in magentacontentIDs:
 epg.append('\n</tv>\n')
 
 
-datapath = os.path.abspath(os.path.dirname(__file__))
+datapath = "/sdcard/" #os.path.abspath(os.path.dirname(__file__))
 guide_dest = os.path.join(os.path.dirname(datapath), 'guide.xml')
 guidegz_dest = os.path.join(os.path.dirname(datapath), 'guide.xml.gz')
 with open(guide_dest, "w") as k:
