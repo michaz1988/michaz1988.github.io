@@ -544,7 +544,7 @@ for contentID in magentacontentIDs:
 epg.append('\n</tv>\n')
 
 
-datapath = "/sdcard/" #os.path.abspath(os.path.dirname(__file__))
+datapath = os.path.abspath(os.path.dirname(__file__))
 guide_dest = os.path.join(os.path.dirname(datapath), 'guide.xml')
 guidegz_dest = os.path.join(os.path.dirname(datapath), 'guide.xml.gz')
 with open(guide_dest, "w") as k:
