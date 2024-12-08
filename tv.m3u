@@ -26,7 +26,7 @@ plugin://plugin.video.vavooto/?name=CARTOON+NETWORK
 #EXTINF:-1 tvg-id="148" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/lightbg/100x100/451.png",Cartoonito
 plugin://plugin.video.vavooto/?name=CARTOONITO
 #EXTINF:-1 tvg-id="CC" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1073.png",Comedy Central
-plugin://plugin.video.vavooto/?name=VIVA
+plugin://plugin.video.joyn/?mode=play_video&video_id=comedy-central-de&stream_type=LIVE
 #EXTINF:-1 tvg-id="CRIN" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/945.png",CRIME + INVESTIGATION
 plugin://plugin.video.vavooto/?name=CRIME+%2b+INVESTIGATION
 #EXTINF:-1 tvg-id="ARD" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1016.png",Das Erste
@@ -34,11 +34,11 @@ plugin://plugin.video.vavooto/?name=ARD - DAS ERSTE
 #EXTINF:-1 tvg-id="DMC" group-title="Alle" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1034.png",DELUXE MUSIC
 plugin://plugin.video.vavooto/?name=DELUXE MUSIC
 #EXTINF:-1 tvg-id="DMAX" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/969.png",DMAX
-plugin://plugin.video.vavooto/?name=DMAX
+plugin://plugin.video.joyn/?mode=play_video&video_id=dmax-at&stream_type=LIVE
 #EXTINF:-1 tvg-id="HDDIS" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/543.png",Discovery
 plugin://plugin.video.vavooto/?name=DISCOVERY
 #EXTINF:-1 tvg-id="EURO" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/890.png",Eurosport 1
-plugin://plugin.video.dazn/?mode=play&title=Eurosport+1&id=1lgmsk2b5xn7d1uux7vn4noqep&params=884uhofskjiyp81uqidjkljtl&verify_age=False
+plugin://plugin.video.joyn/?mode=play_video&video_id=eurosport1-de&stream_type=LIVE
 #EXTINF:-1 tvg-id="EURO2" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/450.png",Eurosport 2
 plugin://plugin.video.dazn/?mode=play&title=Eurosport+2&id=1glc8nr85cpa21r4ahv8074dqs&params=f5lgatefogdowhxxv80ndf3ve&verify_age=False
 #EXTINF:-1 tvg-id="FFTV" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/60x60/960.png",Fix und Foxi
@@ -68,7 +68,7 @@ plugin://plugin.video.vavooto/?name=KINOWELT
 #EXTINF:-1 tvg-id="MDR" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1011.png",MDR
 plugin://plugin.video.vavooto/?name=MDR
 #EXTINF:-1 tvg-id="MTV" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1395.png",MTV
-plugin://plugin.video.joyn/?stream_type=LIVE&video_id=mtv-de-hd&mode=play_video
+plugin://plugin.video.joyn/?stream_type=LIVE&video_id=mtv-de&mode=play_video
 #EXTINF:-1 tvg-id="MOVTV" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1181.png",Motorvision
 plugin://plugin.video.joyn/?mode=play_video&video_id=motorvision-de-hd&stream_type=LIVE
 #EXTINF:-1 tvg-id="NTV" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1004.png",N-TV
@@ -178,11 +178,11 @@ plugin://plugin.video.vavooto/?name=SWR
 #EXTINF:-1 tvg-id="SCIFI" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/lightbg/100x100/537.png",Syfy
 plugin://plugin.video.vavooto/?name=SYFY
 #EXTINF:-1 tvg-id="TLC" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/944.png",TLC
-plugin://plugin.video.vavooto/?name=TLC
+plugin://plugin.video.joyn/?mode=play_video&video_id=tlc-at&stream_type=LIVE
 #EXTINF:-1 tvg-id="TAG24" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1046.png",Tagesschau 24
 plugin://plugin.video.vavooto/?name=TAGESSCHAU 24
 #EXTINF:-1 tvg-id="TELE5" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1018.png",Tele 5
-plugin://plugin.video.vavooto/?name=TELE+5
+plugin://plugin.video.joyn/?mode=play_video&video_id=tele5-at&stream_type=LIVE
 #EXTINF:-1 tvg-id="TOGGO" group-title="Standart" tvg-logo="https://images.waipu.tv/api/channels/TOGGOPLUS/logosd.png?width=100&height=100",Toggo
 plugin://plugin.video.vavooto/?name=TOGGO+PLUS
 #EXTINF:-1 tvg-id="UNIVE" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/438.png",Universal Channel
