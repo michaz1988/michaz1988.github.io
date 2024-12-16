@@ -5,7 +5,6 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 today = datetime.today()
 now = datetime.now()
 
-"""
 tvsDE_header = {'Host': 'live.tvspielfilm.de',
 	'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:75.0) Gecko/20100101 Firefox/75.0',
 	'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -37,7 +36,6 @@ def magentaSession():
 	return session
 
 magentacontentIDs = ["148"]
-"""
 contentIDs = ['ARD', 'ZDF', 'RTL', 'SAT1', 'PRO7', 'K1', 'RTL2', 'VOX', '3SAT', 'ARTE', 'SERVUSA', 'TELE5', 'SPTVW', 'JUKE', 'HEIMA', 'DMAX', 'SIXX', 'RTL-N', 'RTLPL', 'SPO-D', 'SAT1G', 'PRO7M', 'CC', 'WDR', 'N3', 'BR', 'SWR', 'HR', 'MDR', 'RBB', 'SPORT', 'S1PLU', 'EURO', 'EURO2', 'AMS', 'KIKA', 'SUPER', 'TOGGO', 'RIC', 'NICK', 'FFTV', 'NICKJ', 'NICKT', 'PHOEN', 'ALPHA', 'FES', '2NEO', 'ZINFO', 'ANIXE', 'TLC', 'WDWTV', 'VOXUP', 'TAG24', 'NTV', 'WELT', 'N24DOKU', 'K1DOKU', 'DMC', 'MTV', '123TV', 'ATV', 'ATV2', 'ORF1', 'ORF2', 'ORF3', 'ORFSP', 'OE24TV', 'PULS4', 'SF1', 'SF2', 'CIN', 'SKY-F', 'SKY-A', 'SKY-N', 'SKYCH', 'SKY-CR', 'SKY-D', 'SKY-NA', 'TNT-F', 'KINOW', 'SKY1', 'SKYAT', 'SKY-K', 'SKYRP', 'UNIVE', 'HISHD', 'SP-GE', 'MOVTV', 'HDDIS', 'N-GHD', 'N-GW', '13TH', 'SCIFI', 'TNT-S', 'TNT-C', 'CRIN', 'ROM', 'C-NET', 'CLASS', 'APLAN', 'AXN', 'GEO', 'K1CLA', 'SAT1E', 'PRO7F', 'RTL-C', 'RTL-L', 'PASS', 'SILVE', 'SONY', 'SPTVW', 'TRACE']
 provider = 'TV SPIELFILM (DE)'
 lang = 'de'
@@ -440,7 +438,7 @@ for channel in tvsDE_chlist_url:
 		day_to_start += timedelta(days=1)
 		tvs_data_urls.append('{}/{}'.format(channel_id, day_to_grab))
 
-"""
+
 epg.append('\n<!--  {}  CHANNEL LIST -->\n'.format('MAGENTA TV (DE)'))
 magentaDE_channels = magentaSession().post(magentaDE_channellist_url, json=magentaDE_get_chlist,headers=magentaDE_header).json()
 for channels in magentaDE_channels["channellist"]:
@@ -454,7 +452,6 @@ for channels in magentaDE_channels["channellist"]:
 	epg.append('        <display-name lang="{}">{}</display-name>\n'.format(lang, channel_name))
 	epg.append('        <icon src="{}" />\n'.format(channel_icon))
 	epg.append('    </channel>\n')
-"""
 
 
 epg.append('\n<!--  {}  PROGRAMME LIST -->'.format('ZAPPN'))
@@ -504,7 +501,6 @@ with ThreadPoolExecutor(len(tvs_data_urls)) as executor:
 		o = future.result()
 		epg.append(o)
 
-"""
 epg.append('\n<!--  {}  PROGRAMME LIST -->'.format('MAGENTA TV (DE)'))
 starttime = datetime(today.year, today.month, today.day, hour=00, minute=00, second=1).strftime("%Y%m%d%H%M%S")
 calc_then = datetime(today.year, today.month, today.day, hour=23, minute=59, second=59)
@@ -555,7 +551,7 @@ for contentID in magentacontentIDs:
 		if item_agerating == '-1':
 			item_agerating = ''
 		epg.append(xml_broadcast(episode_format, contentID, item_title, item_starttime, item_endtime, item_description, item_country, item_picture, item_subtitle, items_genre, item_date, item_season, item_episode, item_agerating, item_starrating, items_director, items_producer, items_actor, enable_rating_mapper, lang))
-"""
+
 epg.append('\n</tv>\n')
 
 
