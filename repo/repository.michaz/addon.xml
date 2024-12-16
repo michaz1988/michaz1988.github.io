@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="repository.michaz" name="Michaz Repository" provider-name="Michaz" version="4.9">
+<addon id="repository.michaz" name="Michaz Repository" provider-name="Michaz" version="5.0">
 	<extension point="xbmc.addon.repository" name="Michaz Repository">
 		<dir>
 			<info compressed="false">https://michaz1988.github.io/repo/addons.xml</info>
@@ -25,6 +25,11 @@
 			<info compressed="false">https://raw.github.com/kaffepausse71/SKINBASE.PEGASUS/master/addons.xml</info>
 			<checksum>https://raw.github.com/kaffepausse71/SKINBASE.PEGASUS/master/addons.xml.md5</checksum>
 			<datadir zip="true">https://raw.github.com/kaffepausse71/SKINBASE.PEGASUS/master/</datadir>
+		</dir>
+		<dir>
+			<info compressed="false">https://raw.githubusercontent.com/Gujal00/smrzips/master/addons.xml</info>
+			<checksum>https://raw.githubusercontent.com/Gujal00/smrzips/master/addons.xml.md5</checksum>
+			<datadir zip="true">https://raw.githubusercontent.com/Gujal00/smrzips/master/zips/</datadir>
 		</dir>
 	</extension>
 	<extension point="xbmc.addon.metadata">
