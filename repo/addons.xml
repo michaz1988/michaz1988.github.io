@@ -51,35 +51,6 @@
 	</extension>
 </addon>
 
-<addon id="skin.mimic.lr" name="Mimic-LR" version="999.2" provider-name="Randall,michaz">
-	<requires>
-		<import addon="xbmc.gui" version="5.15.0" />
-		<import addon="resource.images.studios.white" version="0.0.25" />
-		<import addon="script.skinshortcuts" version="1.1.4" />
-		<import addon="script.toolbox" version="2.0.0" />
-		<import addon="script.image.resource.select" version="3.0.2" />
-	</requires>
-	<extension point="xbmc.gui.skin" debugging="false" effectslowdown="0.75">
-		<res width="1920" height="1080" aspect="16:9" default="true" folder="1080i" />
-	</extension>
-
-	<extension point="xbmc.addon.metadata">
-		<summary lang="en_GB">Mimic-LR</summary>
-		<description lang="en_GB">Mimic reborn</description>
-		<platform>all</platform>
-		<license>CC BY-NC-SA 4.0</license>
-		<forum>http://forum.kodi.tv/forumdisplay.php?fid=218</forum>
-		<website></website>
-		<email></email>
-		<source>https://github.com/randallspicher/skin.mimic.lr/tree/Matrix</source>
-		<assets>
-			<icon>resources/icon.png</icon>
-			<fanart>resources/fanart.png</fanart>
-		</assets>
-		<news></news>
-	</extension>
-</addon>
-
 <addon id="repository.gujal" name="Gujal Addons Repository" version="2.0.3" provider-name="gujal">
 	<extension point="xbmc.addon.repository" name="Gujal Addons Repository">
 		<dir>
@@ -356,22 +327,12 @@
 	</extension>
 </addon>
 
-<addon id="repository.jurialmunkey" name="jurialmunkey Alpha Repository" version="3.4" provider-name="jurialmunkey">
+<addon id="repository.jurialmunkey" name="jurialmunkey Alpha Repository" version="3.5" provider-name="jurialmunkey">
     <extension point="xbmc.addon.repository" name="jurialmunkey Alpha Repository">
         <dir>
             <info compressed="false">https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/repo/zips/addons.xml</info>
             <checksum>https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/repo/zips/addons.xml.md5</checksum>
             <datadir zip="true">https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/repo/zips/</datadir>
-        </dir>
-		<dir minversion="18.0" maxversion="18.9.0">
-            <info compressed="false">https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/leia/zips/addons.xml</info>
-            <checksum>https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/leia/zips/addons.xml.md5</checksum>
-            <datadir zip="true">https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/leia/zips/</datadir>
-        </dir>
-        <dir minversion="18.9.0" maxversion="19.9.0">
-            <info compressed="false">https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/matrix/zips/addons.xml</info>
-            <checksum>https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/matrix/zips/addons.xml.md5</checksum>
-            <datadir zip="true">https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/matrix/zips/</datadir>
         </dir>
         <dir minversion="19.9.1" maxversion="20.9.0">
             <info compressed="false">https://raw.githubusercontent.com/jurialmunkey/repository.jurialmunkey/master/nexusrepo/zips/addons.xml</info>
