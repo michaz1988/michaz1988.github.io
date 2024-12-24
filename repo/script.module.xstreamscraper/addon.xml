@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.module.xstreamscraper" name="xStream Scraper" provider-name="michaz1988" version="2.6.3">
+<addon id="script.module.xstreamscraper" name="xStream Scraper" provider-name="michaz1988" version="2.6.4">
 	<requires>
 		<import addon="plugin.video.vavooto"/>
         <import addon="script.module.requests"/>
