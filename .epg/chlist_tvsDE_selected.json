@@ -991,6 +991,15 @@
             ]
         },
         {
+            "contentId": "SKYSH",
+            "name": "sky showcase",
+            "pictures": [
+                {
+                    "href": "https://live.tvspielfilm.de/api/cms//images/1bebe92c-38d3-4223-abaf-08de068f22f7.png"
+                }
+            ]
+        },
+        {
             "contentId": "TRACE",
             "name": "Trace TV",
             "pictures": [

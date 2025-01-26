@@ -412,7 +412,7 @@ tvsDE_chlist_url = requests.get(tvsDE_channellist_url, headers=tvsDE_header).jso
 
 
 epg = ['<?xml version="1.0" encoding="UTF-8" ?>\n<!DOCTYPE tv SYSTEM "xmltv.dtd">\n<!-- EPG XMLTV FILE CREATED BY Take-a-LUG TEAM- (c) 2020 Bastian Kleinschmidt -->\n<!-- created on {} -->\n<tv generator-info-name="Takealug EPG Grabber Ver. {}" generator-info-url="https://github.com/DeBaschdi/service.takealug.epg-grabber">\n'.format(str(now), addon_version)]
-epg.append('\n<!--  {}  CHANNEL LIST -->\n'.format('ZAPPN'))
+epg.append('\n<!--  {}  CHANNEL LIST -->\n'.format('SIMPLI TV'))
 epg.append('    <channel id="{}">\n'.format('PULS24'))
 epg.append('        <display-name lang="{}">{}</display-name>\n'.format(lang, 'PULS24'))
 epg.append('        <icon src="{}" />\n'.format('https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/PULS24logo.png/640px-PULS24logo.png'))
@@ -454,7 +454,7 @@ for channels in magentaDE_channels["channellist"]:
 	epg.append('    </channel>\n')
 
 
-epg.append('\n<!--  {}  PROGRAMME LIST -->'.format('ZAPPN'))
+epg.append('\n<!--  {}  PROGRAMME LIST -->'.format('SIMPLI TV'))
 api_headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0', 'Content-type': 'application/json;charset=utf-8', 'X-Api-Date-Format': 'iso', 'X-Api-Camel-Case': 'true', 'referer': 'https://streaming.simplitv.at/'}
 time_start = str(now.strftime("%Y-%m-%dT%H:%M:00.000Z"))
 time_end = str((now + timedelta(days=2)).strftime("%Y-%m-%dT%H:%M:00.000Z"))

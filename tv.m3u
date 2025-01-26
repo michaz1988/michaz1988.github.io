@@ -17,9 +17,9 @@ plugin://plugin.video.joyn/?mode=play_video&video_id=atv&stream_type=LIVE
 plugin://plugin.video.joyn/?mode=play_video&video_id=atv2&stream_type=LIVE
 #EXTINF:-1 tvg-id="AMS" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1031.png",Auto Motor Sport
 plugin://plugin.video.vavooto/?name=AUTO+MOTOR+SPORT
-#EXTINF:-1 tvg-id="AXN" group-title="Standart" tvg-logo="https://live.tvspielfilm.de/api/cms//images/2d44d4bd-b858-47ef-992c-2956576129a7.png",AXN
+#EXTINF:-1 tvg-id="AXN" group-title="Standart" tvg-logo="https://live.tvspielfilm.de/api/cms//images/2d44d4bd-b858-47ef-992c-2956576129a7.png",AXN BLACK
 plugin://plugin.video.vavooto/?name=AXN+BLACK
-#EXTINF:-1 tvg-id="SONY" group-title="Standart" tvg-logo="https://live.tvspielfilm.de/api/cms//images/6ccae3be-09aa-4db5-bc11-f7149101563a.png",Sony Channel
+#EXTINF:-1 tvg-id="SONY" group-title="Standart" tvg-logo="https://live.tvspielfilm.de/api/cms//images/6ccae3be-09aa-4db5-bc11-f7149101563a.png",AXN WHITE
 plugin://plugin.video.vavooto/?name=AXN+WHITE
 #EXTINF:-1 tvg-id="BR" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/959.png",BR
 plugin://plugin.video.vavooto/?name=BR
@@ -163,6 +163,8 @@ plugin://plugin.video.vavooto/?name=SKY+NATURE
 plugin://plugin.video.vavooto/?name=SKY+1
 #EXTINF:-1 tvg-id="SKYRP" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/img/station/lightbg/320x39/1366.png",Sky Replay
 plugin://plugin.video.vavooto/?name=SKY+REPLAY
+#EXTINF:-1 tvg-id="SKYSH" group-title="Standart" tvg-logo="https://live.tvspielfilm.de/api/cms//images/1bebe92c-38d3-4223-abaf-08de068f22f7.png",Sky Showcase
+plugin://plugin.video.vavooto/?name=SKY+SHOWCASE
 #EXTINF:-1 tvg-id="SP-GE" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/lightbg/100x100/486.png",Spiegel Geschichte
 plugin://plugin.video.vavooto/?name=SPIEGEL+GESCHICHTE
 #EXTINF:-1 tvg-id="SPTVW" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1246.png",Spiegel TV Wissen
