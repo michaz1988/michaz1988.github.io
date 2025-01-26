@@ -5,20 +5,22 @@ plugin://plugin.video.vavooto/?name=13TH+STREET
 plugin://plugin.video.vavooto/?name=3SAT
 #EXTINF:-1 tvg-id="ALPHA" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1007.png",ARD
 plugin://plugin.video.vavooto/?name=ARD ALPHA
-#EXTINF:-1 tvg-id="ATV" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/925.png",ATV
-plugin://plugin.video.joyn/?mode=play_video&video_id=atv&stream_type=LIVE
-#EXTINF:-1 tvg-id="ATV2" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/926.png",ATV2
-plugin://plugin.video.joyn/?mode=play_video&video_id=atv2&stream_type=LIVE
-#EXTINF:-1 tvg-id="AXN" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/lightbg/100x100/539.png",AXN
-plugin://plugin.video.vavooto/?name=AXN+Black
 #EXTINF:-1 tvg-id="APLAN" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/994.png",Animal Planet
 plugin://plugin.video.vavooto/?name=ANIMAL+PLANET
 #EXTINF:-1 tvg-id="ANIXE" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1008.png",Anixe
 plugin://plugin.video.vavooto/?name=ANIXE
 #EXTINF:-1 tvg-id="ARTE" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1009.png",Arte
 plugin://plugin.video.vavooto/?name=ARTE
+#EXTINF:-1 tvg-id="ATV" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/925.png",ATV
+plugin://plugin.video.joyn/?mode=play_video&video_id=atv&stream_type=LIVE
+#EXTINF:-1 tvg-id="ATV2" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/926.png",ATV2
+plugin://plugin.video.joyn/?mode=play_video&video_id=atv2&stream_type=LIVE
 #EXTINF:-1 tvg-id="AMS" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1031.png",Auto Motor Sport
 plugin://plugin.video.vavooto/?name=AUTO+MOTOR+SPORT
+#EXTINF:-1 tvg-id="AXN" group-title="Standart" tvg-logo="https://live.tvspielfilm.de/api/cms//images/2d44d4bd-b858-47ef-992c-2956576129a7.png",AXN
+plugin://plugin.video.vavooto/?name=AXN+BLACK
+#EXTINF:-1 tvg-id="SONY" group-title="Standart" tvg-logo="https://live.tvspielfilm.de/api/cms//images/6ccae3be-09aa-4db5-bc11-f7149101563a.png",Sony Channel
+plugin://plugin.video.vavooto/?name=AXN+WHITE
 #EXTINF:-1 tvg-id="BR" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/959.png",BR
 plugin://plugin.video.vavooto/?name=BR
 #EXTINF:-1 tvg-id="C-NET" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1032.png",Cartoon Network
@@ -29,8 +31,8 @@ plugin://plugin.video.vavooto/?name=CARTOONITO
 plugin://plugin.video.joyn/?mode=play_video&video_id=comedy-central-de&stream_type=LIVE
 #EXTINF:-1 tvg-id="CRIN" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/945.png",CRIME + INVESTIGATION
 plugin://plugin.video.vavooto/?name=CRIME+%2b+INVESTIGATION
-#EXTINF:-1 tvg-id="ARD" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1016.png",Das Erste
-plugin://plugin.video.vavooto/?name=ARD - DAS ERSTE
+#EXTINF:-1 tvg-id="ARD" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1016.png",ARD
+plugin://plugin.video.vavooto/?name=ARD
 #EXTINF:-1 tvg-id="DMC" group-title="Alle" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1034.png",DELUXE MUSIC
 plugin://plugin.video.vavooto/?name=DELUXE MUSIC
 #EXTINF:-1 tvg-id="DMAX" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/969.png",DMAX
@@ -161,8 +163,6 @@ plugin://plugin.video.vavooto/?name=SKY+NATURE
 plugin://plugin.video.vavooto/?name=SKY+1
 #EXTINF:-1 tvg-id="SKYRP" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/img/station/lightbg/320x39/1366.png",Sky Replay
 plugin://plugin.video.vavooto/?name=SKY+REPLAY
-#EXTINF:-1 tvg-id="SONY" group-title="Standart" tvg-logo="https://live.tvspielfilm.de/api/cms//images/6ccae3be-09aa-4db5-bc11-f7149101563a.png",Sony Channel
-plugin://plugin.video.vavooto/?name=AXN+WHITE
 #EXTINF:-1 tvg-id="SP-GE" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/lightbg/100x100/486.png",Spiegel Geschichte
 plugin://plugin.video.vavooto/?name=SPIEGEL+GESCHICHTE
 #EXTINF:-1 tvg-id="SPTVW" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1246.png",Spiegel TV Wissen
