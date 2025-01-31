@@ -357,7 +357,7 @@ for channel in tvsDE_chlist_url:
 	epg.append('        <display-name lang="{}">{}</display-name>\n'.format(lang, channel_name))
 	epg.append('        <icon src="{}" />\n'.format(channel_icon))
 	epg.append('    </channel>\n')
-	day_to_start = datetime(today.year, today.month, today.day, hour=00, minute=00, second=1)
+	day_to_start = now #datetime(today.year, today.month, today.day, hour=00, minute=00, second=1)
 	for i in range(0, days_to_grab):
 		day_to_grab = day_to_start.strftime("%Y-%m-%d")
 		day_to_start += timedelta(days=1)
@@ -401,12 +401,13 @@ for program in epg_data:
 	epg.append(xml_broadcast('onscreen', "PULS24", item_title, item_starttime, item_endtime, item_description, item_country, item_picture, item_subtitle, items_genre, item_date, item_season, item_episode, item_agerating, item_starrating, items_director, items_producer, items_actor, False, "de"))
 
 epg.append('\n<!--  SWISSCOM (CH)  PROGRAMME LIST -->')
-today = datetime.today()
-calc_today = datetime(today.year, today.month, today.day, hour=00, minute=00, second=1)
-calc_then = datetime(today.year, today.month, today.day, hour=23, minute=59, second=59)
-calc_then += timedelta(days=days_to_grab)
-starttime = calc_today.strftime("%Y%m%d%H%M")
-endtime = calc_then.strftime("%Y%m%d%H%M")
+#calc_today = datetime(today.year, today.month, today.day, hour=00, minute=00, second=1)
+#calc_then = datetime(today.year, today.month, today.day, hour=23, minute=59, second=59)
+#calc_then += timedelta(days=days_to_grab)
+#starttime = calc_today.strftime("%Y%m%d%H%M")
+#endtime = calc_then.strftime("%Y%m%d%H%M")
+starttime = now.strftime("%Y%m%d%H%M")
+endtime = (now + timedelta(days=2)).strftime("%Y%m%d%H%M")
 swc_data_url = 'https://services.sg101.prd.sctv.ch/catalog/tv/channels/list/end={};ids={};level=normal;start={}'.format(endtime, "54", starttime)
 swc_data = requests.get(swc_data_url, headers=swcCH_header).json()
 for playbilllist in swc_data['Nodes']['Items'][0]['Content']['Nodes']['Items']:
