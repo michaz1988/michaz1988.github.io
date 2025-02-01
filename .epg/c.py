@@ -299,7 +299,7 @@ for channel in tvsDE_chlist_url:
 	epg.append('        <display-name lang="{}">{}</display-name>\n'.format(lang, channel_name))
 	epg.append('        <icon src="{}" />\n'.format(channel_icon))
 	epg.append('    </channel>\n')
-	day_to_start = now #datetime(today.year, today.month, today.day, hour=00, minute=00, second=1)
+	day_to_start = datetime(today.year, today.month, today.day, hour=00, minute=00, second=1)
 	for i in range(0, days_to_grab):
 		day_to_grab = day_to_start.strftime("%Y-%m-%d")
 		day_to_start += timedelta(days=1)
@@ -307,8 +307,13 @@ for channel in tvsDE_chlist_url:
 
 epg.append('\n<!--  {}  PROGRAMME LIST -->'.format('SIMPLI TV'))
 api_headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0', 'Content-type': 'application/json;charset=utf-8', 'X-Api-Date-Format': 'iso', 'X-Api-Camel-Case': 'true', 'referer': 'https://streaming.simplitv.at/'}
-time_start = str(now.strftime("%Y-%m-%dT%H:%M:00.000Z"))
-time_end = str((now + timedelta(days=2)).strftime("%Y-%m-%dT%H:%M:00.000Z"))
+calc_today = datetime(today.year, today.month, today.day, hour=00, minute=00, second=1)
+calc_then = datetime(today.year, today.month, today.day, hour=23, minute=59, second=59)
+calc_then += timedelta(days=days_to_grab)
+time_start = str(calc_today.strftime("%Y-%m-%dT%H:%M:00.000Z"))
+time_end = str(calc_then.strftime("%Y-%m-%dT%H:%M:00.000Z"))
+#time_start = str(now.strftime("%Y-%m-%dT%H:%M:00.000Z"))
+#time_end = str((now + timedelta(days=2)).strftime("%Y-%m-%dT%H:%M:00.000Z"))
 epg_url = "https://api.app.simplitv.at/v1/EpgTile/FilterProgramTiles"
 epg_post = {"platformCodename": "www", "from": time_start, "to": time_end}
 epg_resp = requests.post(epg_url, timeout=5, headers=api_headers, json=epg_post, allow_redirects=False).json()["programs"]
@@ -341,8 +346,14 @@ for program in epg_data:
 	epg.append(xml_broadcast('onscreen', "PULS24", item_title, item_starttime, item_endtime, item_description, item_country, item_picture, item_subtitle, items_genre, item_date, item_season, item_episode, item_agerating, item_starrating, items_director, items_producer, items_actor, False, "de"))
 
 epg.append('\n<!--  {}  PROGRAMME LIST -->'.format("SWISSCOM (CH)"))
-starttime = now.strftime("%Y%m%d%H%M")
-endtime = (now + timedelta(days=2)).strftime("%Y%m%d%H%M")
+
+calc_today = datetime(today.year, today.month, today.day, hour=00, minute=00, second=1)
+calc_then = datetime(today.year, today.month, today.day, hour=23, minute=59, second=59)
+calc_then += timedelta(days=days_to_grab)
+starttime = str(calc_today.strftime("%Y%m%d%H%M"))
+endtime = str(calc_then.strftime("%Y%m%d%H%M"))
+#starttime = now.strftime("%Y%m%d%H%M")
+#endtime = (now + timedelta(days=2)).strftime("%Y%m%d%H%M")
 swc_data_url = 'https://services.sg101.prd.sctv.ch/catalog/tv/channels/list/end={};ids={};level=normal;start={}'.format(endtime, "54", starttime)
 swc_data = requests.get(swc_data_url, headers=swcCH_header).json()
 for playbilllist in swc_data['Nodes']['Items'][0]['Content']['Nodes']['Items']:
