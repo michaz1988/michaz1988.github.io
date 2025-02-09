@@ -151,7 +151,7 @@ Xship 2021.07.01
     </extension>
 </addon>
 
-<addon id="plugin.video.xstream" name="xStream" version="44.1.9" provider-name="xStream-Team">
+<addon id="plugin.video.xstream" name="xStream" version="44.2.0.2" provider-name="xStream-Team">
 	<requires>
 		<import addon="xbmc.python" version="3.0.0"/>
 		<import addon="script.module.requests"/>

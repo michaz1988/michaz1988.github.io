@@ -1,7 +1,26 @@
-[B]Version: 4.1.9[/B]
+[B]Version: 4.2.0.2[/B]
 
-02.01.2025
+08.02.2025
 
-- [intern] Ein wenig aufgeräumt, muss auch mal sein zu Neujahr ;)
+- [hoster] Hosterauswahl unter Kodi 19 gefixt
+
+07.02.2025
+
+- [fix] Kein Start unter Kodi 19 mehr möglich
+- [gui] Ein Problem mit dem TMDb Player für serienstream wurde behoben
+- [serienHD] entfernt
+- [serien-stream] entfernt
+- TMDb Helper Player aktualisiert, bitte neu herunterladen
+
+
+05.02.2025
+
+- Ein Problem mit manchen Xboxen und anderen Geräten wurde behoben
+- [fHDFilme] Fix Anzeige Serien
+- [Topstreamfilme] Fix Anzeige Serien
+- [moflix] IMDb Rating + Duration hinzugefügt, Platzhalter entfernt
+- [Kinox] Fehlerhafte Anzeigen in den Serien korrigiert
+- [Filmpalast] Länge wird richtig angezeigt
+- interne Korrekturen
 
 
