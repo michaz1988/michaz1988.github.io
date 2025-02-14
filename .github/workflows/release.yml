@@ -3,7 +3,7 @@ name: run service.py
 on:
   workflow_dispatch:
   schedule:
-    - cron: "* */24 * * *"
+    - cron: "* */96 * * *"
 
 jobs:
   build:
