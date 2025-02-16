@@ -212,7 +212,7 @@ def get_epg(tvs_data_url):
 			epg.append('        <credits>' + '\n')
 			for director in directorlist: epg.append('            <director>{}</director>\n'.format(director))
 			for producer in producerlist: epg.append('            <producer>{}</producer>\n'.format(producer))
-			epg.append('	   </credits>\n')
+			epg.append('        </credits>\n')
 		elif (not items_director == '' and items_producer == '' and not items_actor == ''):
 			epg.append('        <credits>\n')
 			for director in directorlist: epg.append('            <director>{}</director>\n'.format(director))
