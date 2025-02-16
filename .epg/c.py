@@ -175,17 +175,17 @@ def get_epg(tvs_data_url):
 		items_producer = ''
 		if (not item_starttime == '' and not item_endtime == ''):
 			#channel_id = channel_id.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
-			epg.append('	<programme start="{} +0000" stop="{} +0000" channel="{}">\n'.format(item_starttime, item_endtime, channel_id))
+			epg.append('    <programme start="{} +0000" stop="{} +0000" channel="{}">\n'.format(item_starttime, item_endtime, channel_id))
 		stars = ''
 		if not item_title == '':
 			item_title = item_title.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
-			epg.append('		<title lang="{}">{}</title>\n'.format(lang, item_title))
+			epg.append('        <title lang="{}">{}</title>\n'.format(lang, item_title))
 		if not item_subtitle == '':
 			item_subtitle = item_subtitle.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
-			epg.append('		<sub-title lang="{}">{}</sub-title>\n'.format(lang, item_subtitle))
+			epg.append('        <sub-title lang="{}">{}</sub-title>\n'.format(lang, item_subtitle))
 		if not item_description == '':
 			item_description = item_description.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('\n', '\n		')
-			if enable_rating_mapper == False: epg.append('		<desc lang="{}">{}</desc>\n'.format(lang, item_description))
+			if enable_rating_mapper == False: epg.append('        <desc lang="{}">{}</desc>\n'.format(lang, item_description))
 			elif enable_rating_mapper == True:
 				country = '' if item_country == '' else '({})'.format(item_country)
 				date = '' if item_date == '' else '{}'.format(item_date)
@@ -194,7 +194,7 @@ def get_epg(tvs_data_url):
 				fsk = '' if item_agerating == '' else '• FSK {}'.format(item_agerating)
 				imdbstars = '' if stars == '' else '{}'.format(stars)
 				desc = '<desc lang="{}">{} {} {} {} {} {}'.format(lang, country, date, season, episode, fsk, imdbstars)
-				epg.append('		{}\n		{}</desc>\n'.format(' '.join(desc.split()), item_description))
+				epg.append('        {}\n        {}</desc>\n'.format(' '.join(desc.split()), item_description))
 		if not items_producer == '': items_producer = items_producer.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 		producerlist = items_producer.split(',')
 		if not items_director == '': items_director = items_director.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
@@ -203,72 +203,72 @@ def get_epg(tvs_data_url):
 		actorlist = items_actor.split(',')
 		# Complete
 		if (not items_director == '' and not items_producer == '' and not items_actor == ''):
-			epg.append('		<credits>\n')
-			for director in directorlist: epg.append('			<director>{}</director>\n'.format(director))
-			for actor in actorlist: epg.append('			<actor>{}</actor>\n'.format(actor))
-			for producer in producerlist: epg.append('			<producer>{}</producer>\n'.format(producer))
-			epg.append('		</credits>\n')
+			epg.append('        <credits>\n')
+			for director in directorlist: epg.append('            <director>{}</director>\n'.format(director))
+			for actor in actorlist: epg.append('            <actor>{}</actor>\n'.format(actor))
+			for producer in producerlist: epg.append('            <producer>{}</producer>\n'.format(producer))
+			epg.append('        </credits>\n')
 		elif (not items_director == '' and not items_producer == '' and items_actor == ''):
-			epg.append('		<credits>' + '\n')
-			for director in directorlist: epg.append('			<director>{}</director>\n'.format(director))
-			for producer in producerlist: epg.append('			<producer>{}</producer>\n'.format(producer))
+			epg.append('        <credits>' + '\n')
+			for director in directorlist: epg.append('            <director>{}</director>\n'.format(director))
+			for producer in producerlist: epg.append('            <producer>{}</producer>\n'.format(producer))
 			epg.append('	   </credits>\n')
 		elif (not items_director == '' and items_producer == '' and not items_actor == ''):
-			epg.append('		<credits>\n')
-			for director in directorlist: epg.append('			<director>{}</director>\n'.format(director))
-			for actor in actorlist: epg.append('			<actor>{}</actor>\n'.format(actor))
-			epg.append('		</credits>\n')
+			epg.append('        <credits>\n')
+			for director in directorlist: epg.append('            <director>{}</director>\n'.format(director))
+			for actor in actorlist: epg.append('            <actor>{}</actor>\n'.format(actor))
+			epg.append('        </credits>\n')
 		elif (items_director == '' and not items_producer == '' and not items_actor == ''):
-			epg.append('		<credits>\n')
-			for actor in actorlist: epg.append('			<actor>{}</actor>\n'.format(actor))
-			for producer in producerlist: epg.append('			<producer>{}</producer>\n'.format(producer))
-			epg.append('		</credits>\n')
+			epg.append('        <credits>\n')
+			for actor in actorlist: epg.append('            <actor>{}</actor>\n'.format(actor))
+			for producer in producerlist: epg.append('            <producer>{}</producer>\n'.format(producer))
+			epg.append('        </credits>\n')
 		elif (not items_director == '' and items_producer == '' and items_actor == ''):
-			epg.append('		<credits>\n')
-			for director in directorlist: epg.append('			<director>{}</director>\n'.format(director))
-			epg.append('		</credits>\n')
+			epg.append('        <credits>\n')
+			for director in directorlist: epg.append('            <director>{}</director>\n'.format(director))
+			epg.append('        </credits>\n')
 		if (items_director == '' and not items_producer == '' and items_actor == ''):
-			epg.append('		<credits>\n')
-			for producer in producerlist: epg.append('			<producer>{}</producer>\n'.format(producer))
-			epg.append('		</credits>\n')
+			epg.append('        <credits>\n')
+			for producer in producerlist: epg.append('            <producer>{}</producer>\n'.format(producer))
+			epg.append('        </credits>\n')
 		if (items_director == '' and items_producer == '' and not items_actor == ''):
-			epg.append('		<credits>\n')
-			for actor in actorlist: epg.append('			<actor>{}</actor>\n'.format(actor))
-			epg.append('		</credits>\n')
-		if not item_date == '': epg.append('		<date>{}</date>\n'.format(item_date))
+			epg.append('        <credits>\n')
+			for actor in actorlist: epg.append('            <actor>{}</actor>\n'.format(actor))
+			epg.append('        </credits>\n')
+		if not item_date == '': epg.append('        <date>{}</date>\n'.format(item_date))
 		if not items_genre == '':
 			items_genre = items_genre.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 			genrelist = items_genre.split(',')
-			for genre in genrelist: epg.append('		<category lang="{}">{}</category>\n'.format(lang, genre))
-		if not item_picture == '': epg.append('		<icon src="{}"/>\n'.format(item_picture))
+			for genre in genrelist: epg.append('        <category lang="{}">{}</category>\n'.format(lang, genre))
+		if not item_picture == '': epg.append('        <icon src="{}"/>\n'.format(item_picture))
 		if not item_country == '':
 			item_country = item_country.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
-			epg.append('		<country>{}</country>\n'.format(item_country))
+			epg.append('        <country>{}</country>\n'.format(item_country))
 		if episode_format == 'xmltv_ns':
 			if (not item_season == '' and not item_episode == ''):
 				item_season_ns = int(item_season) - int(1)
 				item_episode_ns = int(item_episode) - int(1)
-				epg.append('		<episode-num system="xmltv_ns">{} . {} . </episode-num>\n'.format(str(item_season_ns),str(item_episode_ns)))
+				epg.append('        <episode-num system="xmltv_ns">{} . {} . </episode-num>\n'.format(str(item_season_ns),str(item_episode_ns)))
 			elif (not item_season == '' and item_episode == ''):
 				item_season_ns = int(item_season) - int(1)
-				epg.append('		<episode-num system="xmltv_ns">{} . 0 . </episode-num>\n'.format(str(item_season_ns)))
+				epg.append('        <episode-num system="xmltv_ns">{} . 0 . </episode-num>\n'.format(str(item_season_ns)))
 			elif (item_season == '' and not item_episode == ''):
 				item_episode_ns = int(item_episode) - int(1)
-				epg.append('		<episode-num system="xmltv_ns">0 . {} . </episode-num>\n'.format(str(item_episode_ns)))
+				epg.append('        <episode-num system="xmltv_ns">0 . {} . </episode-num>\n'.format(str(item_episode_ns)))
 		elif episode_format == 'onscreen':
-			if (not item_season == '' and not item_episode == ''): epg.append('		<episode-num system="onscreen">S{} E{}</episode-num>\n'.format(item_season, item_episode))
-			elif (not item_season == '' and item_episode == ''): epg.append('		<episode-num system="onscreen">S{}</episode-num>\n'.format(item_season))
-			elif (item_season == '' and not item_episode == ''): epg.append('		<episode-num system="onscreen">E{}</episode-num>\n'.format(item_episode))
+			if (not item_season == '' and not item_episode == ''): epg.append('        <episode-num system="onscreen">S{} E{}</episode-num>\n'.format(item_season, item_episode))
+			elif (not item_season == '' and item_episode == ''): epg.append('        <episode-num system="onscreen">S{}</episode-num>\n'.format(item_season))
+			elif (item_season == '' and not item_episode == ''): epg.append('        <episode-num system="onscreen">E{}</episode-num>\n'.format(item_episode))
 		if (not item_agerating == ''):
-			epg.append('		<rating>\n')
-			epg.append('			<value>{}</value>\n'.format(item_agerating))
-			epg.append('		</rating>\n')
+			epg.append('        <rating>\n')
+			epg.append('            <value>{}</value>\n'.format(item_agerating))
+			epg.append('        </rating>\n')
 		if (not item_starrating == ''):
 			item_starrating = int(item_starrating) / int(10)
-			epg.append('		<star-rating system="IMDb">\n')
-			epg.append('			<value>{}/10</value>\n'.format(item_starrating))
-			epg.append('		</star-rating>\n')
-		epg.append('	</programme>\n')
+			epg.append('        <star-rating system="IMDb">\n')
+			epg.append('            <value>{}/10</value>\n'.format(item_starrating))
+			epg.append('        </star-rating>\n')
+		epg.append('    </programme>\n')
 
 base_url = "https://live.tvspielfilm.de/api/cms/"
 tvsDE_channellist_url = base_url + "channels/list"
@@ -291,7 +291,7 @@ for channel in tvsDE_chlist_url:
 	channel_id = channel['channelId']
 	if channel_id not in contentIDs: continue
 	channel_icon = base_url+ channel["imageLarge"]
-	channel_name = channel['name']
+	channel_name = channel['name'].replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 	epg.append('    <channel id="{}">\n'.format(channel_id))
 	epg.append('        <display-name lang="{}">{}</display-name>\n'.format(lang, channel_name))
 	epg.append('        <icon src="{}" />\n'.format(channel_icon))
