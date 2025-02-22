@@ -1,8 +1,17 @@
-[B]Version: 4.2.0.2[/B]
+[B]Version: 4.2.0.3[/B]
+
+17.02.25
+
+- [moflix-stream] Workaround für fehlende erste Staffeln eingebaut
+- [Tools] Optimierungen im Caching
+- [Utils] Optimierungen
+- [fix] Ein Problem mit der Meldung "Probleme mit Internetverbindung" wurde behoben
+- [fix] Filme wurden urplötzlich im Hintergrund abgespielt
 
 08.02.2025
 
 - [hoster] Hosterauswahl unter Kodi 19 gefixt
+
 
 07.02.2025
 
@@ -11,16 +20,3 @@
 - [serienHD] entfernt
 - [serien-stream] entfernt
 - TMDb Helper Player aktualisiert, bitte neu herunterladen
-
-
-05.02.2025
-
-- Ein Problem mit manchen Xboxen und anderen Geräten wurde behoben
-- [fHDFilme] Fix Anzeige Serien
-- [Topstreamfilme] Fix Anzeige Serien
-- [moflix] IMDb Rating + Duration hinzugefügt, Platzhalter entfernt
-- [Kinox] Fehlerhafte Anzeigen in den Serien korrigiert
-- [Filmpalast] Länge wird richtig angezeigt
-- interne Korrekturen
-
-
