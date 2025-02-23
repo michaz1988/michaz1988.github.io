@@ -172,15 +172,15 @@ plugin://plugin.video.vavooto/?name=SPIEGEL+WISSEN
 #EXTINF:-1 tvg-id="SPORT" group-title="S1PLU" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1014.png",Sport 1
 plugin://plugin.video.joyn/?mode=play_video&video_id=sport1-de&stream_type=LIVE
 #EXTINF:-1 tvg-id="SPO-D" group-title="Sport" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1045.png",Sport digital
-plugin://plugin.video.dazn/?mode=play&title=SPORTDIGITAL+FUSSBALL&id=x8c9qhmvpi2d1hx8zcg9850bm&params=c3tbokwl3uci2u78hg866wl46&verify_age=False
+plugin://plugin.video.vavooto/?name=SPORT+DIGITAL
 #EXTINF:-1 tvg-id="SUPER" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/993.png",Super RTL
-plugin://plugin.video.vavooto/?name=SUPER RTL
+plugin://plugin.video.vavooto/?name=SUPER+RTL
 #EXTINF:-1 tvg-id="SWR" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1030.png",SWR
 plugin://plugin.video.vavooto/?name=SWR
 #EXTINF:-1 tvg-id="SCIFI" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/lightbg/100x100/537.png",Syfy
 plugin://plugin.video.vavooto/?name=SYFY
 #EXTINF:-1 tvg-id="TAG24" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1046.png",Tagesschau 24
-plugin://plugin.video.vavooto/?name=TAGESSCHAU 24
+plugin://plugin.video.vavooto/?name=TAGESSCHAU+24
 #EXTINF:-1 tvg-id="TELE5" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1018.png",Tele 5
 plugin://plugin.video.joyn/?mode=play_video&video_id=tele5-at&stream_type=LIVE
 #EXTINF:-1 tvg-id="TLC" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/944.png",TLC
@@ -211,7 +211,3 @@ plugin://plugin.video.vavooto/?name=ZDF
 plugin://plugin.video.vavooto/?name=ZDF+INFO
 #EXTINF:-1 tvg-id="2NEO" group-title="Standart" tvg-logo="http://epggw.a1.net/img/station/darkbg/100x100/1015.png",ZDF neo
 plugin://plugin.video.vavooto/?name=ZDF+NEO
-
-
-
-
