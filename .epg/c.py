@@ -553,13 +553,13 @@ for contentID in magentacontentIDs:
 		epg.append(xml_broadcast(episode_format, contentID, item_title, item_starttime, item_endtime, item_description, item_country, item_picture, item_subtitle, items_genre, item_date, item_season, item_episode, item_agerating, item_starrating, items_director, items_producer, items_actor, enable_rating_mapper, lang))
 
 epg.append('\n</tv>\n')
-
+epgstring = "".join(epg)
 
 datapath = os.path.abspath(os.path.dirname(__file__))
 #datapath = "/sdcard/"
 guide_dest = os.path.join(os.path.dirname(datapath), 'guide.xml')
 guidegz_dest = os.path.join(os.path.dirname(datapath), 'guide.xml.gz')
 with open(guide_dest, "w") as k:
-	k.write("".join(epg))
+	k.write(epgstring)
 with open(guide_dest, 'rb') as f_in, gzip.open(guidegz_dest, 'wb') as f_out:
 	f_out.writelines(f_in)
