@@ -457,7 +457,7 @@ for channels in magentaDE_channels["channellist"]:
 epg.append('\n<!--  {}  PROGRAMME LIST -->'.format('SIMPLI TV'))
 api_headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0', 'Content-type': 'application/json;charset=utf-8', 'X-Api-Date-Format': 'iso', 'X-Api-Camel-Case': 'true', 'referer': 'https://streaming.simplitv.at/'}
 time_start = str(now.strftime("%Y-%m-%dT%H:%M:00.000Z"))
-time_end = str((now + timedelta(days=2)).strftime("%Y-%m-%dT%H:%M:00.000Z"))
+time_end = str((now + timedelta(days=days_to_grab)).strftime("%Y-%m-%dT%H:%M:00.000Z"))
 epg_url = "https://api.app.simplitv.at/v1/EpgTile/FilterProgramTiles"
 epg_post = {"platformCodename": "www", "from": time_start, "to": time_end}
 epg_resp = requests.post(epg_url, timeout=5, headers=api_headers, json=epg_post, allow_redirects=False).json()["programs"]
