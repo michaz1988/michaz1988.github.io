@@ -80,7 +80,7 @@
     </extension>
 </addon>
 
-<addon id="plugin.video.vavooto" name="VAVOO.TO" version="7.0.1" provider-name="kasi,michaz">
+<addon id="plugin.video.vavooto" name="VAVOO.TO" version="7.0.2" provider-name="kasi,michaz">
 	<requires>
 		<import addon="script.module.requests"/>
 		<import addon="script.module.resolveurl"/>
