@@ -21,6 +21,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install boto3
           pip install bs4
+          pip install requests
       - name: execute py script # run service.py
         run: python -c "import os; os.chdir('.epg'); import c"     
       - name: commit files
