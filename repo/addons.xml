@@ -1,45 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addons>
-<addon id="plugin.video.xstream" name="xStream" version="44.2.0.3" provider-name="xStream-Team">
-	<requires>
-		<import addon="xbmc.python" version="3.0.0"/>
-		<import addon="script.module.requests"/>
-		<import addon="script.module.resolveurl" version="5.1.67"/>
-		<import addon="script.module.six" version="1.11.0"/>
-		<import addon="repository.xstream" version="1.2.4"/>
-		<import addon="repository.resolveurl" optional="true"/>
-		<import addon="script.module.inputstreamhelper" version="0.3.3" optional="true"/>
-		<import addon="script.module.pydevd" optional="true" />
-	</requires>
-	<extension point="xbmc.python.pluginsource" library="default.py">
-		<provides>video</provides>
-	</extension>
-    <extension point="xbmc.service" library="service.py" start="startup" />
-	<extension point="xbmc.addon.metadata">
-		<summary lang="de">xStream: Das Original</summary>
-		<summary lang="en_GB">xStream: The Original</summary>
-		<description lang="de">xStream ist ein Video-Addon für Kodi. xStream dient als Suchmaschine für Filme und Serien auf verschiedenen Webseiten.</description>
-		<description lang="en_GB">xStream is a video add-on for Kodi. xStream serves as a search engine for films and series on various websites.</description>
-		<disclaimer lang="de">Sie können dieses Video Addon gerne verwenden. Der bereitgestellte Inhalt der Webseiten steht in keinem Bezug zu xStream oder den Entwicklern! Weitere Informationen finden Sie in unserer Wiki und FaQ.</disclaimer>
-		<disclaimer lang="en_GB">You are welcome to use this video addon. The content provided on the websites has no connection to xStream or the developers! For more information, see our Wiki and FaQ.</disclaimer>
-		<language>de en</language>
-		<platform>all</platform>
-		<license>GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007</license>
-		<website>https://streamxstream.github.io/xStreamRepoWeb/</website>
-		<source>https://github.com/streamxstream</source>
-		<assets>
-			<icon>resources/icon.png</icon>
-			<fanart>resources/fanart.jpg</fanart>
-			<banner>resources/banner.png</banner>
-			<clearlogo>resources/clearlogo.png</clearlogo>
-			<screenshot>resources/screenshot-01.jpg</screenshot>
-			<screenshot>resources/screenshot-02.jpg</screenshot>
-			<screenshot>resources/screenshot-03.jpg</screenshot>
-			<screenshot>resources/screenshot-04.jpg</screenshot>
-		</assets>
-	</extension>
-</addon>
-
 <addon id="script.module.xstreamscraper" name="xStream Scraper" provider-name="michaz1988" version="2.7.0">
 	<requires>
 		<import addon="plugin.video.vavooto"/>
@@ -421,5 +381,30 @@
 			<screenshot></screenshot>
 		</assets>
 	</extension>
+</addon>
+
+<addon id="service.takealug.epg-grabber" name="Takealug EPG Grabber" version="1.1.8" provider-name="DeBaschdi">
+    <requires>
+        <import addon="xbmc.python" version="3.0.0"/>
+        <import addon="script.module.requests"/>
+    </requires>
+    <extension point="xbmc.service" library="service.py" start="startup" />
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <summary>EPG Grabber</summary>
+        <description lang="en">Grabbs EPG Data from Different IPTV Sources and generate an xmltv Guide</description>
+        <description lang="de">Grabbt EPG Daten von verschiedenen IPTV Quellen und erstellt eine guide.xml</description>
+        <source>https://github.com/DeBaschdi/repo/tree/master/service.takealug.epg-grabber/</source>
+        <forum>https://www.kodinerds.net/index.php/Thread/64901-RELEASE-Takealug-EPG-Grabber/</forum>
+        <assets>
+            <icon>icon.png</icon>
+            <fanart>fanart.jpg</fanart>
+            <screenshot>fanart.jpg</screenshot>
+            <screenshot>screenshot3.png</screenshot>
+            <screenshot>screenshot1.png</screenshot>
+            <screenshot>screenshot2.png</screenshot>
+        </assets>
+        <news lang="en">1.1.7+ Fix Magenta Login</news>
+    </extension>
 </addon>
 </addons>
