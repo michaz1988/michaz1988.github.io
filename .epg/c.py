@@ -4748,6 +4748,7 @@ csv_content = gzip_file.read().decode("utf-8").splitlines()
 for a in csv_content:
 	if "," in a:
 		url, mac = a.split(",")
+		url = url.replace("/c/", "/c")
 		if url not in alllist: alllist[url] = []
 		if mac not in alllist[url]:
 			alllist[url].append(mac)
