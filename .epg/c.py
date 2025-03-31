@@ -4753,8 +4753,9 @@ for a in csv_content:
 		if mac not in alllist[url]:
 			alllist[url].append(mac)
 			
+sorted_dict = dict(sorted(sorted(alllist.items()), key=lambda item: len(item[1]), reverse=True))
 with open(maclist, "w") as k:
-	json.dump(alllist, k, indent=4)
+	json.dump(sorted_dict, k, indent=4)
 
 addon_name = "Takealug EPG Grabber"
 addon_version = "1.1.7"
