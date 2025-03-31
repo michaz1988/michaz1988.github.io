@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addons>
+<addon id="plugin.video.vavooto" name="VAVOO.TO" version="7.1" provider-name="kasi,michaz">
+	<requires>
+		<import addon="script.module.requests"/>
+		<import addon="script.module.resolveurl"/>
+		<import addon="inputstream.ffmpegdirect" optional="true" />
+		<import addon="script.module.futures" optional="true" />
+		<import addon="script.module.infotagger" optional="true" />
+		<!-- only for debug -->
+		<import addon="script.module.pydevd" optional="true"/>
+	</requires>
+	<extension point="xbmc.python.pluginsource" library="main.py">
+		<provides>video</provides>
+	</extension>
+	<extension point="xbmc.python.module" library="resources" />
+	<extension point="xbmc.addon.metadata">
+		<assets>
+			<icon>icon.png</icon>
+		</assets>
+	</extension>
+</addon>
+
 <addon id="script.module.xstreamscraper" name="xStream Scraper" provider-name="michaz1988" version="2.7.0">
 	<requires>
 		<import addon="plugin.video.vavooto"/>
@@ -38,27 +59,6 @@
             <icon>icon.png</icon>
         </assets>
     </extension>
-</addon>
-
-<addon id="plugin.video.vavooto" name="VAVOO.TO" version="7.0.3.2" provider-name="kasi,michaz">
-	<requires>
-		<import addon="script.module.requests"/>
-		<import addon="script.module.resolveurl"/>
-		<import addon="inputstream.ffmpegdirect" optional="true" />
-		<import addon="script.module.futures" optional="true" />
-		<import addon="script.module.infotagger" optional="true" />
-		<!-- only for debug -->
-		<import addon="script.module.pydevd" optional="true"/>
-	</requires>
-	<extension point="xbmc.python.pluginsource" library="main.py">
-		<provides>video</provides>
-	</extension>
-	<extension point="xbmc.python.module" library="resources" />
-	<extension point="xbmc.addon.metadata">
-		<assets>
-			<icon>icon.png</icon>
-		</assets>
-	</extension>
 </addon>
 
 <addon id="repository.castagnait" name="CastagnaIT Repository" version="2.0.1" provider-name="castagnait">
