@@ -504,8 +504,11 @@ for contentID in magentacontentIDs:
 		except (KeyError, IndexError): items_director = ''
 		try: items_producer = playbilllist['cast']['producer']
 		except (KeyError, IndexError): items_producer = ''
-		try: actor  = [i["castName"] for i in playbilllist['casts'] if playbilllist.get('casts')]
-		except (): actor = []
+		actor = []
+		try: 
+			casts =  playbilllist.get('casts')
+			if casts: actor  = [i["castName"] for i in casts]
+		except: actor = []
 		items_actor = ", ".join(actor)
 		item_starrating = ''
 		if item_date:
