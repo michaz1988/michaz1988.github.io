@@ -105,7 +105,7 @@ magentaDE_header = {'Host': 'api.prod.sngtv.magentatv.de',
 					'Connection': 'keep-alive',
 					'Upgrade-Insecure-Requests': '1'}
 
-def magentaDE_session():
+def magentaSession():
 	x = 0
 	while x < 120:
 		session = requests.Session()
