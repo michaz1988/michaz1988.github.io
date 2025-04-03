@@ -459,7 +459,8 @@ for program in epg_data:
 	item_episode = program.get("episodeNumber", "")
 	item_subtitle = program.get("subTitle", "")
 	item_date = program.get("date", "")
-	item_agerating, item_starrating, items_director, items_producer = "", "", "", ""
+	item_agerating = program.get("ageRating", "")
+	item_starrating = ""
 	actor, director, producer, desc = [], [], [], []
 	if len(program.get("people", [])) > 0:
 		c = {}
