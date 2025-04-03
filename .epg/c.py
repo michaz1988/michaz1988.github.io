@@ -39,6 +39,7 @@ soup = BeautifulSoup(page, 'html.parser')
 for tag in soup.find_all('table'):
 	u, p, m, e = tag.find_all("th")
 	url, port, mac, expire = u.text.strip(), p.text.strip(), m.text.strip(), e.text.strip()
+	url = url.replace("/c/", "/c")
 	if 'unlimited' in expire:
 		if url not in alllist: alllist[url] = []
 		if mac not in alllist[url]:
