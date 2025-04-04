@@ -38,7 +38,7 @@ page = requests.get("https://ikracccam.blogspot.com/p/stalker-iptv-ikra_2.html")
 soup = BeautifulSoup(page, 'html.parser')
 for tag in soup.find_all('table'):
 	u, p, m, e = tag.find_all("th")
-	url, port, mac, expire = u.text.strip().rstrip("/").replace(":80/c", "/c"), p.text.strip(), m.text.strip(), e.text.strip()
+	url, port, mac, expire = u.text.strip().rstrip("/"), p.text.strip(), m.text.strip(), e.text.strip()
 	if 'unlimited' in expire:
 		if url not in alllist: alllist[url] = []
 		if mac not in alllist[url]:
@@ -58,7 +58,7 @@ csv_content = gzip_file.read().decode("utf-8").splitlines()
 for a in csv_content:
 	if "," in a:
 		url, mac = a.split(",")
-		url = url.strip().rstrip("/").replace(":80/c", "/c")
+		url = url.strip().rstrip("/")
 		if url not in alllist: alllist[url] = []
 		if mac not in alllist[url]:
 			alllist[url].append(mac)
