@@ -61,6 +61,31 @@
     </extension>
 </addon>
 
+<addon id="service.takealug.epg-grabber" name="Takealug EPG Grabber" version="1.2" provider-name="DeBaschdi">
+    <requires>
+        <import addon="xbmc.python" version="3.0.0"/>
+        <import addon="script.module.requests"/>
+    </requires>
+    <extension point="xbmc.service" library="service.py" start="startup" />
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <summary>EPG Grabber</summary>
+        <description lang="en">Grabbs EPG Data from Different IPTV Sources and generate an xmltv Guide</description>
+        <description lang="de">Grabbt EPG Daten von verschiedenen IPTV Quellen und erstellt eine guide.xml</description>
+        <source>https://github.com/DeBaschdi/repo/tree/master/service.takealug.epg-grabber/</source>
+        <forum>https://www.kodinerds.net/index.php/Thread/64901-RELEASE-Takealug-EPG-Grabber/</forum>
+        <assets>
+            <icon>icon.png</icon>
+            <fanart>fanart.jpg</fanart>
+            <screenshot>fanart.jpg</screenshot>
+            <screenshot>screenshot3.png</screenshot>
+            <screenshot>screenshot1.png</screenshot>
+            <screenshot>screenshot2.png</screenshot>
+        </assets>
+        <news lang="en">1.2+ New Providers</news>
+    </extension>
+</addon>
+
 <addon id="repository.castagnait" name="CastagnaIT Repository" version="2.0.1" provider-name="castagnait">
 	<extension point="xbmc.addon.repository" name="CastagnaIT Repository">
 		<dir minversion="19.0.0">
@@ -381,30 +406,5 @@
 			<screenshot></screenshot>
 		</assets>
 	</extension>
-</addon>
-
-<addon id="service.takealug.epg-grabber" name="Takealug EPG Grabber" version="1.1.8" provider-name="DeBaschdi">
-    <requires>
-        <import addon="xbmc.python" version="3.0.0"/>
-        <import addon="script.module.requests"/>
-    </requires>
-    <extension point="xbmc.service" library="service.py" start="startup" />
-    <extension point="xbmc.addon.metadata">
-        <platform>all</platform>
-        <summary>EPG Grabber</summary>
-        <description lang="en">Grabbs EPG Data from Different IPTV Sources and generate an xmltv Guide</description>
-        <description lang="de">Grabbt EPG Daten von verschiedenen IPTV Quellen und erstellt eine guide.xml</description>
-        <source>https://github.com/DeBaschdi/repo/tree/master/service.takealug.epg-grabber/</source>
-        <forum>https://www.kodinerds.net/index.php/Thread/64901-RELEASE-Takealug-EPG-Grabber/</forum>
-        <assets>
-            <icon>icon.png</icon>
-            <fanart>fanart.jpg</fanart>
-            <screenshot>fanart.jpg</screenshot>
-            <screenshot>screenshot3.png</screenshot>
-            <screenshot>screenshot1.png</screenshot>
-            <screenshot>screenshot2.png</screenshot>
-        </assets>
-        <news lang="en">1.1.7+ Fix Magenta Login</news>
-    </extension>
 </addon>
 </addons>
