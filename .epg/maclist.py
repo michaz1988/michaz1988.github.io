@@ -1,4 +1,4 @@
-alllist = {"http://focus.viptveu.com:8080/portal.php": [
+alllist = {"http://focus.viptveu.com:8080/c": [
 	"00:1A:79:08:43:9B",
 	"A0:BB:3E:B5:FA:09",
 	"00:2A:01:92:0A:F5",
