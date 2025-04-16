@@ -1,5 +1,5 @@
 {
-    "http://focus.viptveu.com:8080/portal.php": [
+    "http://focus.viptveu.com:8080/c": [
         "00:1A:79:08:43:9B",
         "A0:BB:3E:B5:FA:09",
         "00:2A:01:92:0A:F5",
@@ -4701,7 +4701,7 @@
         "00:1A:79:AB:CD:5F",
         "00:2A:01:93:55:9C"
     ],
-    "http://22297-hot.cloud-ott.me/portal.php": [
+    "http://22297-hot.cloud-ott.me/c": [
         "00:1A:79:66:B1:D0",
         "00:1A:79:2D:63:E4",
         "00:1A:79:8C:0E:5D",
@@ -4947,7 +4947,7 @@
         "00:1A:79:07:80:9A",
         "00:1A:79:4D:47:4C"
     ],
-    "http://168.119.44.162:2080/stalker_portal/portal.php": [
+    "http://168.119.44.162:2080/stalker_portal/c": [
         "00:1A:79:00:0B:9B",
         "00:1A:79:00:08:DD",
         "00:1A:79:00:09:58",
@@ -5142,7 +5142,7 @@
         "00:1A:79:07:C4:F2",
         "00:1A:79:02:82:28"
     ],
-    "http://tv.premiumplus.tv/portal.php": [
+    "http://tv.premiumplus.tv/c": [
         "00:1A:79:EE:CB:F1",
         "00:1A:79:95:8F:6C",
         "00:1A:79:96:68:33",
@@ -5260,7 +5260,7 @@
         "00:1A:79:0D:A1:E4",
         "00:1A:79:BC:4F:63"
     ],
-    "http://trxx.in/portal.php": [
+    "http://trxx.in/c": [
         "00:1A:79:38:E0:85",
         "00:1A:79:55:2E:77",
         "00:1A:79:57:DF:54",
@@ -5363,7 +5363,7 @@
         "00:1A:79:bf:d9:08",
         "00:1A:79:ad:26:df"
     ],
-    "http://iptvworld.ml:2095/portal.php": [
+    "http://iptvworld.ml:2095/c": [
         "00:1A:79:50:4A:D0",
         "00:1A:79:5E:F6:14",
         "00:1A:79:BE:71:CB",
@@ -5463,7 +5463,7 @@
         "00:1A:79:BC:7A:C2",
         "00:1A:79:D9:C8:6A"
     ],
-    "http://palavip.org/portal.php": [
+    "http://palavip.org/c": [
         "00:1A:79:08:4C:54",
         "00:1A:79:C6:A2:99",
         "00:1A:79:BF:FD:62",
@@ -5563,7 +5563,7 @@
         "00:1A:79:Be:60:66",
         "00:1A:79:cf:eC:5e"
     ],
-    "http://supkartt.xyz/portal.php": [
+    "http://supkartt.xyz/c": [
         "00:1A:79:E6:80:B5",
         "00:1A:79:0D:40:E8",
         "00:1A:79:B7:73:26",
@@ -5653,7 +5653,7 @@
         "00:1A:79:B1:05:D4",
         "00:1A:79:3D:13:D5"
     ],
-    "http://new.dittotv.co/stalker_portal/portal.php": [
+    "http://new.dittotv.co/stalker_portal/c": [
         "00:1A:79:C2:CC:DC",
         "00:1A:79:02:58:D5",
         "00:1A:79:29:2C:FF",
@@ -5739,7 +5739,7 @@
         "00:1A:79:F0:5E:C8",
         "00:1A:79:EB:D6:06"
     ],
-    "http://6d.tanres.us/portal.php": [
+    "http://6d.tanres.us/c": [
         "00:1A:79:58:BE:65",
         "00:1A:79:53:B8:69",
         "00:1A:79:5E:2B:66",
@@ -5823,14 +5823,13 @@
         "00:1A:79:BF:7D:E4",
         "00:1A:79:48:06:49"
     ],
-    "http://drk.yasar.tv/portal.php": [
+    "http://drk.yasar.tv/c": [
         "00:1A:79:BE:96:29",
         "00:1A:79:57:59:9A",
         "00:1A:79:50:DF:F8",
         "00:1A:79:BF:E6:F2",
         "00:1A:79:4A:20:95",
         "00:1A:79:F5:11:5A",
-        "00:1A:79:74:FC:93",
         "00:1A:79:D6:09:CF",
         "00:1A:79:F8:1F:AB",
         "00:1A:79:19:42:0A",
@@ -5901,7 +5900,7 @@
         "00:1A:79:46:F2:04",
         "00:1A:79:91:7A:5A"
     ],
-    "http://proxy.plus55.xyz/portal.php": [
+    "http://proxy.plus55.xyz/c": [
         "00:1A:79:91:D3:75",
         "00:1A:79:62:40:34",
         "00:1A:79:74:A4:5D",
@@ -5972,7 +5971,7 @@
         "00:1A:79:51:B7:7F",
         "00:1A:79:E9:1F:94"
     ],
-    "http://mag.4k365.xyz/portal.php": [
+    "http://mag.4k365.xyz/c": [
         "00:1A:79:36:03:42",
         "00:1A:79:00:11:DA",
         "00:1A:79:8E:86:37",
@@ -6041,7 +6040,7 @@
         "00:1A:79:C7:E2:CC",
         "00:1A:79:BF:E8:AD"
     ],
-    "http://line.greatstar.me/portal.php": [
+    "http://line.greatstar.me/c": [
         "00:1A:79:7A:7C:BB",
         "00:1A:79:33:4E:55",
         "00:1A:79:A2:FD:0E",
@@ -6106,7 +6105,7 @@
         "00:1A:79:6B:33:1A",
         "00:1A:79:5A:51:E2"
     ],
-    "http://mutant.arrox.top/portal.php": [
+    "http://mutant.arrox.top/c": [
         "00:1A:79:B5:1E:78",
         "00:1A:79:3B:07:47",
         "00:1A:79:F5:29:4D",
@@ -6169,7 +6168,7 @@
         "00:1A:79:32:4F:DE",
         "00:1A:79:10:E0:64"
     ],
-    "http://1.germany4k.xyz/portal.php": [
+    "http://1.germany4k.xyz/c": [
         "00:1A:79:14:C0:6D",
         "00:1A:79:43:62:17",
         "00:1A:79:D7:9B:41",
@@ -6231,7 +6230,7 @@
         "00:1A:79:E1:71:E6",
         "00:1A:79:BE:5C:90"
     ],
-    "http://ip.sltv.be:8080/portal.php": [
+    "http://ip.sltv.be:8080/c": [
         "00:1A:79:02:11:0C",
         "00:1A:79:5D:FD:44",
         "00:1A:79:28:ef:e7",
@@ -6290,7 +6289,7 @@
         "00:1A:79:B0:9D:04",
         "00:1A:79:4A:48:D6"
     ],
-    "http://download.best-ott.me/portal.php": [
+    "http://download.best-ott.me/c": [
         "00:1A:79:31:1B:E8",
         "00:1A:79:3A:C0:25",
         "00:1A:79:4B:52:59",
@@ -6347,7 +6346,7 @@
         "00:1A:79:61:32:66",
         "00:1A:79:B3:28:68"
     ],
-    "http://wtc05.mi20.cc/stalker_portal/portal.php": [
+    "http://wtc05.mi20.cc/stalker_portal/c": [
         "00:1A:79:6F:C7:D0",
         "00:1A:79:6E:8C:02",
         "00:1A:79:6F:28:F5",
@@ -6404,7 +6403,7 @@
         "00:1A:79:74:71:63",
         "00:1A:79:F1:E4:47"
     ],
-    "http://live.titan4k.cc/stalker_portal/portal.php": [
+    "http://live.titan4k.cc/stalker_portal/c": [
         "00:1A:79:C2:99:65",
         "00:1A:79:1C:05:BF",
         "00:1A:79:C2:80:84",
@@ -6459,7 +6458,7 @@
         "00:1A:79:CD:CD:04",
         "00:1A:79:C6:C6:CE"
     ],
-    "http://107.189.14.168:8080/portal.php": [
+    "http://107.189.14.168:8080/c": [
         "00:1A:79:B3:40:DF",
         "00:1A:79:60:BF:0C",
         "00:1A:79:D5:82:2F",
@@ -6513,7 +6512,7 @@
         "00:1A:79:A1:88:DB",
         "00:1A:79:57:40:F3"
     ],
-    "http://violetta.cfd:8080/portal.php": [
+    "http://violetta.cfd:8080/c": [
         "00:1A:79:B3:75:3D",
         "00:1A:79:BB:E2:BA",
         "00:1A:79:30:64:63",
@@ -6567,7 +6566,7 @@
         "00:1A:79:03:76:E6",
         "00:1A:79:65:91:D9"
     ],
-    "http://line.myox.me/portal.php": [
+    "http://line.myox.me/c": [
         "00:1A:79:8c:08:24",
         "00:1A:79:74:44:43",
         "00:1A:79:70:25:87",
@@ -6617,7 +6616,7 @@
         "00:1A:79:42:59:12",
         "00:1A:79:10:02:71"
     ],
-    "http://194.76.0.140/portal.php": [
+    "http://194.76.0.140/c": [
         "00:1A:79:59:DF:AC",
         "00:1A:79:47:34:06",
         "00:1A:79:36:4D:E3",
@@ -6664,7 +6663,7 @@
         "00:1A:79:CC:BF:0D",
         "00:1A:79:D6:9F:8F"
     ],
-    "http://apksmart.dino.ws/portal.php": [
+    "http://apksmart.dino.ws/c": [
         "00:1A:79:00:09:D4",
         "00:1A:79:00:0C:07",
         "00:1A:79:3E:9F:5F",
@@ -6711,7 +6710,7 @@
         "00:1A:79:66:66:55",
         "00:1A:79:CD:92:2E"
     ],
-    "http://app.mm88.com.bd/stalker_portal/portal.php": [
+    "http://app.mm88.com.bd/stalker_portal/c": [
         "00:1A:79:7A:D6:54",
         "00:1A:79:5D:C6:76",
         "00:1A:79:7E:12:B8",
@@ -6755,7 +6754,7 @@
         "00:1A:79:7C:02:82",
         "00:1A:79:F3:8C:AB"
     ],
-    "http://d.tvdark.eu/portal.php": [
+    "http://d.tvdark.eu/c": [
         "00:1A:79:6F:2F:65",
         "00:1A:79:3F:E2:FD",
         "00:1A:79:0B:B6:16",
@@ -6797,7 +6796,7 @@
         "00:1A:79:6E:50:3E",
         "00:1A:79:07:c2:8d"
     ],
-    "http://testdi.proxytx.cloud/portal.php": [
+    "http://testdi.proxytx.cloud/c": [
         "00:1A:79:64:A2:7F",
         "00:1A:79:C2:BA:70",
         "00:1A:79:CC:0D:BB",
@@ -6837,7 +6836,7 @@
         "00:1A:79:A1:BB:AC",
         "00:1A:79:79:81:12"
     ],
-    "http://restream.cdn-4k.cloud/portal.php": [
+    "http://restream.cdn-4k.cloud/c": [
         "00:1A:79:59:CD:68",
         "00:1A:79:4D:BD:D4",
         "00:1A:79:4D:92:23",
@@ -6876,7 +6875,7 @@
         "00:1A:79:a5:24:39",
         "00:1A:79:B6:25:FC"
     ],
-    "http://145.239.253.183/stalker_portal/portal.php": [
+    "http://145.239.253.183/stalker_portal/c": [
         "00:1A:79:72:AE:0F",
         "00:1A:79:3F:2F:9E",
         "00:1A:79:7C:08:0D",
@@ -6914,7 +6913,7 @@
         "00:1A:79:57:A2:45",
         "00:1A:79:39:3E:E8"
     ],
-    "http://tv.tvdark.eu/portal.php": [
+    "http://tv.tvdark.eu/c": [
         "00:1A:79:AE:B4:46",
         "00:1A:79:08:33:5A",
         "00:1A:79:18:76:CD",
@@ -6951,7 +6950,7 @@
         "00:1A:79:51:5F:38",
         "00:1A:79:A0:DF:72"
     ],
-    "http://new.dittotvv.cc/stalker_portal/portal.php": [
+    "http://new.dittotvv.cc/stalker_portal/c": [
         "00:1A:79:03:BF:D9",
         "00:1A:79:A3:62:AD",
         "00:1A:79:62:79:36",
@@ -6987,7 +6986,7 @@
         "00:1A:79:B9:59:2C",
         "00:1A:79:98:A4:1D"
     ],
-    "http://95.214.232.47/portal.php": [
+    "http://95.214.232.47/c": [
         "00:1A:79:36:FE:5A",
         "00:1A:79:5E:CE:F2",
         "00:1A:79:b9:bb:bb",
@@ -7020,7 +7019,7 @@
         "00:1A:79:BC:D9:C8",
         "00:1A:79:A5:B8:0C"
     ],
-    "http://hottest.vip/portal.php": [
+    "http://hottest.vip/c": [
         "00:1A:79:D9:CC:C1",
         "00:1A:79:19:57:7D",
         "00:1A:79:CC:92:E5",
@@ -7053,7 +7052,7 @@
         "00:1A:79:11:FB:B6",
         "00:1A:79:17:C0:5E"
     ],
-    "http://vofive.info:88/stalker_portal/portal.php": [
+    "http://vofive.info:88/stalker_portal/c": [
         "00:1A:79:38:65:35",
         "00:1A:79:B6:1A:59",
         "00:1A:79:D5:8D:55",
@@ -7085,7 +7084,7 @@
         "00:1A:79:52:AA:8D",
         "00:1A:79:B4:F5:71"
     ],
-    "http://www.login.a1days.com/portal.php": [
+    "http://www.login.a1days.com/c": [
         "00:1A:79:4F:25:19",
         "00:1A:79:00:8A:5D",
         "00:1A:79:01:64:A1",
@@ -7117,7 +7116,7 @@
         "00:1A:79:01:6B:2D",
         "00:1A:79:03:10:63"
     ],
-    "http://1.iptv22.is/portal.php": [
+    "http://1.iptv22.is/c": [
         "00:1A:79:B4:02:A6",
         "00:1A:79:D0:76:53",
         "00:1A:79:C5:27:41",
@@ -7148,7 +7147,7 @@
         "00:1A:79:CF:7F:91",
         "00:1A:79:AD:23:D4"
     ],
-    "http://neroiptv.xyz:8080/portal.php": [
+    "http://neroiptv.xyz:8080/c": [
         "00:1A:79:AA:25:B6",
         "00:1A:79:B3:D4:6E",
         "00:1A:79:95:54:9C",
@@ -7179,7 +7178,7 @@
         "00:1A:79:B5:AB:B9",
         "00:1A:79:A4:7D:EE"
     ],
-    "http://tr.redatvgold.com/portal.php": [
+    "http://tr.redatvgold.com/c": [
         "00:1A:79:A9:1E:86",
         "00:1A:79:B6:29:CC",
         "00:1A:79:B2:89:CF",
@@ -7210,7 +7209,7 @@
         "00:1A:79:6F:8D:31",
         "00:1A:79:17:1B:86"
     ],
-    "http://58315-mobile.oot-mx.me/portal.php": [
+    "http://58315-mobile.oot-mx.me/c": [
         "00:1A:79:44:16:32",
         "00:1A:79:95:DD:8E",
         "00:1A:79:AC:8A:A5",
@@ -7240,7 +7239,7 @@
         "00:1A:79:3A:25:63",
         "00:1A:79:2E:06:D4"
     ],
-    "http://drk.yasarpro.com/portal.php": [
+    "http://drk.yasarpro.com/c": [
         "00:1A:79:19:49:42",
         "00:1A:79:00:00:00",
         "00:1A:79:EE:C9:92",
@@ -7270,7 +7269,7 @@
         "00:1A:79:A6:7F:86",
         "00:1A:79:6F:4F:41"
     ],
-    "http://extremaiptv.com:8080/portal.php": [
+    "http://extremaiptv.com:8080/c": [
         "00:1A:79:A6:D5:9D",
         "00:1A:79:A3:11:B5",
         "00:1A:79:B0:D1:29",
@@ -7300,7 +7299,7 @@
         "00:1A:79:BD:29:9F",
         "00:1A:79:b5:58:22"
     ],
-    "http://ainfo.icu/portal.php": [
+    "http://ainfo.icu/c": [
         "00:1A:79:BF:F0:B6",
         "00:1A:79:C2:9F:A2",
         "00:1A:79:74:98:95",
@@ -7329,7 +7328,7 @@
         "00:1A:79:CD:49:45",
         "00:1A:79:E5:FC:47"
     ],
-    "http://skunkytv.live/portal.php": [
+    "http://skunkytv.live/c": [
         "00:1A:79:B6:2A:57",
         "00:1A:79:24:1B:B6",
         "00:1A:79:80:91:69",
@@ -7358,7 +7357,7 @@
         "00:1A:79:c0:03:7e",
         "00:1A:79:00:18:12"
     ],
-    "http://tkosportz.live:25461/portal.php": [
+    "http://tkosportz.live:25461/c": [
         "00:1A:79:E6:51:97",
         "00:1A:79:E5:89:04",
         "00:1A:79:2D:6A:7A",
@@ -7387,7 +7386,7 @@
         "00:1A:79:E7:59:CB",
         "00:1A:79:E6:D7:CD"
     ],
-    "http://hdtvs.pro:8080/portal.php": [
+    "http://hdtvs.pro:8080/c": [
         "00:1A:79:31:75:44",
         "00:1A:79:00:05:46",
         "00:1A:79:75:2F:EB",
@@ -7415,7 +7414,7 @@
         "00:1A:79:44:9A:63",
         "00:1A:79:67:83:01"
     ],
-    "http://sonymax.org:8080/portal.php": [
+    "http://sonymax.org:8080/c": [
         "00:1A:79:D1:72:13",
         "00:1A:79:A9:CE:B5",
         "00:1A:79:CB:16:11",
@@ -7443,7 +7442,7 @@
         "00:1A:79:B2:70:6F",
         "00:1A:79:5E:7D:C1"
     ],
-    "http://iptv.magikserv.com/portal.php": [
+    "http://iptv.magikserv.com/c": [
         "00:1A:79:98:9F:19",
         "00:1A:79:6B:5F:1D",
         "00:1A:79:A3:8D:D2",
@@ -7470,7 +7469,7 @@
         "00:1A:79:B5:B4:F6",
         "00:1A:79:A3:8A:14"
     ],
-    "http://gold.cdn-4k.cloud/portal.php": [
+    "http://gold.cdn-4k.cloud/c": [
         "00:1A:79:D1:55:50",
         "00:1A:79:4D:E4:67",
         "00:1A:79:D0:E4:4B",
@@ -7496,7 +7495,7 @@
         "00:1A:79:7D:E0:A6",
         "00:1A:79:B5:B2:98"
     ],
-    "http://portal2.iptv-mag.com/portal.php": [
+    "http://portal2.iptv-mag.com/c": [
         "00:1A:79:20:3B:A0",
         "00:1A:79:57:96:B1",
         "00:1A:79:4D:8F:3B",
@@ -7522,7 +7521,7 @@
         "00:1A:79:7D:07:B4",
         "00:1A:79:56:58:40"
     ],
-    "http://adenmedia.net/portal.php": [
+    "http://adenmedia.net/c": [
         "00:1A:79:BC:4F:63",
         "00:1A:79:B6:42:06",
         "00:1A:79:43:4D:D9",
@@ -7547,7 +7546,7 @@
         "00:1A:79:56:Bf:6D",
         "00:1A:79:74:E8:DD"
     ],
-    "http://mag.powerdino.com/portal.php": [
+    "http://mag.powerdino.com/c": [
         "00:1A:79:38:21:a5",
         "00:1A:79:dc:7c:8d",
         "00:1A:79:6b:d6:c3",
@@ -7572,7 +7571,7 @@
         "00:1A:79:78:76:f0",
         "00:1A:79:22:55:de"
     ],
-    "http://mag.premiumplus.tv/portal.php": [
+    "http://mag.premiumplus.tv/c": [
         "00:1A:79:1B:0F:A3",
         "00:1A:79:C3:D5:60",
         "00:1A:79:8C:08:9C",
@@ -7597,7 +7596,7 @@
         "00:1A:79:8E:98:AD",
         "00:1A:79:Be:60:66"
     ],
-    "http://45.139.122.199:8080/portal.php": [
+    "http://45.139.122.199:8080/c": [
         "00:1A:79:A8:C2:52",
         "00:1A:79:B6:45:9B",
         "00:1A:79:40:48:56",
@@ -7621,7 +7620,7 @@
         "00:1A:79:85:42:46",
         "00:1A:79:F3:3D:19"
     ],
-    "http://androstv.xyz:8080/portal.php": [
+    "http://androstv.xyz:8080/c": [
         "00:1A:79:15:68:79",
         "00:1A:79:42:88:68",
         "00:1A:79:6E:B6:96",
@@ -7645,7 +7644,7 @@
         "00:1A:79:69:6E:6E",
         "00:1A:79:70:C1:B4"
     ],
-    "http://rufus.zone/stalker_portal/portal.php": [
+    "http://rufus.zone/stalker_portal/c": [
         "00:1A:79:9D:29:97",
         "00:1A:79:C5:0D:BB",
         "00:1A:79:88:13:AB",
@@ -7669,7 +7668,7 @@
         "00:1A:79:44:E6:4A",
         "00:1A:79:E5:16:47"
     ],
-    "http://53256-brand.ott-tx.com/portal.php": [
+    "http://53256-brand.ott-tx.com/c": [
         "00:1A:79:4e:c1:b5",
         "00:1A:79:a5:51:7b",
         "00:1A:79:FB:6C:A1",
@@ -7692,7 +7691,7 @@
         "00:1A:79:AC:F4:DB",
         "00:1A:79:6c:25:2b"
     ],
-    "http://ix.kingtv.pw/portal.php": [
+    "http://ix.kingtv.pw/c": [
         "00:1A:79:0F:45:62",
         "00:1A:79:9F:3C:57",
         "00:1A:79:14:E4:A9",
@@ -7715,7 +7714,7 @@
         "00:1A:79:14:E7:C2",
         "00:1A:79:07:C9:8A"
     ],
-    "http://tv.greatstar.me/portal.php": [
+    "http://tv.greatstar.me/c": [
         "00:1A:79:82:15:68",
         "00:1A:79:AF:12:77",
         "00:1A:79:EF:5A:64",
@@ -7738,7 +7737,7 @@
         "00:1A:79:30:35:7E",
         "00:1A:79:74:E4:8A"
     ],
-    "http://line.iptvwings.com/portal.php": [
+    "http://line.iptvwings.com/c": [
         "00:1A:79:BC:4F:63",
         "00:1A:79:A4:03:34",
         "00:1A:79:F3:E8:6F",
@@ -7760,7 +7759,7 @@
         "00:1A:79:E3:95:83",
         "00:1A:79:A9:E6:3C"
     ],
-    "http://m.devtv.biz/portal.php": [
+    "http://m.devtv.biz/c": [
         "00:1A:79:32:a6:ee",
         "00:1A:79:bc:88:66",
         "00:1A:79:f6:6f:cc",
@@ -7782,7 +7781,7 @@
         "00:1A:79:BB:EE:C9",
         "00:1A:79:D8:9F:C5"
     ],
-    "http://lookontv.net:2095/portal.php": [
+    "http://lookontv.net:2095/c": [
         "00:1A:79:3F:9A:31",
         "00:1A:79:76:0D:42",
         "00:1A:79:57:CE:49",
@@ -7803,7 +7802,7 @@
         "00:1A:79:BA:95:3B",
         "00:1A:79:C6:E7:A4"
     ],
-    "http://pal.alphatx.me/portal.php": [
+    "http://pal.alphatx.me/c": [
         "00:1A:79:00:00:35",
         "00:1A:79:00:09:56",
         "00:1A:79:3A:1D:99",
@@ -7824,7 +7823,7 @@
         "00:1A:79:C0:36:D6",
         "00:1A:79:BB:72:AB"
     ],
-    "http://genlive.online/portal.php": [
+    "http://genlive.online/c": [
         "00:1A:79:62:D8:E1",
         "00:1A:79:D0:1D:B9",
         "00:1A:79:C3:C3:1F",
@@ -7844,7 +7843,7 @@
         "00:1A:79:C1:EC:0C",
         "00:1A:79:7B:E7:D9"
     ],
-    "http://neofass.com:8080/portal.php": [
+    "http://neofass.com:8080/c": [
         "00:1A:79:C5:B5:AB",
         "00:1A:79:31:C6:2A",
         "00:1A:79:38:34:35",
@@ -7864,7 +7863,7 @@
         "00:1A:79:BC:4E:74",
         "00:1A:79:5B:65:4C"
     ],
-    "http://23232.top/portal.php": [
+    "http://23232.top/c": [
         "00:1A:79:f0:0c:a4",
         "00:1A:79:3e:8d:f6",
         "00:1A:79:e7:88:b8",
@@ -7883,7 +7882,7 @@
         "00:1A:79:BF:DF:57",
         "00:1A:79:46:18:44"
     ],
-    "http://alpha-2ott.me/portal.php": [
+    "http://alpha-2ott.me/c": [
         "00:1A:79:10:0B:B3",
         "00:1A:79:A3:BB:7E",
         "00:1A:79:24:38:6C",
@@ -7902,7 +7901,7 @@
         "00:1A:79:79:C7:1A",
         "00:1A:79:96:8D:BD"
     ],
-    "http://neptunpro24.xyz:8080/portal.php": [
+    "http://neptunpro24.xyz:8080/c": [
         "00:1A:79:B5:9A:5A",
         "00:1A:79:D3:18:FB",
         "00:1A:79:2D:22:EB",
@@ -7921,7 +7920,7 @@
         "00:1A:79:C9:9D:DE",
         "00:1A:79:C2:1E:F0"
     ],
-    "http://prizes67594.cdngold.me/portal.php": [
+    "http://prizes67594.cdngold.me/c": [
         "00:1A:79:DC:9B:6E",
         "00:1A:79:b9:bb:bb",
         "00:1A:79:df:1d:0e",
@@ -7940,7 +7939,7 @@
         "00:1A:79:6E:B6:96",
         "00:1A:79:A4:0F:35"
     ],
-    "http://3tv.pro/portal.php": [
+    "http://3tv.pro/c": [
         "00:1A:79:41:11:15",
         "00:1A:79:BC:4F:63",
         "00:1A:79:89:5E:1D",
@@ -7958,7 +7957,7 @@
         "00:1A:79:2D:2D:A4",
         "00:1A:79:41:13:12"
     ],
-    "http://recreativa.tecnologiashd.com:8080/portal.php": [
+    "http://recreativa.tecnologiashd.com:8080/c": [
         "00:1A:79:03:B3:9B",
         "00:1A:79:5f:d2:d1",
         "00:1A:79:61:1D:E6",
@@ -7976,7 +7975,7 @@
         "00:1A:79:B9:52:83",
         "00:1A:79:46:b1:08"
     ],
-    "http://wowtv.cc/portal.php": [
+    "http://wowtv.cc/c": [
         "00:1A:79:35:CF:D8",
         "00:1A:79:45:44:12",
         "00:1A:79:66:34:61",
@@ -7994,7 +7993,7 @@
         "00:1A:79:B5:F7:39",
         "00:1A:79:B5:F7:5E"
     ],
-    "http://xc.tvset.top/portal.php": [
+    "http://xc.tvset.top/c": [
         "00:1A:79:37:FE:FE",
         "00:1A:79:5C:3C:46",
         "00:1A:79:40:CF:A8",
@@ -8012,7 +8011,7 @@
         "00:1A:79:80:66:C1",
         "00:1A:79:2B:A6:64"
     ],
-    "http://fakaur.com/portal.php": [
+    "http://fakaur.com/c": [
         "00:1A:79:C3:C4:8D",
         "00:1A:79:3B:89:DD",
         "00:1A:79:76:2B:4C",
@@ -8029,7 +8028,7 @@
         "00:1A:79:A2:F9:CD",
         "00:1A:79:A3:FD:30"
     ],
-    "http://mag.greatott.me/portal.php": [
+    "http://mag.greatott.me/c": [
         "00:1A:79:32:18:43",
         "00:1A:79:C6:71:5E",
         "00:1A:79:51:89:1E",
@@ -8046,7 +8045,7 @@
         "00:1A:79:92:39:54",
         "00:1A:79:4C:75:38"
     ],
-    "http://mag.yo-ott.com/portal.php": [
+    "http://mag.yo-ott.com/c": [
         "00:1A:79:F7:F0:77",
         "00:1A:79:87:99:B0",
         "00:1A:79:00:21:18",
@@ -8063,7 +8062,7 @@
         "00:1A:79:76:9F:D6",
         "00:1A:79:50:91:9B"
     ],
-    "http://247m.live/portal.php": [
+    "http://247m.live/c": [
         "00:1A:79:46:35:9D",
         "00:1A:79:C1:40:C5",
         "00:1A:79:61:0D:08",
@@ -8079,7 +8078,7 @@
         "00:1A:79:12:7F:DB",
         "00:1A:79:CF:67:94"
     ],
-    "http://hd-max.org:8080/portal.php": [
+    "http://hd-max.org:8080/c": [
         "00:1A:79:8C:91:06",
         "00:1A:79:C4:2F:04",
         "00:1A:79:44:77:11",
@@ -8095,7 +8094,7 @@
         "00:1A:79:0C:8C:F1",
         "00:1A:79:CC:75:CD"
     ],
-    "http://s.octotv.live/portal.php": [
+    "http://s.octotv.live/c": [
         "00:1A:79:32:C5:ED",
         "00:1A:79:32:C5:DD",
         "00:1A:79:B6:19:A4",
@@ -8111,7 +8110,7 @@
         "00:1A:79:F6:7F:5D",
         "00:1A:79:BF:FD:B0"
     ],
-    "http://source.strictv.com/portal.php": [
+    "http://source.strictv.com/c": [
         "00:1A:79:8b:95:8a",
         "00:1A:79:75:1a:63",
         "00:1A:79:6f:35:c9",
@@ -8127,7 +8126,7 @@
         "00:1A:79:f3:6b:c8",
         "00:1A:79:37:f4:53"
     ],
-    "http://stalker.ugoiptv.com/portal.php": [
+    "http://stalker.ugoiptv.com/c": [
         "00:1A:79:EC:06:82",
         "00:1A:79:2E:20:BA",
         "00:1A:79:23:D2:7E",
@@ -8143,7 +8142,7 @@
         "00:1A:79:F1:FE:C5",
         "00:1A:79:1E:01:C0"
     ],
-    "http://triptv.club:8000/portal.php": [
+    "http://triptv.club:8000/c": [
         "00:1A:79:B3:38:B8",
         "00:1A:79:B7:57:8F",
         "00:1A:79:57:C7:3F",
@@ -8159,7 +8158,7 @@
         "00:1A:79:0E:0F:B0",
         "00:1A:79:2A:0F:4B"
     ],
-    "http://xegd.ultapulta.com/stalker_portal/portal.php": [
+    "http://xegd.ultapulta.com/stalker_portal/c": [
         "00:1A:79:51:84:C6",
         "00:1A:79:51:8D:E5",
         "00:1A:79:53:45:AC",
@@ -8175,7 +8174,7 @@
         "00:1A:79:53:C9:BF",
         "00:1A:79:54:B4:81"
     ],
-    "http://brekna.club/portal.php": [
+    "http://brekna.club/c": [
         "00:1A:79:10:D8:FC",
         "00:1A:79:39:36:38",
         "00:1A:79:B6:25:A8",
@@ -8190,7 +8189,7 @@
         "00:1A:79:B6:25:63",
         "00:1A:79:B6:25:AB"
     ],
-    "http://diarynotesclub.com/portal.php": [
+    "http://diarynotesclub.com/c": [
         "00:1A:79:B5:F8:2E",
         "00:1A:79:B5:F8:77",
         "00:1A:79:B5:F8:73",
@@ -8205,7 +8204,7 @@
         "00:1A:79:B5:F8:79",
         "00:1A:79:B5:F8:88"
     ],
-    "http://eu.majes-line.co/portal.php": [
+    "http://eu.majes-line.co/c": [
         "00:1A:79:0F:EC:F6",
         "00:1A:79:77:8D:8C",
         "00:1A:79:00:00:79",
@@ -8220,7 +8219,7 @@
         "00:1A:79:AD:14:0E",
         "00:1A:79:3A:C6:AF"
     ],
-    "http://lllllliiiiiiidsa9.funtogether.xyz:8080/portal.php": [
+    "http://lllllliiiiiiidsa9.funtogether.xyz:8080/c": [
         "00:1A:79:2F:35:C5",
         "00:1A:79:39:de:88",
         "00:1A:79:b7:48:59",
@@ -8235,7 +8234,7 @@
         "00:1A:79:40:B2:37",
         "00:1A:79:3E:7F:99"
     ],
-    "http://proxy.watchtv.best/portal.php": [
+    "http://proxy.watchtv.best/c": [
         "00:1A:79:DB:70:D7",
         "00:1A:79:97:E5:9E",
         "00:1A:79:4F:82:5C",
@@ -8250,7 +8249,7 @@
         "00:1A:79:D9:08:1D",
         "00:1A:79:00:F1:12"
     ],
-    "http://smart.cwdn.cx/portal.php": [
+    "http://smart.cwdn.cx/c": [
         "00:1A:79:4D:B6:77",
         "00:1A:79:59:7D:49",
         "00:1A:79:80:5a:b7",
@@ -8265,7 +8264,7 @@
         "00:1A:79:b5:f7:d6",
         "00:1A:79:AF:0D:29"
     ],
-    "http://16919-near.cloud-ott.me/portal.php": [
+    "http://16919-near.cloud-ott.me/c": [
         "00:1A:79:5C:70:9F",
         "00:1A:79:30:71:28",
         "00:1A:79:00:9B:7A",
@@ -8279,7 +8278,7 @@
         "00:1A:79:A5:4F:9A",
         "00:1A:79:BC:69:68"
     ],
-    "http://b1g.pw/portal.php": [
+    "http://b1g.pw/c": [
         "00:1A:79:24:60:37",
         "00:1A:79:9a:65:ef",
         "00:1A:79:b5:df:0e",
@@ -8293,7 +8292,7 @@
         "00:1A:79:77:63:7f",
         "00:1A:79:01:56:A9"
     ],
-    "http://galaxyhotwomenhorror26368-maxpros.xyz/portal.php": [
+    "http://galaxyhotwomenhorror26368-maxpros.xyz/c": [
         "00:1A:79:18:1D:11",
         "00:1A:79:A4:CA:47",
         "00:1A:79:D5:0B:71",
@@ -8307,7 +8306,7 @@
         "00:1A:79:62:BD:B3",
         "00:1A:79:B8:E9:1E"
     ],
-    "http://gfr5.mi20.cc/stalker_portal/portal.php": [
+    "http://gfr5.mi20.cc/stalker_portal/c": [
         "00:1A:79:E7:33:42",
         "00:1A:79:74:16:22",
         "00:1A:79:6E:29:28",
@@ -8321,7 +8320,7 @@
         "00:1A:79:42:8D:C2",
         "00:1A:79:E7:36:C9"
     ],
-    "http://ip.king-cobra.eu:8080/portal.php": [
+    "http://ip.king-cobra.eu:8080/c": [
         "00:1A:79:74:16:22",
         "00:1A:79:6A:E7:C1",
         "00:1A:79:76:CB:F8",
@@ -8335,7 +8334,7 @@
         "00:1A:79:74:79:DD",
         "00:1A:79:E7:33:42"
     ],
-    "http://line.300spartiatis.com/portal.php": [
+    "http://line.300spartiatis.com/c": [
         "00:1A:79:60:70:af",
         "00:1A:79:60:70:AF",
         "00:1A:79:bc:35:27",
@@ -8349,7 +8348,7 @@
         "00:1A:79:84:54:4b",
         "00:1A:79:8b:7c:36"
     ],
-    "http://mag.efetv.de:8080/portal.php": [
+    "http://mag.efetv.de:8080/c": [
         "00:1A:79:A4:6A:B4",
         "00:1A:79:EF:1C:8F",
         "00:1A:79:4B:7A:D6",
@@ -8363,7 +8362,7 @@
         "00:1A:79:e2:e1:28",
         "00:1A:79:38:7a:d0"
     ],
-    "http://pankajgorasiya.net/portal.php": [
+    "http://pankajgorasiya.net/c": [
         "00:1A:79:42:9A:D8",
         "00:1A:79:10:E0:A8",
         "00:1A:79:42:9A:FE",
@@ -8377,7 +8376,7 @@
         "00:1A:79:4B:F4:92",
         "00:1A:79:24:D4:B7"
     ],
-    "http://srvgold.iptvcheap.com/portal.php": [
+    "http://srvgold.iptvcheap.com/c": [
         "00:1A:79:7C:E2:11",
         "00:1A:79:DF:41:E4",
         "00:1A:79:61:32:34",
@@ -8391,7 +8390,7 @@
         "00:1A:79:00:00:AC",
         "00:1A:79:02:FE:01"
     ],
-    "http://7.iptv11.is/portal.php": [
+    "http://7.iptv11.is/c": [
         "00:1A:79:E6:F6:1A",
         "00:1A:79:65:35:88",
         "00:1A:79:25:9E:24",
@@ -8404,7 +8403,7 @@
         "00:1A:79:29:18:83",
         "00:1A:79:97:BC:C2"
     ],
-    "http://iptv.darktv.in/portal.php": [
+    "http://iptv.darktv.in/c": [
         "00:1A:79:A4:0F:35",
         "00:1A:79:A7:DD:F1",
         "00:1A:79:C0:96:5A",
@@ -8417,7 +8416,7 @@
         "00:1A:79:47:42:7A",
         "00:1A:79:54:7C:9B"
     ],
-    "http://mag.premiumpowers.net/portal.php": [
+    "http://mag.premiumpowers.net/c": [
         "00:1A:79:02:3F:3D",
         "00:1A:79:00:F7:AE",
         "00:1A:79:0B:87:31",
@@ -8430,7 +8429,7 @@
         "00:1A:79:08:53:E0",
         "00:1A:79:02:3F:2B"
     ],
-    "http://wyveep.com:8080/portal.php": [
+    "http://wyveep.com:8080/c": [
         "00:1A:79:D4:0E:95",
         "00:1A:79:50:49:AA",
         "00:1A:79:B2:88:7D",
@@ -8443,7 +8442,7 @@
         "00:1A:79:4F:AD:24",
         "00:1A:79:FB:2E:70"
     ],
-    "http://92.246.87.53/portal.php": [
+    "http://92.246.87.53/c": [
         "00:1A:79:B0:56:AE",
         "00:1A:79:B1:B8:C7",
         "00:1A:79:30:64:37",
@@ -8455,7 +8454,7 @@
         "00:1A:79:7D:7B:21",
         "00:1A:79:1C:10:9B"
     ],
-    "http://imoxof.xyz/portal.php": [
+    "http://imoxof.xyz/c": [
         "00:1A:79:50:4A:10",
         "00:1A:79:AC:51:9F",
         "00:1A:79:97:0F:8E",
@@ -8467,7 +8466,7 @@
         "00:1A:79:A1:B2:94",
         "00:1A:79:A8:DE:F6"
     ],
-    "http://line.trx-ott.com/portal.php": [
+    "http://line.trx-ott.com/c": [
         "00:1A:79:8E:6A:D6",
         "00:1A:79:3D:A7:41",
         "00:1A:79:CE:3A:0A",
@@ -8479,7 +8478,7 @@
         "00:1A:79:74:62:93",
         "00:1A:79:B0:04:3A"
     ],
-    "http://vpncloud.uk/stalker_portal/portal.php": [
+    "http://vpncloud.uk/stalker_portal/c": [
         "00:1A:79:C7:12:59",
         "00:1A:79:C3:0D:64",
         "00:1A:79:C3:10:97",
@@ -8491,7 +8490,7 @@
         "00:1A:79:A5:C2:45",
         "00:1A:79:78:12:A3"
     ],
-    "http://weaseltv.live/portal.php": [
+    "http://weaseltv.live/c": [
         "00:1A:79:56:5d:4b",
         "00:1A:79:21:76:6e",
         "00:1A:79:b5:95:de",
@@ -8503,7 +8502,7 @@
         "00:1A:79:aa:8e:10",
         "00:1A:79:67:cc:dd"
     ],
-    "http://192.99.19.27:8000/portal.php": [
+    "http://192.99.19.27:8000/c": [
         "00:1A:79:F1:F2:39",
         "00:1A:79:80:50:09",
         "00:1A:79:81:93:14",
@@ -8514,7 +8513,7 @@
         "00:1A:79:46:1B:41",
         "00:1A:79:58:A4:DD"
     ],
-    "http://8kooka.com:8080/portal.php": [
+    "http://8kooka.com:8080/c": [
         "00:1A:79:00:00:69",
         "00:1A:79:39:35:D5",
         "00:1A:79:00:00:00",
@@ -8525,7 +8524,7 @@
         "00:1A:79:3E:D3:A5",
         "00:1A:79:6E:B6:96"
     ],
-    "http://alexiptv.ddns.me:8080/portal.php": [
+    "http://alexiptv.ddns.me:8080/c": [
         "00:1A:79:C1:A1:7E",
         "00:1A:79:AB:47:30",
         "00:1A:79:47:F6:DE",
@@ -8536,7 +8535,7 @@
         "00:1A:79:B7:9A:B6",
         "00:1A:79:44:F6:21"
     ],
-    "http://buket.sltv.pw:8080/portal.php": [
+    "http://buket.sltv.pw:8080/c": [
         "00:1A:79:d6:b7:a2",
         "00:1A:79:01:4d:3c",
         "00:1A:79:7c:64:ae",
@@ -8547,7 +8546,7 @@
         "00:1A:79:b4:d9:a8",
         "00:1A:79:8e:22:91"
     ],
-    "http://frt23.mi20.cc/stalker_portal/portal.php": [
+    "http://frt23.mi20.cc/stalker_portal/c": [
         "00:1A:79:92:3C:62",
         "00:1A:79:89:54:36",
         "00:1A:79:62:34:37",
@@ -8558,7 +8557,7 @@
         "00:1A:79:FC:55:0B",
         "00:1A:79:B4:A8:6A"
     ],
-    "http://funmitra.com:8080/portal.php": [
+    "http://funmitra.com:8080/c": [
         "00:1A:79:BD:26:3A",
         "00:1A:79:3D:F8:D9",
         "00:1A:79:30:37:35",
@@ -8569,7 +8568,7 @@
         "00:1A:79:EF:1C:8F",
         "00:1A:79:36:6F:E8"
     ],
-    "http://new.gprod.co/stalker_portal/portal.php": [
+    "http://new.gprod.co/stalker_portal/c": [
         "00:1A:79:00:0B:E8",
         "00:1A:79:00:04:C1",
         "00:1A:79:00:07:DD",
@@ -8580,7 +8579,7 @@
         "00:1A:79:3B:38:E4",
         "00:1A:79:28:BA:C7"
     ],
-    "http://p1.iptvrocket.tv/portal.php": [
+    "http://p1.iptvrocket.tv/c": [
         "00:1A:79:C1:27:74",
         "00:1A:79:B7:E4:56",
         "00:1A:79:73:76:C6",
@@ -8591,7 +8590,7 @@
         "00:1A:79:31:7F:B3",
         "00:1A:79:49:45:61"
     ],
-    "http://yasslaa.xyz/portal.php": [
+    "http://yasslaa.xyz/c": [
         "00:1A:79:68:F1:AE",
         "00:1A:79:97:0F:34",
         "00:1A:79:FA:8D:9C",
@@ -8602,7 +8601,7 @@
         "00:1A:79:4B:02:95",
         "00:1A:79:6E:E3:5B"
     ],
-    "http://Mag.alphatx.me/portal.php": [
+    "http://Mag.alphatx.me/c": [
         "00:1A:79:00:00:22",
         "00:1A:79:00:00:44",
         "00:1A:79:00:00:72",
@@ -8612,7 +8611,7 @@
         "00:1A:79:00:00:35",
         "00:1A:79:00:00:04"
     ],
-    "http://b1g.ooo/portal.php": [
+    "http://b1g.ooo/c": [
         "00:1A:79:5C:FA:72",
         "00:1A:79:BE:B3:F0",
         "00:1A:79:48:D7:6A",
@@ -8622,7 +8621,7 @@
         "00:1A:79:00:91:3C",
         "00:1A:79:00:2D:2F"
     ],
-    "http://line.kahr4a.com/portal.php": [
+    "http://line.kahr4a.com/c": [
         "00:1A:79:BD:60:2E",
         "00:1A:79:EE:9E:55",
         "00:1A:79:BC:38:D7",
@@ -8632,7 +8631,7 @@
         "00:1A:79:B5:11:81",
         "00:1A:79:3F:B7:67"
     ],
-    "http://line.powerdino.com/portal.php": [
+    "http://line.powerdino.com/c": [
         "00:1A:79:00:18:DC",
         "00:1A:79:29:5f:2c",
         "00:1A:79:C0:09:B6",
@@ -8642,7 +8641,7 @@
         "00:1A:79:19:72:45",
         "00:1A:79:46:88:5C"
     ],
-    "http://m1-max.dns-speedy.com/portal.php": [
+    "http://m1-max.dns-speedy.com/c": [
         "00:1A:79:C0:40:63",
         "00:1A:79:6B:3F:BF",
         "00:1A:79:30:4F:4E",
@@ -8652,7 +8651,7 @@
         "00:1A:79:C6:8B:50",
         "00:1A:79:03:03:34"
     ],
-    "http://nettv88.net:8080/portal.php": [
+    "http://nettv88.net:8080/c": [
         "00:1A:79:D9:E9:6C",
         "00:1A:79:e0:66:9d",
         "00:1A:79:77:39:1B",
@@ -8662,7 +8661,7 @@
         "00:1A:79:44:3C:8C",
         "00:1A:79:BD:26:3A"
     ],
-    "http://otthome.xyz:33000/portal.php": [
+    "http://otthome.xyz:33000/c": [
         "00:1A:79:db:bd:f5",
         "00:1A:79:e2:e1:28",
         "00:1A:79:38:7a:d0",
@@ -8672,7 +8671,7 @@
         "00:1A:79:b9:bb:bb",
         "00:1A:79:df:1d:0e"
     ],
-    "http://pointpython.streamtv.to:8080/portal.php": [
+    "http://pointpython.streamtv.to:8080/c": [
         "00:1A:79:C2:0D:EB",
         "00:1A:79:AE:63:A8",
         "00:1A:79:C7:11:1F",
@@ -8682,7 +8681,7 @@
         "00:1A:79:AB:64:E1",
         "00:1A:79:76:70:DE"
     ],
-    "http://portott.com/portal.php": [
+    "http://portott.com/c": [
         "00:1A:79:02:1A:C1",
         "00:1A:79:77:8D:8C",
         "00:1A:79:00:00:79",
@@ -8692,7 +8691,7 @@
         "00:1A:79:9A:2D:DA",
         "00:1A:79:55:41:11"
     ],
-    "http://torcidaiptv.gentv.to:8080/portal.php": [
+    "http://torcidaiptv.gentv.to:8080/c": [
         "00:1A:79:3B:42:F6",
         "00:1A:79:52:95:E8",
         "00:1A:79:55:4A:08",
@@ -8702,7 +8701,7 @@
         "00:1A:79:5C:C3:BA",
         "00:1A:79:59:46:60"
     ],
-    "http://xc.xvip58.xyz:8080/portal.php": [
+    "http://xc.xvip58.xyz:8080/c": [
         "00:1A:79:14:DE:FA",
         "00:1A:79:13:4F:9B",
         "00:1A:79:AF:F9:08",
@@ -8712,7 +8711,7 @@
         "00:1A:79:14:6D:0C",
         "00:1A:79:10:DF:FC"
     ],
-    "http://90309-fri.ott-cdn.me/portal.php": [
+    "http://90309-fri.ott-cdn.me/c": [
         "00:1A:79:78:6E:81",
         "00:1A:79:3B:E0:C6",
         "00:1A:79:7D:98:BF",
@@ -8721,7 +8720,7 @@
         "00:1A:79:54:CB:13",
         "00:1A:79:BE:91:CB"
     ],
-    "http://9v.wtf/portal.php": [
+    "http://9v.wtf/c": [
         "00:1A:79:69:B2:08",
         "00:1A:79:D1:D4:E0",
         "00:1A:79:9B:60:00",
@@ -8730,7 +8729,7 @@
         "00:1A:79:4D:A9:55",
         "00:1A:79:5A:76:B6"
     ],
-    "http://danatv.tv.streamtv.to:8080/portal.php": [
+    "http://danatv.tv.streamtv.to:8080/c": [
         "00:1A:79:5D:25:C2",
         "00:1A:79:3B:C4:C3",
         "00:1A:79:51:A1:E3",
@@ -8739,7 +8738,7 @@
         "00:1A:79:43:56:4A",
         "00:1A:79:54:B6:E3"
     ],
-    "http://genlive.online:8080/portal.php": [
+    "http://genlive.online:8080/c": [
         "00:1A:79:C8:32:BF",
         "00:1A:79:AB:61:22",
         "00:1A:79:C2:E0:75",
@@ -8748,7 +8747,7 @@
         "00:1A:79:CE:1B:60",
         "00:1A:79:3A:20:58"
     ],
-    "http://hans_monika.streamtv.to:8080/portal.php": [
+    "http://hans_monika.streamtv.to:8080/c": [
         "00:1A:79:DC:DA:5D",
         "00:1A:79:5F:C5:D8",
         "00:1A:79:A1:A6:80",
@@ -8757,7 +8756,7 @@
         "00:1A:79:CB:8F:10",
         "00:1A:79:32:75:89"
     ],
-    "http://honeywatch.net/portal.php": [
+    "http://honeywatch.net/c": [
         "00:1A:79:27:73:58",
         "00:1A:79:42:F1:A1",
         "00:1A:79:0D:CB:FA",
@@ -8766,7 +8765,7 @@
         "00:1A:79:61:92:E9",
         "00:1A:79:42:8A:FB"
     ],
-    "http://ip.sltv.xyz:8080/portal.php": [
+    "http://ip.sltv.xyz:8080/c": [
         "00:1A:79:AB:15:C7",
         "00:1A:79:D6:0F:D2",
         "00:1A:79:EF:1C:8F",
@@ -8775,7 +8774,7 @@
         "00:1A:79:BD:26:3A",
         "00:1A:79:C1:77:FC"
     ],
-    "http://line.iseepremium.com/portal.php": [
+    "http://line.iseepremium.com/c": [
         "00:1A:79:29:68:21",
         "00:1A:79:2B:F0:43",
         "00:1A:79:82:cc:6c",
@@ -8784,7 +8783,7 @@
         "00:1A:79:22:f3:21",
         "00:1A:79:2b:f0:43"
     ],
-    "http://line.linehunt.org/portal.php": [
+    "http://line.linehunt.org/c": [
         "00:1A:79:2C:10:99",
         "00:1A:79:C7:10:E7",
         "00:1A:79:13:F1:A1",
@@ -8793,7 +8792,7 @@
         "00:1A:79:BA:EA:37",
         "00:1A:79:8D:3C:29"
     ],
-    "http://line.rs4ott.com/portal.php": [
+    "http://line.rs4ott.com/c": [
         "00:1A:79:70:4f:03",
         "00:1A:79:37:36:65",
         "00:1A:79:ED:77:7E",
@@ -8802,7 +8801,7 @@
         "00:1A:79:29:89:06",
         "00:1A:79:7A:74:AC"
     ],
-    "http://mag-live.me/portal.php": [
+    "http://mag-live.me/c": [
         "00:1A:79:00:01:DF",
         "00:1A:79:39:35:D5",
         "00:1A:79:00:00:00",
@@ -8811,7 +8810,7 @@
         "00:1A:79:00:00:02",
         "00:1A:79:00:00:69"
     ],
-    "http://mihajlo33.nabija.se.vucicu.na.kurac.streamtv.to:8080/portal.php": [
+    "http://mihajlo33.nabija.se.vucicu.na.kurac.streamtv.to:8080/c": [
         "00:1A:79:B6:82:E3",
         "00:1A:79:63:78:E0",
         "00:1A:79:3E:7F:99",
@@ -8820,7 +8819,7 @@
         "00:1A:79:44:F6:21",
         "00:1A:79:47:F6:DE"
     ],
-    "http://nicolaj.123tv.to:8080/portal.php": [
+    "http://nicolaj.123tv.to:8080/c": [
         "00:1A:79:A9:DB:D2",
         "00:1A:79:4C:F2:1B",
         "00:1A:79:34:29:C5",
@@ -8829,7 +8828,7 @@
         "00:1A:79:35:EC:E2",
         "00:1A:79:F6:FD:E3"
     ],
-    "http://porn-hub.streamtv.to:8080/portal.php": [
+    "http://porn-hub.streamtv.to:8080/c": [
         "00:1A:79:3E:7F:99",
         "00:1A:79:AD:5F:2B",
         "00:1A:79:B7:9A:B6",
@@ -8838,7 +8837,7 @@
         "00:1A:79:47:F6:DE",
         "00:1A:79:B6:82:E3"
     ],
-    "http://to-jest-link.cc/portal.php": [
+    "http://to-jest-link.cc/c": [
         "00:1A:79:65:32:DC",
         "00:1A:79:7E:44:C2",
         "00:1A:79:8E:FF:0D",
@@ -8847,7 +8846,7 @@
         "00:1A:79:3E:D0:BB",
         "00:1A:79:B2:1E:A1"
     ],
-    "http://tv.trexiptv.com/portal.php": [
+    "http://tv.trexiptv.com/c": [
         "00:1A:79:C0:F7:A3",
         "00:1A:79:A3:C9:FB",
         "00:1A:79:91:40:DF",
@@ -8856,7 +8855,7 @@
         "00:1A:79:A0:46:D4",
         "00:1A:79:1D:A0:A7"
     ],
-    "http://117tv.icu:8080/portal.php": [
+    "http://117tv.icu:8080/c": [
         "00:1A:79:6B:76:B4",
         "00:1A:79:BB:78:ED",
         "00:1A:79:27:FE:31",
@@ -8864,7 +8863,7 @@
         "00:1A:79:46:74:9D",
         "00:1A:79:AD:CD:25"
     ],
-    "http://16243-sides.cdn-o2.me/portal.php": [
+    "http://16243-sides.cdn-o2.me/c": [
         "00:1A:79:43:93:29",
         "00:1A:79:EA:04:48",
         "00:1A:79:bb:a9:21",
@@ -8872,7 +8871,7 @@
         "00:1A:79:a9:bb:7f",
         "00:1A:79:05:f1:c5"
     ],
-    "http://aceservers.watch:8880/portal.php": [
+    "http://aceservers.watch:8880/c": [
         "00:1A:79:bd:11:32",
         "00:1A:79:c8:3c:b8",
         "00:1A:79:b8:74:a0",
@@ -8880,7 +8879,7 @@
         "00:1A:79:4b:dd:99",
         "00:1A:79:78:75:db"
     ],
-    "http://fastrunner.live:8080/portal.php": [
+    "http://fastrunner.live:8080/c": [
         "00:1A:79:BA:2A:5B",
         "00:1A:79:72:71:A0",
         "00:1A:79:D0:1D:B9",
@@ -8888,7 +8887,7 @@
         "00:1A:79:BB:52:94",
         "00:1A:79:63:78:E0"
     ],
-    "http://grande99826.cdngold.me/portal.php": [
+    "http://grande99826.cdngold.me/c": [
         "00:1A:79:6E:B6:96",
         "00:1A:79:00:00:02",
         "00:1A:79:39:35:D5",
@@ -8896,7 +8895,7 @@
         "00:1A:79:00:00:00",
         "00:1A:79:73:86:55"
     ],
-    "http://main2.cwdn.cx/portal.php": [
+    "http://main2.cwdn.cx/c": [
         "00:1A:79:40:4B:06",
         "00:1A:79:7D:72:26",
         "00:1A:79:CB:48:C9",
@@ -8904,7 +8903,7 @@
         "00:1A:79:C7:23:18",
         "00:1A:79:D1:A9:67"
     ],
-    "http://mihajlo33.cetnik.ulitan.pori.ga.davi.ga.streamtv.to:8080/portal.php": [
+    "http://mihajlo33.cetnik.ulitan.pori.ga.davi.ga.streamtv.to:8080/c": [
         "00:1A:79:B7:9A:B6",
         "00:1A:79:47:F6:DE",
         "00:1A:79:AD:5F:2B",
@@ -8912,7 +8911,7 @@
         "00:1A:79:B6:82:E3",
         "00:1A:79:63:78:E0"
     ],
-    "http://mihajlo33.pusi.dux4.kurac.streamtv.to:8080/portal.php": [
+    "http://mihajlo33.pusi.dux4.kurac.streamtv.to:8080/c": [
         "00:1A:79:47:F6:DE",
         "00:1A:79:AD:5F:2B",
         "00:1A:79:B7:9A:B6",
@@ -8920,7 +8919,7 @@
         "00:1A:79:B6:82:E3",
         "00:1A:79:63:78:E0"
     ],
-    "http://nossacasa55.ddns.net:8080/portal.php": [
+    "http://nossacasa55.ddns.net:8080/c": [
         "00:1A:79:B7:9A:B6",
         "00:1A:79:47:F6:DE",
         "00:1A:79:B6:82:E3",
@@ -8928,7 +8927,7 @@
         "00:1A:79:3E:7F:99",
         "00:1A:79:AD:5F:2B"
     ],
-    "http://schanel.org:8080/portal.php": [
+    "http://schanel.org:8080/c": [
         "00:1A:79:A1:EC:92",
         "00:1A:79:52:CF:84",
         "00:1A:79:a1:e3:69",
@@ -8936,648 +8935,648 @@
         "00:1A:79:53:6d:4e",
         "00:1A:79:a1:e7:84"
     ],
-    "http://10431-plan.ott-cdn.me/portal.php": [
+    "http://10431-plan.ott-cdn.me/c": [
         "00:1A:79:CE:EB:CD",
         "00:1A:79:AA:27:A7",
         "00:1A:79:0C:F9:D7",
         "00:1A:79:54:E8:7D",
         "00:1A:79:58:DC:72"
     ],
-    "http://141.95.145.166/portal.php": [
+    "http://141.95.145.166/c": [
         "00:1A:79:AC:2E:C3",
         "00:1A:79:2B:EC:0A",
         "00:1A:79:C4:FE:C4",
         "00:1A:79:B8:0D:0C",
         "00:1A:79:AA:4C:51"
     ],
-    "http://185.235.165.30/portal.php": [
+    "http://185.235.165.30/c": [
         "00:1A:79:70:66:5F",
         "00:1A:79:7E:40:54",
         "00:1A:79:62:37:30",
         "00:1A:79:7C:55:7F",
         "00:1A:79:5E:40:73"
     ],
-    "http://albin.kurti.stavi.sanju.vulic.na.kurac.streamtv.to:8080/portal.php": [
+    "http://albin.kurti.stavi.sanju.vulic.na.kurac.streamtv.to:8080/c": [
         "00:1A:79:B6:82:E3",
         "00:1A:79:B7:9A:B6",
         "00:1A:79:47:F6:DE",
         "00:1A:79:AD:5F:2B",
         "00:1A:79:3E:7F:99"
     ],
-    "http://apk-es.dinott.com/portal.php": [
+    "http://apk-es.dinott.com/c": [
         "00:1A:79:01:0d:b0",
         "00:1A:79:33:8f:2c",
         "00:1A:79:cf:70:02",
         "00:1A:79:4b:72:86",
         "00:1A:79:33:8F:2C"
     ],
-    "http://line.mytvzone.xyz/portal.php": [
+    "http://line.mytvzone.xyz/c": [
         "00:1A:79:8b:34:14",
         "00:1A:79:34:f6:dd",
         "00:1A:79:24:76:5a",
         "00:1A:79:a3:62:32",
         "00:1A:79:d6:2f:83"
     ],
-    "http://line.protv.cc/portal.php": [
+    "http://line.protv.cc/c": [
         "00:1A:79:8D:E9:5E",
         "00:1A:79:D1:D2:9F",
         "00:1A:79:DF:2E:14",
         "00:1A:79:E4:BD:F7",
         "00:1A:79:1B:6C:0B"
     ],
-    "http://line.rs6ott.com/portal.php": [
+    "http://line.rs6ott.com/c": [
         "00:1A:79:90:42:EF",
         "00:1A:79:3E:8F:76",
         "00:1A:79:B4:DF:73",
         "00:1A:79:AA:58:CC",
         "00:1A:79:AE:DE:FD"
     ],
-    "http://mihajlo33.nabija.se.duxu4.na.kurac.streamtv.to:8080/portal.php": [
+    "http://mihajlo33.nabija.se.duxu4.na.kurac.streamtv.to:8080/c": [
         "00:1A:79:47:F6:DE",
         "00:1A:79:3E:7F:99",
         "00:1A:79:B6:82:E3",
         "00:1A:79:63:78:E0",
         "00:1A:79:B3:75:3D"
     ],
-    "http://mihajlo33.pusi.kurtiju.kurac.streamtv.to:8080/portal.php": [
+    "http://mihajlo33.pusi.kurtiju.kurac.streamtv.to:8080/c": [
         "00:1A:79:B7:9A:B6",
         "00:1A:79:B3:75:3D",
         "00:1A:79:47:F6:DE",
         "00:1A:79:3E:7F:99",
         "00:1A:79:B6:82:E3"
     ],
-    "http://new.ivue.co:25461/portal.php": [
+    "http://new.ivue.co:25461/c": [
         "00:1A:79:5C:94:F2",
         "00:1A:79:44:2A:0F",
         "00:1A:79:C0:05:12",
         "00:1A:79:BB:D8:6F",
         "00:1A:79:50:57:90"
     ],
-    "http://owliptv.streamtv.to:8080/portal.php": [
+    "http://owliptv.streamtv.to:8080/c": [
         "00:1A:79:B4:32:FA",
         "00:1A:79:6E:92:26",
         "00:1A:79:8C:0A:B2",
         "00:1A:79:AD:6E:F1",
         "00:1A:79:BA:53:AD"
     ],
-    "http://tissl.club:8080/portal.php": [
+    "http://tissl.club:8080/c": [
         "00:1A:79:40:84:F9",
         "00:1a:79:3c:4a:a7",
         "00:1A:79:3D:99:42",
         "00:1A:79:AA:8A:77",
         "00:1A:79:15:4F:ED"
     ],
-    "http://un1.anonymoustv.club/portal.php": [
+    "http://un1.anonymoustv.club/c": [
         "00:1A:79:b7:6f:47",
         "00:1A:79:c7:05:e6",
         "00:1A:79:63:66:37",
         "00:1A:79:95:9a:ad",
         "00:1A:79:f0:1f:4c"
     ],
-    "http://web2021.biz:8080/portal.php": [
+    "http://web2021.biz:8080/c": [
         "00:1A:79:5F:77:A9",
         "00:1A:79:49:12:99",
         "00:1A:79:52:EE:27",
         "00:1A:79:53:D7:28",
         "00:1A:79:63:E9:F7"
     ],
-    "http://1234up.com:8080/portal.php": [
+    "http://1234up.com:8080/c": [
         "00:1A:79:D0:FA:3B",
         "00:1A:79:BC:D0:D2",
         "00:1A:79:C8:26:BB",
         "00:1A:79:AF:88:FA"
     ],
-    "http://200.26.188.66/portal.php": [
+    "http://200.26.188.66/c": [
         "00:1A:79:00:00:00",
         "00:1A:79:00:9B:7A",
         "00:1A:79:AC:C9:B3",
         "00:1A:79:17:1A:74"
     ],
-    "http://4connect.link/portal.php": [
+    "http://4connect.link/c": [
         "00:1A:79:B5:0D:63",
         "00:1A:79:6A:E2:E4",
         "00:1A:79:80:63:0E",
         "00:1A:79:5D:64:06"
     ],
-    "http://apk.dino.ws/portal.php": [
+    "http://apk.dino.ws/c": [
         "00:1A:79:B0:91:79",
         "00:1A:79:E7:53:04",
         "00:1A:79:ac:33:b8",
         "00:1A:79:AC:33:B8"
     ],
-    "http://atlas213.xyz/portal.php": [
+    "http://atlas213.xyz/c": [
         "00:1A:79:54:A0:D3",
         "00:1A:79:5C:6A:EE",
         "00:1A:79:C2:EE:DC",
         "00:1A:79:14:5B:0C"
     ],
-    "http://exm3u.123tv.to:8080/portal.php": [
+    "http://exm3u.123tv.to:8080/c": [
         "00:1A:79:B5:B5:7B",
         "00:1A:79:A4:80:28",
         "00:1A:79:BB:E2:8D",
         "00:1A:79:C5:38:B5"
     ],
-    "http://king4k.tv/portal.php": [
+    "http://king4k.tv/c": [
         "00:1A:79:32:a2:40",
         "00:1A:79:32:A2:40",
         "00:1A:79:1C:07:EE",
         "00:1A:79:76:02:36"
     ],
-    "http://line.dinoho.xyz/portal.php": [
+    "http://line.dinoho.xyz/c": [
         "00:1A:79:cf:3f:09",
         "00:1A:79:38:38:31",
         "00:1A:79:CC:2F:DF",
         "00:1A:79:CF:3F:09"
     ],
-    "http://line.stayconnected.pro/portal.php": [
+    "http://line.stayconnected.pro/c": [
         "00:1A:79:B6:86:28",
         "00:1A:79:51:85:61",
         "00:1A:79:C4:70:FD",
         "00:1A:79:C5:7D:62"
     ],
-    "http://mag.trexlive.me/portal.php": [
+    "http://mag.trexlive.me/c": [
         "00:1A:79:4E:41:D7",
         "00:1A:79:A4:AB:C0",
         "00:1A:79:9B:26:53",
         "00:1A:79:C3:93:96"
     ],
-    "http://maxhd.eu:8080/portal.php": [
+    "http://maxhd.eu:8080/c": [
         "00:1A:79:EF:1C:8F",
         "00:1A:79:7E:70:72",
         "00:1A:79:3A:AD:69",
         "00:1A:79:5F:86:D6"
     ],
-    "http://maxhd.org:8080/portal.php": [
+    "http://maxhd.org:8080/c": [
         "00:1A:79:BD:26:3A",
         "00:1A:79:CB:78:22",
         "00:1A:79:EF:1C:8F",
         "00:1A:79:80:33:0B"
     ],
-    "http://medotv.nl:8000/portal.php": [
+    "http://medotv.nl:8000/c": [
         "00:1A:79:90:30:43",
         "00:1A:79:DE:44:95",
         "00:1A:79:C3:2D:DA",
         "00:1A:79:AD:DE:DF"
     ],
-    "http://nk.cdnnet.xyz/portal.php": [
+    "http://nk.cdnnet.xyz/c": [
         "00:1A:79:19:FD:E1",
         "00:1A:79:29:10:B8",
         "00:1A:79:D1:E4:78",
         "00:1A:79:BE:8E:93"
     ],
-    "http://oceanstream.me/portal.php": [
+    "http://oceanstream.me/c": [
         "00:1A:79:78:04:b0",
         "00:1A:79:0c:f4:ca",
         "00:1A:79:55:cc:db",
         "00:1A:79:0C:F4:CA"
     ],
-    "http://onlinebakkal.uk:8080/portal.php": [
+    "http://onlinebakkal.uk:8080/c": [
         "00:1A:79:4F:69:61",
         "00:1A:79:36:6F:E8",
         "00:1A:79:EF:1C:8F",
         "00:1A:79:5D:EA:27"
     ],
-    "http://owliptv.gentv.to:8080/portal.php": [
+    "http://owliptv.gentv.to:8080/c": [
         "00:1A:79:7B:E7:D9",
         "00:1A:79:75:05:74",
         "00:1A:79:BA:61:2D",
         "00:1A:79:67:46:85"
     ],
-    "http://proxym3u.watchtv.best/portal.php": [
+    "http://proxym3u.watchtv.best/c": [
         "00:1A:79:A0:FC:1A",
         "00:1A:79:8B:24:4C",
         "00:1A:79:39:7B:94",
         "00:1A:79:23:68:76"
     ],
-    "http://stb.iphd.tv/portal.php": [
+    "http://stb.iphd.tv/c": [
         "00:1A:79:D6:48:AF",
         "00:1A:79:27:9F:F8",
         "00:1A:79:C7:B8:D9",
         "00:1A:79:05:0A:50"
     ],
-    "http://tv.8dott.xyz/portal.php": [
+    "http://tv.8dott.xyz/c": [
         "00:1A:79:B4:EC:44",
         "00:1A:79:19:81:4B",
         "00:1A:79:DF:97:0B",
         "00:1A:79:36:38:31"
     ],
-    "http://zirvetv.xyz:8080/portal.php": [
+    "http://zirvetv.xyz:8080/c": [
         "00:1A:79:58:37:27",
         "00:1A:79:50:0D:F6",
         "00:1A:79:4E:39:66",
         "00:1A:79:AB:AA:F7"
     ],
-    "http://15.235.13.183:88/stalker_portal/portal.php": [
+    "http://15.235.13.183:88/stalker_portal/c": [
         "00:1A:79:F4:6F:52",
         "00:1A:79:B1:83:1E",
         "00:1A:79:B3:F7:25"
     ],
-    "http://56175-view.cdn-o2.me/portal.php": [
+    "http://56175-view.cdn-o2.me/c": [
         "00:1A:79:bf:61:fd",
         "00:1A:79:e0:33:91",
         "00:1A:79:b4:f1:20"
     ],
-    "http://avare.kingtv.pw/portal.php": [
+    "http://avare.kingtv.pw/c": [
         "00:1A:79:2B:27:53",
         "00:1A:79:3A:D6:B4",
         "00:1A:79:10:D4:C5"
     ],
-    "http://fastopen.live:8080/portal.php": [
+    "http://fastopen.live:8080/c": [
         "00:1A:79:B3:28:CF",
         "00:1A:79:A3:A1:89",
         "00:1A:79:63:78:E0"
     ],
-    "http://funtv.8k-iptv.com:8080/portal.php": [
+    "http://funtv.8k-iptv.com:8080/c": [
         "00:1A:79:00:00:69",
         "00:1A:79:C0:A5:69",
         "00:1A:79:00:40:C7"
     ],
-    "http://ip.sltv.nl:8080/portal.php": [
+    "http://ip.sltv.nl:8080/c": [
         "00:1A:79:EF:1C:8F",
         "00:1A:79:2A:A8:7E",
         "00:1A:79:BD:26:3A"
     ],
-    "http://iptv.darktv.eu/portal.php": [
+    "http://iptv.darktv.eu/c": [
         "00:1A:79:3C:4F:61",
         "00:1A:79:3c:4f:61",
         "00:1A:79:5C:A7:4A"
     ],
-    "http://m3u.zen-ott.me/portal.php": [
+    "http://m3u.zen-ott.me/c": [
         "00:1A:79:27:5f:28",
         "00:1A:79:00:14:75",
         "00:1A:79:27:5F:28"
     ],
-    "http://new.nexatv.be/stalker_portal/portal.php": [
+    "http://new.nexatv.be/stalker_portal/c": [
         "00:1A:79:5D:C8:FB",
         "00:1A:79:A1:82:9A",
         "00:1A:79:B6:30:8E"
     ],
-    "http://portal.entertainmentxl.com:8080/portal.php": [
+    "http://portal.entertainmentxl.com:8080/c": [
         "00:1A:79:54:24:58",
         "00:1A:79:C8:3A:43",
         "00:1A:79:AD:E8:AF"
     ],
-    "http://portal4.iptv-mag.com/portal.php": [
+    "http://portal4.iptv-mag.com/c": [
         "00:1A:79:AB:4B:3C",
         "00:1A:79:BB:8F:57",
         "00:1A:79:FC:63:0D"
     ],
-    "http://pro.maxhd.eu:8080/portal.php": [
+    "http://pro.maxhd.eu:8080/c": [
         "00:1A:79:EF:1C:8F",
         "00:1A:79:74:41:18",
         "00:1A:79:BD:26:3A"
     ],
-    "http://promaxhd.com:8080/portal.php": [
+    "http://promaxhd.com:8080/c": [
         "00:1A:79:EF:1C:8F",
         "00:1A:79:38:1B:84",
         "00:1A:79:BD:1C:18"
     ],
-    "http://spacextv.live:8080/portal.php": [
+    "http://spacextv.live:8080/c": [
         "00:1A:79:B6:2C:0A",
         "00:1A:79:08:4A:F5",
         "00:1A:79:62:C5:9B"
     ],
-    "http://tv.deirnet.ps/stalker_portal/portal.php": [
+    "http://tv.deirnet.ps/stalker_portal/c": [
         "00:1A:79:6E:75:CA",
         "00:1A:79:49:90:F7",
         "00:1A:79:49:90:f7"
     ],
-    "http://tv.indigotv.me/portal.php": [
+    "http://tv.indigotv.me/c": [
         "00:1A:79:05:5F:18",
         "00:1A:79:05:92:CC",
         "00:1A:79:05:D9:C5"
     ],
-    "http://tvhouse.live/portal.php": [
+    "http://tvhouse.live/c": [
         "00:1A:79:A6:4B:19",
         "00:1A:79:EC:7C:53",
         "00:1A:79:BC:B8:F9"
     ],
-    "http://worldtvvip.net:8080/portal.php": [
+    "http://worldtvvip.net:8080/c": [
         "00:1A:79:3A:CB:BB",
         "00:1A:79:EF:1C:8F",
         "00:1A:79:49:24:44"
     ],
-    "http://z6.watchme.ie/stalker_portal/portal.php": [
+    "http://z6.watchme.ie/stalker_portal/c": [
         "00:1A:79:50:4C:C2",
         "00:1A:79:55:44:01",
         "00:1A:79:0D:40:81"
     ],
-    "http://185.183.34.71:25461/portal.php": [
+    "http://185.183.34.71:25461/c": [
         "00:1A:79:CF:74:78",
         "00:1A:79:14:27:69"
     ],
-    "http://194.120.230.4:8080/portal.php": [
+    "http://194.120.230.4:8080/c": [
         "00:1A:79:1A:00:71",
         "00:1A:79:00:47:96"
     ],
-    "http://21tv.net:2052/portal.php": [
+    "http://21tv.net:2052/c": [
         "00:1A:79:57:9E:4B",
         "00:1A:79:82:06:3A"
     ],
-    "http://30198-puppy.ott-cdn.me/portal.php": [
+    "http://30198-puppy.ott-cdn.me/c": [
         "00:1A:79:04:2F:71",
         "00:1A:79:2E:B6:4E"
     ],
-    "http://apk.zentv4k.me/portal.php": [
+    "http://apk.zentv4k.me/c": [
         "00:1A:79:97:9E:FB",
         "00:1A:79:74:E6:42"
     ],
-    "http://atlas213.xyz:8080/portal.php": [
+    "http://atlas213.xyz:8080/c": [
         "00:1A:79:5B:44:42",
         "00:1A:79:58:95:BA"
     ],
-    "http://b1g.one/portal.php": [
+    "http://b1g.one/c": [
         "00:1A:79:09:25:B1",
         "00:1A:79:EF:FC:E2"
     ],
-    "http://black-ghost.live:8080/portal.php": [
+    "http://black-ghost.live:8080/c": [
         "00:1A:79:00:8A:5D",
         "00:1A:79:AF:F7:CD"
     ],
-    "http://eex24.com:8000/portal.php": [
+    "http://eex24.com:8000/c": [
         "00:1A:79:47:44:B2",
         "00:1A:79:43:70:EA"
     ],
-    "http://elrinconcito.ddns.net:8080/portal.php": [
+    "http://elrinconcito.ddns.net:8080/c": [
         "00:1A:79:af:33:66",
         "00:1A:79:b0:8e:da"
     ],
-    "http://fast.newdns.world/portal.php": [
+    "http://fast.newdns.world/c": [
         "00:1A:79:C7:11:1F",
         "00:1A:79:C0:E4:DC"
     ],
-    "http://fb4k.live:8080/portal.php": [
+    "http://fb4k.live:8080/c": [
         "00:1A:79:EF:1C:8F",
         "00:1A:79:BD:26:3A"
     ],
-    "http://fcs01.xyz:8080/portal.php": [
+    "http://fcs01.xyz:8080/c": [
         "00:1A:79:af:38:1c",
         "00:1A:79:AF:38:1C"
     ],
-    "http://iptv.darktv.eu:25461/portal.php": [
+    "http://iptv.darktv.eu:25461/c": [
         "00:1A:79:5C:A7:4A",
         "00:1A:79:7B:9D:09"
     ],
-    "http://iptvch2.com/portal.php": [
+    "http://iptvch2.com/c": [
         "00:1A:79:65:32:39",
         "00:1A:79:13:CA:F0"
     ],
-    "http://king4k.tv:8080/portal.php": [
+    "http://king4k.tv:8080/c": [
         "00:1A:79:C4:E1:CC",
         "00:1A:79:6E:43:78"
     ],
-    "http://kstv.us/portal.php": [
+    "http://kstv.us/c": [
         "00:1A:79:4A:4A:AD",
         "00:1A:79:34:9D:A9"
     ],
-    "http://line.dino.ws/portal.php": [
+    "http://line.dino.ws/c": [
         "00:1A:79:6F:E5:7F",
         "00:1A:79:A5:AB:46"
     ],
-    "http://line.ottcdn.net/portal.php": [
+    "http://line.ottcdn.net/c": [
         "00:1A:79:4F:A2:DC",
         "00:1A:79:24:71:A4"
     ],
-    "http://live.4keugoldtr.xyz:8080/portal.php": [
+    "http://live.4keugoldtr.xyz:8080/c": [
         "00:1A:79:10:DF:E4",
         "00:1A:79:10:df:e4"
     ],
-    "http://mugiwara.live:8080/portal.php": [
+    "http://mugiwara.live:8080/c": [
         "00:1A:79:6B:BE:7E",
         "00:1A:79:BD:26:3A"
     ],
-    "http://mynxg.top/portal.php": [
+    "http://mynxg.top/c": [
         "00:1A:79:b1:56:d2",
         "00:1A:79:B1:56:D2"
     ],
-    "http://playlistpanel.ddns.net:8080/portal.php": [
+    "http://playlistpanel.ddns.net:8080/c": [
         "00:1A:79:60:4F:A7",
         "00:1A:79:57:1F:19"
     ],
-    "http://primary4.magbox.tv/stalker_portal/portal.php": [
+    "http://primary4.magbox.tv/stalker_portal/c": [
         "00:1A:79:55:82:CA",
         "00:1A:79:15:3C:84"
     ],
-    "http://rapid-4k.com/portal.php": [
+    "http://rapid-4k.com/c": [
         "00:1A:79:AD:89:56",
         "00:1A:79:A2:77:93"
     ],
-    "http://sltv44.live:8080/portal.php": [
+    "http://sltv44.live:8080/c": [
         "00:1A:79:57:9F:90",
         "00:1A:79:81:68:53"
     ],
-    "http://ts1v3.dtv3.lol/portal.php": [
+    "http://ts1v3.dtv3.lol/c": [
         "00:1A:79:76:26:24",
         "00:1A:79:05:4C:68"
     ],
-    "http://tv.box4.cc:2052/portal.php": [
+    "http://tv.box4.cc:2052/c": [
         "00:1A:79:55:05:7B",
         "00:1A:79:00:00:00"
     ],
-    "http://watch.x-iptv.live/portal.php": [
+    "http://watch.x-iptv.live/c": [
         "00:1A:79:C8:29:26",
         "00:1A:79:73:98:55"
     ],
-    "http://xbox.ztv4you.com:2095/portal.php": [
+    "http://xbox.ztv4you.com:2095/c": [
         "00:1A:79:53:74:de",
         "00:1A:79:30:6F:85"
     ],
-    "http://xcpanel.live:8080/portal.php": [
+    "http://xcpanel.live:8080/c": [
         "00:1A:79:33:aa:1e",
         "00:1A:79:33:AA:1E"
     ],
-    "http://zorrohunter.com/portal.php": [
+    "http://zorrohunter.com/c": [
         "00:1A:79:41:0A:A2",
         "00:1A:79:5A:A7:1C"
     ],
-    "http://zupanet.live:8080/portal.php": [
+    "http://zupanet.live:8080/c": [
         "00:1A:79:66:A3:11",
         "00:1A:79:CC:08:3D"
     ],
-    "http://185.182.193.203:25461/portal.php": [
+    "http://185.182.193.203:25461/c": [
         "00:1A:79:7D:C2:E6"
     ],
-    "http://185.182.193.82/stalker_portal/portal.php": [
+    "http://185.182.193.82/stalker_portal/c": [
         "00:1A:79:69:D8:87"
     ],
-    "http://45.139.122.199/portal.php": [
+    "http://45.139.122.199/c": [
         "00:1A:79:CA:10:94"
     ],
-    "http://64cxz.com:8080/portal.php": [
+    "http://64cxz.com:8080/c": [
         "00:1A:79:c4:af:53"
     ],
-    "http://86964-prefer.ott-cdn.me/portal.php": [
+    "http://86964-prefer.ott-cdn.me/c": [
         "00:1A:79:FF:CF:EB"
     ],
-    "http://89.45.13.153:25461/portal.php": [
+    "http://89.45.13.153:25461/c": [
         "00:1A:79:08:BA:81"
     ],
-    "http://94.23.146.142/stalker_portal/portal.php": [
+    "http://94.23.146.142/stalker_portal/c": [
         "00:1A:79:00:00:04"
     ],
-    "http://a1.dinott.com/portal.php": [
+    "http://a1.dinott.com/c": [
         "00:1A:79:15:01:62"
     ],
-    "http://ainfo.icu:8000/portal.php": [
+    "http://ainfo.icu:8000/c": [
         "00:1A:79:48:1C:DC"
     ],
-    "http://ak-47scan.dyndns.tv:25461/portal.php": [
+    "http://ak-47scan.dyndns.tv:25461/c": [
         "00:1A:79:B5:24:2E"
     ],
-    "http://app.yupptv.io/stalker_portal/portal.php": [
+    "http://app.yupptv.io/stalker_portal/c": [
         "00:1A:79:32:35:39"
     ],
-    "http://auth.streamtv.to:8080/portal.php": [
+    "http://auth.streamtv.to:8080/c": [
         "00:1A:79:A6:DD:24"
     ],
-    "http://besttv.club:8080/portal.php": [
+    "http://besttv.club:8080/c": [
         "00:1A:79:18:1A:D3"
     ],
-    "http://blomc.rtmp.io/portal.php": [
+    "http://blomc.rtmp.io/c": [
         "00:1A:79:B4:80:2A"
     ],
-    "http://don-balon.ddns.net:8080/portal.php": [
+    "http://don-balon.ddns.net:8080/c": [
         "00:1A:79:55:05:b5"
     ],
-    "http://elchicharron.ddns.net:8080/portal.php": [
+    "http://elchicharron.ddns.net:8080/c": [
         "00:1A:79:4F:1C:2A"
     ],
-    "http://enndy75.com:2086/portal.php": [
+    "http://enndy75.com:2086/c": [
         "00:1A:79:46:07:E7"
     ],
-    "http://epg.iptveros.com/portal.php": [
+    "http://epg.iptveros.com/c": [
         "00:1A:79:3E:CD:86"
     ],
-    "http://ex.guteex.com:8000/portal.php": [
+    "http://ex.guteex.com:8000/c": [
         "00:1A:79:3B:70:D8"
     ],
-    "http://ip.bttv.be:8080/portal.php": [
+    "http://ip.bttv.be:8080/c": [
         "00:1A:79:AB:57:63"
     ],
-    "http://ip.xtremetv.eu:8000/portal.php": [
+    "http://ip.xtremetv.eu:8000/c": [
         "00:1A:79:3F:62:09"
     ],
-    "http://itekfzco.com/portal.php": [
+    "http://itekfzco.com/c": [
         "00:1A:79:24:98:C2"
     ],
-    "http://jiotv.be/stalker_portal/portal.php": [
+    "http://jiotv.be/stalker_portal/c": [
         "00:1A:79:AA:33:FF"
     ],
-    "http://k2tv.zenga.cc/stalker_portal/portal.php": [
+    "http://k2tv.zenga.cc/stalker_portal/c": [
         "00:1A:79:7D:4F:39"
     ],
-    "http://king-play.newtvhd.com:7070/portal.php": [
+    "http://king-play.newtvhd.com:7070/c": [
         "00:1A:79:6A:1E:4B"
     ],
-    "http://line.iptvhunt.com/portal.php": [
+    "http://line.iptvhunt.com/c": [
         "00:1A:79:96:3D:27"
     ],
-    "http://live.streamtv.to:8080/portal.php": [
+    "http://live.streamtv.to:8080/c": [
         "00:1A:79:63:78:E0"
     ],
-    "http://m.devbox.tv/portal.php": [
+    "http://m.devbox.tv/c": [
         "00:1A:79:00:8A:5D"
     ],
-    "http://m.marstvx.com:8000/portal.php": [
+    "http://m.marstvx.com:8000/c": [
         "00:1A:79:22:21:EC"
     ],
-    "http://mag.good-4k.cc/portal.php": [
+    "http://mag.good-4k.cc/c": [
         "00:1A:79:D8:8F:F8"
     ],
-    "http://mag.ottcst.com/portal.php": [
+    "http://mag.ottcst.com/c": [
         "00:1A:79:bd:4f:b9"
     ],
-    "http://mag.ukhd.tv/portal.php": [
+    "http://mag.ukhd.tv/c": [
         "00:1A:79:23:cb:9a"
     ],
-    "http://magicsateu.com:8080/portal.php": [
+    "http://magicsateu.com:8080/c": [
         "00:1A:79:9A:D0:C6"
     ],
-    "http://main.light-ott.net/portal.php": [
+    "http://main.light-ott.net/c": [
         "00:1A:79:77:87:1A"
     ],
-    "http://masterofiptv.pro/portal.php": [
+    "http://masterofiptv.pro/c": [
         "00:1A:79:4C:0A:A6"
     ],
-    "http://media.ottpurstream.com/portal.php": [
+    "http://media.ottpurstream.com/c": [
         "00:1A:79:64:DE:1D"
     ],
-    "http://museunofthfuture.pics/portal.php": [
+    "http://museunofthfuture.pics/c": [
         "00:1A:79:00:8A:5D"
     ],
-    "http://mylife2022.pro/portal.php": [
+    "http://mylife2022.pro/c": [
         "00:1A:79:11:1F:A5"
     ],
-    "http://noriptv.streamtv.to:8080/portal.php": [
+    "http://noriptv.streamtv.to:8080/c": [
         "00:1A:79:40:B2:37"
     ],
-    "http://otn20.com:8000/portal.php": [
+    "http://otn20.com:8000/c": [
         "00:1A:79:48:C0:EF"
     ],
-    "http://portal.best-tv.me/portal.php": [
+    "http://portal.best-tv.me/c": [
         "00:1A:79:E8:1E:AB"
     ],
-    "http://portal.primez.biz/stalker_portal/portal.php": [
+    "http://portal.primez.biz/stalker_portal/c": [
         "00:1A:79:AC:D6:35"
     ],
-    "http://portal1.iptv-mag.com/portal.php": [
+    "http://portal1.iptv-mag.com/c": [
         "00:1A:79:FE:6A:9B"
     ],
-    "http://portal5.iptv-mag.com/portal.php": [
+    "http://portal5.iptv-mag.com/c": [
         "00:1A:79:23:D4:F0"
     ],
-    "http://portal6.iptv-mag.com/portal.php": [
+    "http://portal6.iptv-mag.com/c": [
         "00:1A:79:75:3D:BE"
     ],
-    "http://proiptv.magiptv.net/portal.php": [
+    "http://proiptv.magiptv.net/c": [
         "00:1A:79:2C:0A:F2"
     ],
-    "http://pt.chape-shop.com:8080/portal.php": [
+    "http://pt.chape-shop.com:8080/c": [
         "00:1A:79:C9:DC:1F"
     ],
-    "http://ramz.123tv.to:8080/portal.php": [
+    "http://ramz.123tv.to:8080/c": [
         "00:1A:79:63:78:E0"
     ],
-    "http://server.hdiptv.world:8080/portal.php": [
+    "http://server.hdiptv.world:8080/c": [
         "00:1A:79:43:EB:A3"
     ],
-    "http://stb.homeiptv.org/stalker_portal/portal.php": [
+    "http://stb.homeiptv.org/stalker_portal/c": [
         "00:1A:79:33:4E:37"
     ],
-    "http://stb5.rucolor.tv/stalker_portal/portal.php": [
+    "http://stb5.rucolor.tv/stalker_portal/c": [
         "00:1A:79:78:89:2E"
     ],
-    "http://stream.ks88.eu:8080/portal.php": [
+    "http://stream.ks88.eu:8080/c": [
         "00:1A:79:5F:63:84"
     ],
-    "http://teckpro-lus.xyz/portal.php": [
+    "http://teckpro-lus.xyz/c": [
         "00:1A:79:5F:DF:D3"
     ],
-    "http://too4youall.net:8080/portal.php": [
+    "http://too4youall.net:8080/c": [
         "00:1A:79:CB:85:E5"
     ],
-    "http://tornado.netlink4.com:8000/portal.php": [
+    "http://tornado.netlink4.com:8000/c": [
         "00:1A:79:01:6A:D7"
     ],
-    "http://tv.nova-iptv.com/portal.php": [
+    "http://tv.nova-iptv.com/c": [
         "00:1A:79:15:ac:5c"
     ],
-    "http://tv.proturk.xyz:8080/portal.php": [
+    "http://tv.proturk.xyz:8080/c": [
         "00:1A:79:63:78:E0"
     ],
-    "http://vipgermany.pro:8080/portal.php": [
+    "http://vipgermany.pro:8080/c": [
         "00:1A:79:C7:58:27"
     ],
-    "http://w212tr.xyz:2086/portal.php": [
+    "http://w212tr.xyz:2086/c": [
         "00:1A:79:56:29:3B"
     ],
-    "http://www.rsplus.cc/portal.php": [
+    "http://www.rsplus.cc/c": [
         "00:1A:79:00:10:42"
     ],
-    "http://zonalove.xyz:8080/portal.php": [
+    "http://zonalove.xyz:8080/c": [
         "00:1A:79:00:31:3E"
     ],
-    "http://zzportals.com:2095/portal.php": [
+    "http://zzportals.com:2095/c": [
         "00:1A:79:BC:3A:99"
     ]
 }
