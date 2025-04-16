@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addons>
-<addon id="plugin.video.vavooto" name="VAVOO.TO" version="7.1.6.1" provider-name="kasi,michaz">
+<addon id="plugin.video.vavooto" name="VAVOO.TO" version="7.2" provider-name="kasi,michaz">
 	<requires>
 		<import addon="script.module.requests"/>
 		<import addon="script.module.resolveurl"/>
+		<import addon="plugin.video.stalkermod"/>
 		<import addon="inputstream.ffmpegdirect" optional="true" />
 		<import addon="script.module.futures" optional="true" />
 		<import addon="script.module.infotagger" optional="true" />
@@ -472,6 +473,34 @@
 			<banner>resources/banner.png</banner>
 			<clearlogo>resources/clearlogo.png</clearlogo>
 			<screenshot></screenshot>
+		</assets>
+	</extension>
+</addon>
+
+<addon id="plugin.video.stalkermod" name="Stalker Client Mod" version="1.0.0" provider-name="michaz">
+	<requires>
+		<import addon="xbmc.python" version="3.0.1"/>
+		<import addon="script.module.requests" version="2.27.1"/>
+	</requires>
+	<extension point="xbmc.python.pluginsource" library="addon_entry.py">
+		<provides>video</provides>
+	</extension>
+	<extension point="xbmc.service" library="service_entry.py"/>
+	<extension point="xbmc.addon.metadata">
+		<reuselanguageinvoker>true</reuselanguageinvoker>
+		<platform>all</platform>
+		<summary lang="en_GB">Stalker VOD Client</summary>
+		<description lang="en_GB">Kodi Stalker client for accessing on demand videos and channels from Stalker middleware</description>
+		<license>GPL-3.0-or-later</license>
+		<language>en</language>
+		<source>https://github.com/rickeylohia/plugin.video.stalkervod</source>
+		<website>https://github.com/rickeylohia/plugin.video.stalkervod</website>
+		<assets>
+			<icon>resources/media/icon.png</icon>
+			<screenshot>resources/media/screenshot_1.png</screenshot>
+			<screenshot>resources/media/screenshot_2.png</screenshot>
+			<screenshot>resources/media/screenshot_3.png</screenshot>
+			<screenshot>resources/media/screenshot_4.png</screenshot>
 		</assets>
 	</extension>
 </addon>
