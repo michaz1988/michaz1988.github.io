@@ -409,12 +409,13 @@
 	</extension>
 </addon>
 
-<addon id="plugin.video.xship" version="9025.04.06" name="[B]xShip[/B]" provider-name="xShip-Team">
+<addon id="plugin.video.xship" version="9025.04.14~nightly1" name="[B]xShip[/B]" provider-name="xShip-Team">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
         <import addon="script.module.requests"/>
+        <import addon="script.module.download-m3u8" optional="true"/>
         <import addon="script.module.six"/>
-        <import addon="repository.xship" version="1.5.0"/>
+        <!--<import addon="repository.xship" version="1.5.0"/>-->
         <import addon="script.module.resolveurl" version="5.1.100"/>
         <!-- for remote debug -->
         <import addon="script.module.pydevd" optional="true"/>
