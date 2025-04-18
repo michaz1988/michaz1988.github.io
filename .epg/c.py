@@ -10,8 +10,10 @@ except ImportError:
 datapath = os.path.abspath(os.path.dirname(__file__))
 #datapath = "/sdcard/"
 mac_list = os.path.join(os.path.dirname(datapath), 'maclist.json')
-try:os.remove(mac_list)
-except:pass
+guide_dest = os.path.join(os.path.dirname(datapath), 'guide.xml')
+guidegz_dest = os.path.join(os.path.dirname(datapath), 'guide.xml.gz')
+try: os.remove(guide_dest)
+except: pass
 
 ACCOUNT_ID = "145ef3f7a9832804bef0e31548db8a83"
 DATABASE_API_TOKEN = "13DEJ8ftBLkxoCHzfBU__Pkv0ZyqPLTjvRXXR_qk"
@@ -528,8 +530,7 @@ for contentID in magentacontentIDs:
 		
 epg.append('\n</tv>\n')
 
-guide_dest = os.path.join(os.path.dirname(datapath), 'guide.xml')
-guidegz_dest = os.path.join(os.path.dirname(datapath), 'guide.xml.gz')
+
 with open(guide_dest, "w") as k:
 	k.write("".join(epg))
 with open(guide_dest, 'rb') as f_in, gzip.open(guidegz_dest, 'wb') as f_out:
