@@ -71,7 +71,6 @@ sorted_dict = dict(sorted(sorted(alllist.items()), key=lambda item: len(item[1])
 with open(mac_list, "w") as k:
 	json.dump(sorted_dict, k, indent=4)
 
-
 addon_name = "Takealug EPG Grabber"
 addon_version = "1.1.7"
 
