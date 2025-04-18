@@ -40,6 +40,19 @@ def get_epgLength(days_to_grab, form="%Y-%m-%dT%H:%M:00.000Z"):
 	endtime = calc_then.strftime(form)
 	return starttime, endtime
 
+page = requests.get("https://drive.usercontent.google.com/download?id=1OSNBcIbXOmcYqkA5GjK0DP-5qo0XW1YI&export=download").text
+urls, macs = [], []
+for line in page.splitlines():
+	if "URL" in line:
+		url = line.lstrip("URL: ").rstrip("/").replace(":80/c", "/c").rstrip(":80")
+		if not url.endswith("/c"): url+="/c"
+		urls.append(url)
+	if "MAC" in line: macs.append(line.lstrip("MAC: ").strip())
+
+for i , url in enumerate(urls):
+	if url not in alllist: alllist[url] = []
+	alllist[url].append(macs[i])
+
 page = requests.get("https://ikracccam.blogspot.com/p/stalker-iptv-ikra_2.html").text
 soup = BeautifulSoup(page, 'html.parser')
 for tag in soup.find_all('table'):
