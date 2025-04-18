@@ -530,7 +530,6 @@ for contentID in magentacontentIDs:
 		
 epg.append('\n</tv>\n')
 
-
 with open(guide_dest, "w") as k:
 	k.write("".join(epg))
 with open(guide_dest, 'rb') as f_in, gzip.open(guidegz_dest, 'wb') as f_out:
