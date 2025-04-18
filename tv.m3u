@@ -39,9 +39,9 @@ plugin://plugin.video.vavooto/?name=DELUXE MUSIC
 plugin://plugin.video.vavooto/?name=DISCOVERY
 #EXTINF:-1 tvg-id="DMAX" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/dmax.png",DMAX
 plugin://plugin.video.joyn/?mode=play_video&video_id=dmax-at&stream_type=LIVE
-#EXTINF:-1 tvg-id="EURO" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/eurosport1.png",Eurosport 1
+#EXTINF:-1 tvg-id="389" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/eurosport1.png",Eurosport 1
 plugin://plugin.video.joyn/?mode=play_video&video_id=eurosport1-de&stream_type=LIVE
-#EXTINF:-1 tvg-id="EURO2" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/eurosport2.png",Eurosport 2
+#EXTINF:-1 tvg-id="18" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/eurosport2.png",Eurosport 2
 plugin://plugin.video.vavooto/?name=EUROSPORT+2
 #EXTINF:-1 tvg-id="FFTV" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/fixundfoxi.png",Fix und Foxi
 plugin://plugin.video.vavooto/?name=FIX+%26+FOXI
