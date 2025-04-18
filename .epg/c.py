@@ -1,4 +1,4 @@
-import requests, gzip, io, json, time, os, boto3, uuid
+import requests, gzip, json, time, os, boto3, uuid
 from maclist import alllist
 from datetime import datetime, timedelta
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -10,6 +10,8 @@ except ImportError:
 datapath = os.path.abspath(os.path.dirname(__file__))
 #datapath = "/sdcard/"
 mac_list = os.path.join(os.path.dirname(datapath), 'maclist.json')
+try:os.remove(mac_list)
+except:pass
 
 ACCOUNT_ID = "145ef3f7a9832804bef0e31548db8a83"
 DATABASE_API_TOKEN = "13DEJ8ftBLkxoCHzfBU__Pkv0ZyqPLTjvRXXR_qk"
