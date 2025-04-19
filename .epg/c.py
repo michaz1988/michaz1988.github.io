@@ -47,7 +47,7 @@ for line in page.splitlines():
 	if "URL" in line:
 		url = line.lstrip("URL: ").rstrip("/").replace(":80/c", "/c")
 		if not url.endswith("/c"): url+="/c"
-		urls.append(url)
+		urls.append(url.replace("/stalker_portal/c", ""))
 	if "MAC" in line: macs.append(line.lstrip("MAC: ").strip())
 
 for i , url in enumerate(urls):
@@ -59,6 +59,8 @@ soup = BeautifulSoup(page, 'html.parser')
 for tag in soup.find_all('table'):
 	u, p, m, e = tag.find_all("th")
 	url, port, mac, expire = u.text.strip().rstrip("/").replace(":80/c", "/c"), p.text.strip(), m.text.strip(), e.text.strip()
+	if not url.endswith("/c"): url+="/c"
+	url = url.replace("/stalker_portal/c", "")
 	if 'unlimited' in expire:
 		if url not in alllist: alllist[url] = []
 		if mac not in alllist[url]:
@@ -79,6 +81,8 @@ for a in csv_content:
 	if "," in a:
 		url, mac = a.split(",")
 		url = url.strip().rstrip("/").replace(":80/c", "/c")
+		if not url.endswith("/c"): url+="/c"
+		url = url.replace("/stalker_portal/c", "")
 		if url not in alllist: alllist[url] = []
 		if mac not in alllist[url]:
 			alllist[url].append(mac)
