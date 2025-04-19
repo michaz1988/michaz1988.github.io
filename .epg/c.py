@@ -44,7 +44,7 @@ page = requests.get("https://drive.usercontent.google.com/download?id=1OSNBcIbXO
 urls, macs = [], []
 for line in page.splitlines():
 	if "URL" in line:
-		url = line.lstrip("URL: ").rstrip("/").replace(":80/c", "/c").rstrip(":80")
+		url = line.lstrip("URL: ").rstrip("/").replace(":80/c", "/c")
 		if not url.endswith("/c"): url+="/c"
 		urls.append(url)
 	if "MAC" in line: macs.append(line.lstrip("MAC: ").strip())
