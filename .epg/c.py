@@ -154,7 +154,7 @@ def xml_broadcast(episode_format, channel_id, item_title, item_starttime, item_e
 		if item_subtitle: epg.append(f'		<sub-title lang="{lang}">{item_subtitle}</sub-title>\n')
 		## DESCRIPTION Condition
 		if item_description:
-			#item_description = item_description.replace('<br/>', '\n		')
+			item_description = item_description.replace('<br/>', '\n').replace('<br />', '\n')
 			if enable_rating_mapper == False: epg.append(f'		<desc lang="{lang}">{item_description}</desc>\n')
 			## Rating Mapper
 			elif enable_rating_mapper == True:
@@ -541,6 +541,6 @@ for contentID in magentacontentIDs:
 epg.append('\n</tv>\n')
 
 with open(guide_dest, "w") as k:
-	k.write("".join(epg).replace("<br/>", "\n"))
+	k.write("".join(epg))
 with open(guide_dest, 'rb') as f_in, gzip.open(guidegz_dest, 'wb') as f_out:
 	f_out.writelines(f_in)
