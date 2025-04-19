@@ -8,7 +8,7 @@ except ImportError:
     from bs4 import BeautifulSoup
     
 datapath = os.path.abspath(os.path.dirname(__file__))
-datapath = "/sdcard/"
+#datapath = "/sdcard/"
 mac_list = os.path.join(os.path.dirname(datapath), 'maclist.json')
 guide_dest = os.path.join(os.path.dirname(datapath), 'guide.xml')
 guidegz_dest = os.path.join(os.path.dirname(datapath), 'guide.xml.gz')
