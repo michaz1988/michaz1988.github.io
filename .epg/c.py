@@ -8,7 +8,7 @@ except ImportError:
     from bs4 import BeautifulSoup
     
 datapath = os.path.abspath(os.path.dirname(__file__))
-#datapath = "/sdcard/"
+datapath = "/sdcard/"
 mac_list = os.path.join(os.path.dirname(datapath), 'maclist.json')
 guide_dest = os.path.join(os.path.dirname(datapath), 'guide.xml')
 guidegz_dest = os.path.join(os.path.dirname(datapath), 'guide.xml.gz')
@@ -154,7 +154,7 @@ def xml_broadcast(episode_format, channel_id, item_title, item_starttime, item_e
 		if item_subtitle: epg.append(f'		<sub-title lang="{lang}">{item_subtitle}</sub-title>\n')
 		## DESCRIPTION Condition
 		if item_description:
-			item_description = item_description.replace('<br/>', '\n')
+			#item_description = item_description.replace('<br/>', '\n		')
 			if enable_rating_mapper == False: epg.append(f'		<desc lang="{lang}">{item_description}</desc>\n')
 			## Rating Mapper
 			elif enable_rating_mapper == True:
@@ -541,6 +541,6 @@ for contentID in magentacontentIDs:
 epg.append('\n</tv>\n')
 
 with open(guide_dest, "w") as k:
-	k.write("".join(epg))
+	k.write("".join(epg).replace("<br/>", "\n"))
 with open(guide_dest, 'rb') as f_in, gzip.open(guidegz_dest, 'wb') as f_out:
 	f_out.writelines(f_in)
