@@ -273,7 +273,7 @@ def get_epg(tvs_data_url):
 		currentTopics = playbilllist.get('currentTopics')
 		conclusion = playbilllist.get('conclusion')
 		preview = playbilllist.get('preview')
-		if conclusion: item_description += conclusion + "\n"
+		if conclusion: ' += conclusion + "\n"
 		if preview: item_description += preview + "\n"
 		if currentTopics: item_description += currentTopics + "\n"
 		if description: item_description += description + "\n"
