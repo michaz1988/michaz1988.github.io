@@ -154,7 +154,6 @@ def xml_broadcast(episode_format, channel_id, item_title, item_starttime, item_e
 		if item_subtitle: epg.append(f'		<sub-title lang="{lang}">{item_subtitle}</sub-title>\n')
 		## DESCRIPTION Condition
 		if item_description:
-			item_description = item_description.replace('<br/>', '\n').replace('<br />', '\n')
 			if enable_rating_mapper == False: epg.append(f'		<desc lang="{lang}">{item_description}</desc>\n')
 			## Rating Mapper
 			elif enable_rating_mapper == True:
@@ -254,7 +253,8 @@ def xml_broadcast(episode_format, channel_id, item_title, item_starttime, item_e
 def rep(episode_format, channel_id, item_title, item_starttime, item_endtime, item_description, item_country, item_picture, item_subtitle, items_genre, item_date, item_season, item_episode, item_agerating, item_starrating, items_director, items_producer, items_actor, enable_rating_mapper, lang):
 	if channel_id: channel_id = channel_id.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 	if item_title: item_title = item_title.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
-	if item_description: item_description = item_description.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+	if item_description: item_description = item_description.strip().replace('  ', ' ').replace('<br/>', '\n').replace('<br />', '\n').replace('\n\n', '\n')
+	if item_description: item_description = item_description.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('\n', '\n			')
 	if item_country: item_country = item_country.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 	if item_subtitle: item_subtitle = item_subtitle.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 	if items_genre: items_genre = items_genre.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
@@ -273,7 +273,7 @@ def get_epg(tvs_data_url):
 		currentTopics = playbilllist.get('currentTopics')
 		conclusion = playbilllist.get('conclusion')
 		preview = playbilllist.get('preview')
-		if conclusion: ' += conclusion + "\n"
+		if conclusion: item_description += conclusion + "\n"
 		if preview: item_description += preview + "\n"
 		if currentTopics: item_description += currentTopics + "\n"
 		if description: item_description += description + "\n"
@@ -302,7 +302,8 @@ def get_epg(tvs_data_url):
 		items_producer = ''
 		if channel_id: channel_id = channel_id.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 		if item_title: item_title = item_title.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
-		if item_description: item_description = item_description.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+		if item_description: item_description = item_description.strip().replace('  ', ' ').replace('<br/>', '\n').replace('<br />', '\n').replace('\n\n', '\n')
+		if item_description: item_description = item_description.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('\n', '\n			')
 		if item_country: item_country = item_country.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 		if item_subtitle: item_subtitle = item_subtitle.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 		if items_genre: items_genre = items_genre.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
@@ -318,7 +319,6 @@ def get_epg(tvs_data_url):
 			## SUBTITLE Condition
 			if item_subtitle: guide.append(f'		<sub-title lang="{lang}">{item_subtitle}</sub-title>\n')
 			## DESCRIPTION Condition
-			if item_description: item_description = item_description.replace('\n', '\n		')
 			if enable_rating_mapper == False: guide.append(f'		<desc lang="{lang}">{item_description}</desc>\n')
 			## Rating Mapper
 			elif enable_rating_mapper == True:
