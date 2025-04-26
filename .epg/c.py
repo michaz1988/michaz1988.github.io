@@ -47,11 +47,11 @@ for line in page.splitlines():
 	if "URL" in line:
 		url = line.lstrip("URL: ").rstrip("/").replace(":80/c", "/c")
 		if not url.endswith("/c"): url+="/c"
-	if "MAC" in line: mac = line.lstrip("MAC: ").strip() 
-	if "Status" in line and "Offline" in line: continue
-	macs.append(mac)
-	urls.append(url)
-	
+		urls.append(url))
+	if "MAC" in line: macs.append(line.lstrip("MAC: ").strip())
+	if "Status" in line and "Offline" in line:
+		urls.pop[-1]
+		macs.pop[-1]
 
 for i , url in enumerate(urls):
 	if url not in alllist: alllist[url] = []
