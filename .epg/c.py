@@ -50,8 +50,8 @@ for line in page.splitlines():
 		urls.append(url)
 	if "MAC" in line: macs.append(line.lstrip("MAC: ").strip())
 	if "Status" in line and "Offline" in line:
-		urls.pop[-1]
-		macs.pop[-1]
+		urls.pop()
+		macs.pop()
 
 for i , url in enumerate(urls):
 	if url not in alllist: alllist[url] = []
