@@ -47,7 +47,7 @@ for line in page.splitlines():
 	if "URL" in line:
 		url = line.lstrip("URL: ").rstrip("/").replace(":80/c", "/c")
 		if not url.endswith("/c"): url+="/c"
-		urls.append(url))
+		urls.append(url)
 	if "MAC" in line: macs.append(line.lstrip("MAC: ").strip())
 	if "Status" in line and "Offline" in line:
 		urls.pop[-1]
