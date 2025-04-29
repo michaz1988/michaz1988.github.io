@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addons>
-<addon id="plugin.video.vavooto" name="VAVOO.TO" version="8.0.3" provider-name="kasi,michaz">
+<addon id="plugin.video.vavooto" name="VAVOO.TO" version="8.1" provider-name="kasi,michaz">
 	<requires>
 		<import addon="script.module.requests"/>
 		<import addon="script.module.resolveurl"/>
-		<import addon="plugin.video.stalkermod"/>
 		<import addon="inputstream.ffmpegdirect" optional="true" />
 		<import addon="script.module.futures" optional="true" />
 		<import addon="script.module.infotagger" optional="true" />
@@ -478,7 +477,7 @@
 	</extension>
 </addon>
 
-<addon id="plugin.video.stalkermod" name="Stalker Client Mod" version="1.0.0" provider-name="michaz">
+<addon id="plugin.video.stalkermod" name="Stalker Client Mod" version="1.0.1" provider-name="michaz">
 	<requires>
 		<import addon="xbmc.python" version="3.0.1"/>
 		<import addon="script.module.requests" version="2.27.1"/>
