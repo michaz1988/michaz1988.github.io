@@ -560,7 +560,7 @@ for user_item in selected_list:
 			if item_episode: item_episode = re.sub(r"\D+", '#', item_episode).split('#')[0]
 			if item_season: item_season = re.sub(r"\D+", '#', item_season).split('#')[0]
 			if not item_description: item_description = 'No Program Information available'
-			rep(episode_format, channel_name, item_title, item_starttime, item_endtime,item_description, item_country, item_picture, item_subtitle,items_genre, item_date, item_season, item_episode, item_agerating, item_starrating, items_director,items_producer, items_actor, enable_rating_mapper, lang)
+			rep(episode_format, contentID, item_title, item_starttime, item_endtime,item_description, item_country, item_picture, item_subtitle,items_genre, item_date, item_season, item_episode, item_agerating, item_starrating, items_director,items_producer, items_actor, enable_rating_mapper, lang)
 		except (KeyError, IndexError): pass
 epg.append('\n<!--  TV SPIELFILM (DE)  PROGRAMME LIST -->')
 
