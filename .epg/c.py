@@ -40,7 +40,7 @@ def get_epgLength(days_to_grab, form="%Y-%m-%dT%H:%M:00.000Z"):
 	starttime = calc_today.strftime(form)
 	endtime = calc_then.strftime(form)
 	return starttime, endtime
-https://drive.google.com/uc?export=download&id=1TlSKAJkq8d0cR6a47y6wTnWa73SYNGNx
+
 page = requests.get("https://drive.usercontent.google.com/download?id=1OSNBcIbXOmcYqkA5GjK0DP-5qo0XW1YI&export=download").text
 urls, macs = [], []
 for line in page.splitlines():
