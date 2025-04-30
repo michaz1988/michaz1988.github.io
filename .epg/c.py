@@ -268,7 +268,9 @@ def xml_broadcast(episode_format, channel_id, item_title, item_starttime, item_e
 		epg.append('	</programme>\n')
 
 def rep(episode_format, channel_id, item_title, item_starttime, item_endtime, item_description, item_country, item_picture, item_subtitle, items_genre, item_date, item_season, item_episode, item_agerating, item_starrating, items_director, items_producer, items_actor, enable_rating_mapper, lang):
-	if channel_id: channel_id = channel_id.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+	if channel_id: 
+		if isinstance(channel_id, int): channel_id = str(channel_id)
+		channel_id = channel_id.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 	if item_title: item_title = item_title.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 	if item_description: item_description = item_description.strip().replace('  ', ' ').replace('<br/>', '\n').replace('<br />', '\n').replace('\n\n', '\n')
 	if item_description: item_description = item_description.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
