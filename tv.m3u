@@ -33,10 +33,14 @@ plugin://plugin.video.vavooto/?name=CARTOONITO
 plugin://plugin.video.joyn/?mode=play_video&video_id=comedy-central-de&stream_type=LIVE
 #EXTINF:-1 tvg-id="CRIN" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/crimeandinvestigation.png",CRIME + INVESTIGATION
 plugin://plugin.video.vavooto/?name=CRIME+%2b+INVESTIGATION
-#EXTINF:-1 tvg-id="DMC" group-title="Alle" tvg-logo="https://michaz1988.github.io/logos/deluxemusic.png",DELUXE MUSIC
+#EXTINF:-1 tvg-id="DMC" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/deluxemusic.png",DELUXE MUSIC
 plugin://plugin.video.vavooto/?name=DELUXE MUSIC
 #EXTINF:-1 tvg-id="HDDIS" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/discoverychannel.png",Discovery
 plugin://plugin.video.vavooto/?name=DISCOVERY
+#EXTINF:-1 tvg-id="12188" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/dazn1.png",DAZN 1
+plugin://plugin.video.vavooto/?name=DAZN 1
+#EXTINF:-1 tvg-id="12189" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/dazn2.png",DAZN 2
+plugin://plugin.video.vavooto/?name=DAZN 2
 #EXTINF:-1 tvg-id="DMAX" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/dmax.png",DMAX
 plugin://plugin.video.joyn/?mode=play_video&video_id=dmax-at&stream_type=LIVE
 #EXTINF:-1 tvg-id="389" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/eurosport1.png",Eurosport 1
