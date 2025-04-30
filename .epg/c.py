@@ -1,4 +1,4 @@
-import requests, gzip, json, time, os, boto3, uuid
+import requests, gzip, json, time, os, boto3, uuid, urllib
 from maclist import alllist
 from datetime import datetime, timedelta
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -40,7 +40,7 @@ def get_epgLength(days_to_grab, form="%Y-%m-%dT%H:%M:00.000Z"):
 	starttime = calc_today.strftime(form)
 	endtime = calc_then.strftime(form)
 	return starttime, endtime
-
+https://drive.google.com/uc?export=download&id=1TlSKAJkq8d0cR6a47y6wTnWa73SYNGNx
 page = requests.get("https://drive.usercontent.google.com/download?id=1OSNBcIbXOmcYqkA5GjK0DP-5qo0XW1YI&export=download").text
 urls, macs = [], []
 for line in page.splitlines():
@@ -102,6 +102,15 @@ epg.append('\n<!--  SIMPLI TV  CHANNEL LIST -->\n')
 epg.append('	<channel id="PULS24">\n')
 epg.append('		<display-name lang="de">PULS24</display-name>\n')
 epg.append('		<icon src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/PULS24logo.png/640px-PULS24logo.png" />\n')
+epg.append('	</channel>\n')
+epg.append('\n<!--  TV DIGITAL (DE)  CHANNEL LIST -->\n')
+epg.append('	<channel id="12188">\n')
+epg.append('		<display-name lang="de">DAZN1</display-name>\n')
+epg.append('		<icon src="https://sender.epglogos.de/240x200/12188.png" />\n')
+epg.append('	</channel>\n')
+epg.append('	<channel id="12189">\n')
+epg.append('		<display-name lang="de">DAZN2</display-name>\n')
+epg.append('		<icon src="https://sender.epglogos.de/240x200/12189.png" />\n')
 epg.append('	</channel>\n')
 
 tvsDE_header = {'Host': 'live.tvspielfilm.de',
@@ -496,6 +505,63 @@ for program in epg_data:
 	items_actor = ', '.join(actor)
 	item_description+= "\n"+', '.join(desc)
 	rep('onscreen', "PULS24", item_title, item_starttime, item_endtime, item_description, item_country, item_picture, item_subtitle, items_genre, item_date, item_season, item_episode, item_agerating, item_starrating, items_director, items_producer, items_actor, False, lang)
+epg.append('\n<!--  TV DIGITAL (DE) PROGRAMME LIST -->')
+broadcast_files = {}
+selected_list = [{"contentId":12188,"name":"DAZN1","pictures":[{"href":"https://sender.epglogos.de/240x200/12188.png"}]},{"contentId":12189,"name":"DAZN2","pictures":[{"href":"https://sender.epglogos.de/240x200/12189.png"}]}]
+ids = []
+for user_item in selected_list:
+	ids.append(user_item['contentId'])
+day_to_start = datetime(today.year, today.month, today.day, hour=00, minute=00, second=1)
+for i in range(0, days_to_grab):
+	day_to_grab = int(datetime.timestamp(day_to_start))
+	day_to_start += timedelta(days=1)
+	params = '{"date":%s,"channels":%s}' % (day_to_grab, ids)
+	for a in requests.get("https://mobile.tvdigital.de/programbystation?data="+urllib.parse.quote(params)+"&tmpl=app&device=androidv14&displayDensity=200&sdkInt=35").json():
+		broad = []
+		for b in a["broadcasts"]:
+			broad.append(b["id"])
+		params = '{"broadcasts":%s}' % broad
+		for t in requests.get("https://mobile.tvdigital.de/broadcastdetails?data="+urllib.parse.quote(params)+"&tmpl=app&device=androidv14&displayDensity=200&sdkInt=35").json():
+			if t["n"] not in broadcast_files: broadcast_files[t["n"]] = []
+			broadcast_files[t["n"]].append(t)
+for user_item in selected_list:
+	contentID = user_item['contentId']
+	channel_name = user_item['name']
+	for playbilllist in broadcast_files[contentID]:
+		try:
+			item_title = playbilllist.get('title', "")
+			item_starttime = playbilllist.get('startTime', "")
+			item_endtime = playbilllist.get('z', "")
+			item_description = ""
+			if playbilllist.get('o'):
+				 item_description = playbilllist.get('o')+"\n"
+			if playbilllist.get('H',""):
+				item_description += '\n'.join(playbilllist.get('H',""))
+			item_country = playbilllist.get('u', "")
+			item_picture = playbilllist.get('w', "")
+			item_subtitle = playbilllist.get('E', "")
+			items_genre = playbilllist.get('t', "")
+			item_date = playbilllist.get('v', "")
+			item_season = playbilllist.get('B', "")
+			item_episode = playbilllist.get('C', "")
+			item_agerating = playbilllist.get('K', "")
+			ad = playbilllist.get('G')
+			items_director, items_actor = "", ""
+			director_list, actor_list = [], []
+			if ad:
+				for key , value in dict(zip(ad[::2], ad[1::2])).items():
+					if value == "Regie": director_list.append(key)
+					else: actor_list.append(f"{key} als {value}")
+				items_actor = ','.join(actor_list)
+				items_director = ','.join(director_list)
+			items_producer, item_starrating = "", ""
+			item_starttime = datetime.utcfromtimestamp(item_starttime).strftime('%Y%m%d%H%M%S')
+			item_endtime = datetime.utcfromtimestamp(item_endtime).strftime('%Y%m%d%H%M%S')
+			if item_episode: item_episode = re.sub(r"\D+", '#', item_episode).split('#')[0]
+			if item_season: item_season = re.sub(r"\D+", '#', item_season).split('#')[0]
+			if not item_description: item_description = 'No Program Information available'
+			rep(episode_format, channel_name, item_title, item_starttime, item_endtime,item_description, item_country, item_picture, item_subtitle,items_genre, item_date, item_season, item_episode, item_agerating, item_starrating, items_director,items_producer, items_actor, enable_rating_mapper, lang)
+		except (KeyError, IndexError): pass
 epg.append('\n<!--  TV SPIELFILM (DE)  PROGRAMME LIST -->')
 
 with ThreadPoolExecutor(len(tvs_data_urls)) as executor:
