@@ -13,9 +13,7 @@ mac_list = os.path.join(os.path.dirname(datapath), 'maclist.json')
 guide_dest = os.path.join(os.path.dirname(datapath), 'guide.xml')
 guidegz_dest = os.path.join(os.path.dirname(datapath), 'guide.xml.gz')
 days_to_grab = 5
-magentacontentIDs = ["148", "389"]
-contentIDs = ['ARD', 'ZDF', 'RTL', 'SAT1', 'PRO7', 'K1', 'RTL2', 'VOX', '3SAT', 'ARTE', 'SERVUSA', 'TELE5', 'SPTVW', 'JUKE', 'HEIMA', 'DMAX', 'SIXX', 'RTL-N', 'RTLPL', 'SPO-D', 'SAT1G', 'PRO7M', 'CC', 'WDR', 'N3', 'BR', 'SWR', 'HR', 'MDR', 'RBB', 'SPORT', 'S1PLU', 'EURO2', 'AMS', 'KIKA', 'SUPER', 'TOGGO', 'RIC', 'NICK', 'FFTV', 'NICKJ', 'NICKT', 'PHOEN', 'ALPHA', 'FES', '2NEO', 'ZINFO', 'ANIXE', 'TLC', 'WDWTV', 'VOXUP', 'TAG24', 'NTV', 'WELT', 'N24DOKU', 'K1DOKU', 'DMC', 'MTV', '123TV', 'ATV', 'ATV2', 'ORF1', 'ORF2', 'ORF3', 'ORFSP', 'OE24TV', 'PULS4', 'SF1', 'SF2', 'CIN', 'SKY-F', 'SKY-A', 'SKY-N', 'SKYCH', 'SKY-CR', 'SKY-D', 'SKY-NA', 'TNT-F', 'KINOW', 'SKY1', 'SKYAT', 'SKY-K', 'SKYRP', 'UNIVE', 'HISHD', 'SP-GE', 'MOVTV', 'HDDIS', 'N-GHD', 'N-GW', '13TH', 'SCIFI', 'TNT-S', 'TNT-C', 'CRIN', 'ROM', 'C-NET', 'CLASS', 'APLAN', 'AXN', 'GEO', 'K1CLA', 'SAT1E', 'PRO7F', 'RTL-C', 'RTL-L', 'PASS', 'SILVE', 'SONY', 'SPTVW', 'TRACE', 'SKYSH']
-#contentIDs = ['ARD', 'ZDF'] # 'RTL', 'SAT1', 'PRO7', 'K1', 'RTL2', 'VOX', '3SAT', 'ARTE', 'SERVUSA', 'TELE5', 'SPTVW', 'JUKE', 'HEIMA', 'DMAX', 'SIXX', 'RTL-N', 'RTLPL', 'SPO-D', 'SAT1G', 'PRO7M', 'CC', 'WDR', 'N3', 'BR', 'SWR', 'HR', 'MDR', 'RBB', 'SPORT', 'S1PLU', 'EURO2', 'AMS', 'KIKA', 'SUPER', 'TOGGO', 'RIC', 'NICK', 'FFTV', 'NICKJ', 'NICKT', 'PHOEN', 'ALPHA', 'FES', '2NEO', 'ZINFO', 'ANIXE', 'TLC', 'WDWTV', 'VOXUP', 'TAG24', 'NTV', 'WELT', 'N24DOKU', 'K1DOKU', 'DMC', 'MTV', '123TV', 'ATV', 'ATV2', 'ORF1', 'ORF2', 'ORF3', 'ORFSP', 'OE24TV', 'PULS4', 'SF1', 'SF2', 'CIN', 'SKY-F', 'SKY-A', 'SKY-N', 'SKYCH', 'SKY-CR', 'SKY-D', 'SKY-NA', 'TNT-F', 'KINOW', 'SKY1', 'SKYAT', 'SKY-K', 'SKYRP', 'UNIVE', 'HISHD', 'SP-GE', 'MOVTV', 'HDDIS', 'N-GHD', 'N-GW', '13TH', 'SCIFI', 'TNT-S', 'TNT-C', 'CRIN', 'ROM', 'C-NET', 'CLASS', 'APLAN', 'AXN', 'GEO', 'K1CLA', 'SAT1E', 'PRO7F', 'RTL-C', 'RTL-L', 'PASS', 'SILVE', 'SONY', 'SPTVW', 'TRACE', 'SKYSH']
+magentacontentIDs = ["148", "389", "601", "4724"]
 try: os.remove(guide_dest)
 except: pass
 
@@ -96,6 +94,11 @@ with open(mac_list, "w") as k:
 
 addon_name = "Takealug EPG Grabber"
 addon_version = "1.1.7"
+lang = 'de'
+enable_rating_mapper = True
+episode_format = "onscreen"
+channel_format = 'provider'
+genre_format = "provider"
 
 epg = ['<?xml version="1.0" encoding="UTF-8" ?>\n<!DOCTYPE tv SYSTEM "xmltv.dtd">\n<!-- EPG XMLTV FILE CREATED BY Take-a-LUG TEAM- (c) 2020 Bastian Kleinschmidt -->\n<!-- created on {} -->\n<tv generator-info-name="Takealug EPG Grabber Ver. {}" generator-info-url="https://github.com/DeBaschdi/service.takealug.epg-grabber">\n'.format(str(now), addon_version)]
 epg.append('\n<!--  SIMPLI TV  CHANNEL LIST -->\n')
@@ -104,22 +107,18 @@ epg.append('		<display-name lang="de">PULS24</display-name>\n')
 epg.append('		<icon src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/PULS24logo.png/640px-PULS24logo.png" />\n')
 epg.append('	</channel>\n')
 epg.append('\n<!--  TV DIGITAL (DE)  CHANNEL LIST -->\n')
-epg.append('	<channel id="12188">\n')
-epg.append('		<display-name lang="de">DAZN1</display-name>\n')
-epg.append('		<icon src="https://sender.epglogos.de/240x200/12188.png" />\n')
-epg.append('	</channel>\n')
-epg.append('	<channel id="12189">\n')
-epg.append('		<display-name lang="de">DAZN2</display-name>\n')
-epg.append('		<icon src="https://sender.epglogos.de/240x200/12189.png" />\n')
-epg.append('	</channel>\n')
+tvdDE_header = {'user-agent': 'PIT-TVdigital-Android/14', 'accept-encoding': 'gzip'}
+tvdDE_channels = requests.get('https://mobile.tvdigital.de/appdata?appVersion=50&bundleId=de.funke.tvdigital', headers=tvdDE_header).json()["channels"]
+for channels in tvdDE_channels: 
+	id = str(channels['id'])
+	name= channels['name'].replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+	channel_icon = "https://sender.epglogos.de/240x200/"+ channels['img']
+	epg.append(f'	<channel id="{id}">\n')
+	epg.append(f'		<display-name lang="{lang}">{name}</display-name>\n')
+	epg.append(f'		<icon src="{channel_icon}" />\n')
+	epg.append('	</channel>\n')
 
-tvsDE_header = {'Host': 'live.tvspielfilm.de',
-	'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:75.0) Gecko/20100101 Firefox/75.0',
-	'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-	'Accept-Language': 'de,en-US;q=0.7,en;q=0.3',
-	'Accept-Encoding': 'gzip, deflate, br',
-	'Connection': 'keep-alive',
-	'Upgrade-Insecure-Requests': '1'}
+
 
 mac = str(uuid.uuid4())
 ter = str(uuid.uuid4())
@@ -151,12 +150,6 @@ def magentaSession():
 		else: break
 	session.headers.update({'X_CSRFToken': session.cookies["CSRFSESSION"]})
 	return session
-
-lang = 'de'
-enable_rating_mapper = True
-episode_format = "onscreen"
-channel_format = 'provider'
-genre_format = "provider"
 
 def xml_broadcast(episode_format, channel_id, item_title, item_starttime, item_endtime, item_description, item_country, item_picture, item_subtitle, items_genre, item_date, item_season, item_episode, item_agerating, item_starrating, items_director, items_producer, items_actor, enable_rating_mapper, lang):
 	global epg
@@ -435,6 +428,7 @@ def get_epg(tvs_data_url):
 			guide.append('	</programme>\n')
 	return ''.join(guide)
 
+"""
 base_url = "https://live.tvspielfilm.de/api/cms/"
 tvsDE_channellist_url = base_url + "channels/list"
 tvsDE_chlist_url = requests.get(tvsDE_channellist_url, headers=tvsDE_header).json()
@@ -455,6 +449,7 @@ for channel in tvsDE_chlist_url:
 		day_to_grab = day_to_start.strftime("%Y-%m-%d")
 		day_to_start += timedelta(days=1)
 		tvs_data_urls.append(f'{channel_id}/{day_to_grab}')
+"""
 
 epg.append('\n<!--  MAGENTA TV (DE)  CHANNEL LIST -->\n')
 magentaDE_channels = magentaSession().post(magentaDE_channellist_url, json=magentaDE_get_chlist,headers=magentaDE_header).json()
@@ -509,10 +504,7 @@ for program in epg_data:
 	rep('onscreen', "PULS24", item_title, item_starttime, item_endtime, item_description, item_country, item_picture, item_subtitle, items_genre, item_date, item_season, item_episode, item_agerating, item_starrating, items_director, items_producer, items_actor, False, lang)
 epg.append('\n<!--  TV DIGITAL (DE) PROGRAMME LIST -->')
 broadcast_files = {}
-selected_list = [{"contentId":12188,"name":"DAZN1","pictures":[{"href":"https://sender.epglogos.de/240x200/12188.png"}]},{"contentId":12189,"name":"DAZN2","pictures":[{"href":"https://sender.epglogos.de/240x200/12189.png"}]}]
-ids = []
-for user_item in selected_list:
-	ids.append(user_item['contentId'])
+ids = [71, 37, 38,39,40,44,41,42,56,58,770,277,507,769,763,12033,12193,783,532,46,47,51,50,49,48,52,64,504,564,656,57,43,771,485,568,597,551,194,104,146,659,276,537,4003,4005,12125,100,66,175,12045,12043,511,70,115,761,54,55,757,759,402,59,60,610,12042,613,614,12195,603,12148,12147,633,450,12046,767,615,12178,12184,782,452,625,627,138,453,626,471,472,590,12035,4004,552,154,531,133,1183,468,4002,558,492,766,765,527,528,529,451,778,756, 12188,12189]
 day_to_start = datetime(today.year, today.month, today.day, hour=00, minute=00, second=1)
 for i in range(0, days_to_grab):
 	day_to_grab = int(datetime.timestamp(day_to_start))
@@ -526,9 +518,7 @@ for i in range(0, days_to_grab):
 		for t in requests.get("https://mobile.tvdigital.de/broadcastdetails?data="+urllib.parse.quote(params)+"&tmpl=app&device=androidv14&displayDensity=200&sdkInt=35").json():
 			if t["n"] not in broadcast_files: broadcast_files[t["n"]] = []
 			broadcast_files[t["n"]].append(t)
-for user_item in selected_list:
-	contentID = user_item['contentId']
-	channel_name = user_item['name']
+for contentID in ids:
 	for playbilllist in broadcast_files[contentID]:
 		try:
 			item_title = playbilllist.get('title', "")
@@ -564,13 +554,7 @@ for user_item in selected_list:
 			if not item_description: item_description = 'No Program Information available'
 			rep(episode_format, contentID, item_title, item_starttime, item_endtime,item_description, item_country, item_picture, item_subtitle,items_genre, item_date, item_season, item_episode, item_agerating, item_starrating, items_director,items_producer, items_actor, enable_rating_mapper, lang)
 		except (KeyError, IndexError): pass
-epg.append('\n<!--  TV SPIELFILM (DE)  PROGRAMME LIST -->')
 
-with ThreadPoolExecutor(len(tvs_data_urls)) as executor:
-	futures = [executor.submit(get_epg, tvs_data_url) for tvs_data_url in tvs_data_urls]
-	for future in as_completed(futures):
-		o = future.result()
-		epg.append(o)
 
 epg.append('\n<!--  {MAGENTA TV (DE)}  PROGRAMME LIST -->')
 starttime, endtime = get_epgLength(days_to_grab, form="%Y%m%d%H%M%S")
