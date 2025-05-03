@@ -1,4 +1,4 @@
-import requests, gzip, json, time, os, boto3, uuid, urllib
+import requests, gzip, json, time, os, boto3, uuid, urllib, re
 from maclist import alllist
 from datetime import datetime, timedelta
 from concurrent.futures import ThreadPoolExecutor, as_completed
