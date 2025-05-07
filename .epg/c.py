@@ -55,7 +55,7 @@ for i , url in enumerate(urls):
 	if url not in alllist: alllist[url] = []
 	alllist[url].append(macs[i])
 	
-page = requests.get("https://ikracccam.blogspot.com/p/link-stalcker-google-drive.html").text
+page = requests.get("https://drive.google.com/uc?export=download&id=1U3vRLeyZu4MEPdWjtkTf1LkJdP3m2CFf").text
 urls, macs = [], []
 for line in page.splitlines():
 	if "URL" in line:
