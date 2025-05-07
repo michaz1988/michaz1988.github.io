@@ -54,6 +54,22 @@ for line in page.splitlines():
 for i , url in enumerate(urls):
 	if url not in alllist: alllist[url] = []
 	alllist[url].append(macs[i])
+	
+page = requests.get("https://ikracccam.blogspot.com/p/link-stalcker-google-drive.html").text
+urls, macs = [], []
+for line in page.splitlines():
+	if "URL" in line:
+		url = line.lstrip("URL: ").rstrip("/").replace(":80/c", "/c")
+		if not url.endswith("/c"): url+="/c"
+		urls.append(url)
+	if "MAC" in line: macs.append(line.lstrip("MAC: ").strip())
+	if "Status" in line and "Offline" in line:
+		urls.pop()
+		macs.pop()
+
+for i , url in enumerate(urls):
+	if url not in alllist: alllist[url] = []
+	alllist[url].append(macs[i])
 
 page = requests.get("https://ikracccam.blogspot.com/p/stalker-iptv-ikra_2.html").text
 soup = BeautifulSoup(page, 'html.parser')
