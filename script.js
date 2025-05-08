@@ -1,5 +1,3 @@
-// @match *rhea-export*
-
 function hookFunc() {
 
     var dumpOffset = '0x20801C' // _kDartIsolateSnapshotInstructions + code offset
