@@ -1,21 +1,62 @@
-function hook_ssl_crypto_x509_session_verify_cert_chain(address){
-  Interceptor.attach(address, {
-    onEnter: function(args) { console.log("Disabling SSL certificate validation") },
-    onLeave: function(retval) { console.log("Retval: " + retval); retval.replace(0x1);}
-  });
-}
-function disable_certificate_validation(){
- var m = Process.findModuleByName("libflutter.so");
- console.log("libflutter.so loaded at ", m.base);
- var jni_onload_addr = m.enumerateExports()[0].address;
- console.log("jni_onload_address: ", jni_onload_addr);
-// Adding the offset between
-// ssl_crypto_x509_session_verify_cert_chain and JNI_Onload = 0xffffffffff7dcdd2
- let addr = ptr(jni_onload_addr).add(0xffffffffff7dcdd2);
- console.log("ssl_crypto_x509_session_verify_cert_chain_addr: ", addr);
- let buf = Memory.readByteArray(addr, 12);
- console.log(hexdump(buf, { offset: 0, length: 64, header: false, ansi: false}));
- hook_ssl_crypto_x509_session_verify_cert_chain(addr);
+// @match *rhea-export*
+
+function hookFunc() {
+
+    var dumpOffset = '0x20801C' // _kDartIsolateSnapshotInstructions + code offset
+
+    var argBufferSize = 150
+
+    var address = Module.findBaseAddress('libapp.so') // libapp.so (Android) or App (IOS) 
+    console.log('\n\nbaseAddress: ' + address.toString())
+
+    var codeOffset = address.add(dumpOffset)
+    console.log('codeOffset: ' + codeOffset.toString())
+    console.log('')
+    console.log('Wait..... ')
+
+    Interceptor.attach(codeOffset, {
+        onEnter: function(args) {
+
+            console.log('')
+            console.log('--------------------------------------------|')
+            console.log('\n    Hook Function: ' + dumpOffset);
+            console.log('')
+            console.log('--------------------------------------------|')
+            console.log('')
+
+            for (var argStep = 0; argStep < 50; argStep++) {
+                try {
+                    dumpArgs(argStep, args[argStep], argBufferSize);
+                } catch (e) {
+
+                    break;
+                }
+
+            }
+
+        },
+        onLeave: function(retval) {
+            console.log('RETURN : ' + retval)
+            dumpArgs(0, retval, 150);
+        }
+    });
 
 }
-setTimeout(disable_certificate_validation, 1000)
+
+function dumpArgs(step, address, bufSize) {
+
+    var buf = Memory.readByteArray(address, bufSize)
+
+    console.log('Argument ' + step + ' address ' + address.toString() + ' ' + 'buffer: ' + bufSize.toString() + '\n\n Value:\n' +hexdump(buf, {
+        offset: 0,
+        length: bufSize,
+        header: false,
+        ansi: false
+    }));
+
+    console.log('')
+    console.log('----------------------------------------------------')
+    console.log('')
+}
+
+setTimeout(hookFunc, 1000)
