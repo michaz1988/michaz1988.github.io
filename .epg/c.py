@@ -294,7 +294,7 @@ def rep(episode_format, channel_id, item_title, item_starttime, item_endtime, it
 def get_epg(tvs_data_url):
 	channel_id = tvs_data_url.split("/")[0]
 	guide = ["\n"]
-	for playbilllist in requests.get("https://live.tvspielfilm.de/static/broadcast/list/%s" % tvs_data_url, headers=tvsDE_header).json():
+	for playbilllist in requests.get("http://tvs3.cellular.de/broadcast/list/%s" % tvs_data_url).json():
 		item_title = playbilllist.get('title')
 		item_description = ""
 		description = playbilllist.get('text')
@@ -445,16 +445,14 @@ def get_epg(tvs_data_url):
 	return ''.join(guide)
 
 """
-base_url = "https://live.tvspielfilm.de/api/cms/"
-tvsDE_channellist_url = base_url + "channels/list"
-tvsDE_chlist_url = requests.get(tvsDE_channellist_url, headers=tvsDE_header).json()
+tvsDE_chlist_url = requests.get("https://rhea-export.tvspielfilm.de/channels").json()["data"]["data_list"]
 
 epg.append('\n<!--  TV SPIELFILM (DE)  CHANNEL LIST -->\n')
 tvs_data_urls = []
 for channel in tvsDE_chlist_url:
-	channel_id = channel['channelId'].replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+	channel_id = str(channel['id']).replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 	if channel_id not in contentIDs: continue
-	channel_icon = base_url+ channel["imageLarge"]
+	channel_icon = https://michaz1988.github.io/tvs-logos/{channel_id}.png
 	channel_name = channel['name'].replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 	epg.append(f'	<channel id="{channel_id}">\n')
 	epg.append(f'		<display-name lang="{lang}">{channel_name}</display-name>\n')
