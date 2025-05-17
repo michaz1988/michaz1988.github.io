@@ -2,7 +2,7 @@
 #EXTINF:-1 tvg-id="471" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/13thstreet.png",13TH Street
 plugin://plugin.video.vavooto/?name=13TH+STREET
 #EXTINF:-1 tvg-id="56" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/3sat.png",3 Sat
-plugin://plugin.video.vavooto/?name=3SAT
+plugin://plugin.video.vavooto/?name=3+SAT
 #EXTINF:-1 tvg-id="1183" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/animalplanet.png",Animal Planet
 plugin://plugin.video.vavooto/?name=ANIMAL+PLANET
 #EXTINF:-1 tvg-id="537" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/anixe.png",Anixe
@@ -10,7 +10,7 @@ plugin://plugin.video.vavooto/?name=ANIXE
 #EXTINF:-1 tvg-id="71" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/ard.png",ARD
 plugin://plugin.video.vavooto/?name=ARD
 #EXTINF:-1 tvg-id="104" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/ardalpha.png",ARD ALPHA
-plugin://plugin.video.vavooto/?name=ARD ALPHA
+plugin://plugin.video.vavooto/?name=ARD+ALPHA
 #EXTINF:-1 tvg-id="58" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/arte.png",Arte
 plugin://plugin.video.vavooto/?name=ARTE
 #EXTINF:-1 tvg-id="115" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/atv.png",ATV
@@ -36,13 +36,13 @@ plugin://plugin.video.vavooto/?name=CRIME+%2b+INVESTIGATION
 #EXTINF:-1 tvg-id="756" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/curiosity.png",Curiosity Channel
 plugin://plugin.video.vavooto/?name=CURIOSITY+CHANNEL
 #EXTINF:-1 tvg-id="511" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/deluxemusic.png",DELUXE MUSIC
-plugin://plugin.video.vavooto/?name=DELUXE MUSIC
+plugin://plugin.video.vavooto/?name=DELUXE+MUSIC
 #EXTINF:-1 tvg-id="138" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/discoverychannel.png",Discovery
 plugin://plugin.video.vavooto/?name=DISCOVERY
 #EXTINF:-1 tvg-id="12188" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/dazn1.png",DAZN 1
-plugin://plugin.video.vavooto/?name=DAZN 1
+plugin://plugin.video.vavooto/?name=DAZN+1
 #EXTINF:-1 tvg-id="12189" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/dazn2.png",DAZN 2
-plugin://plugin.video.vavooto/?name=DAZN 2
+plugin://plugin.video.vavooto/?name=DAZN+2
 #EXTINF:-1 tvg-id="507" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/dmax.png",DMAX
 plugin://plugin.video.joyn/?mode=play_video&video_id=dmax-at&stream_type=LIVE
 #EXTINF:-1 tvg-id="389" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/eurosport1.png",Eurosport 1
