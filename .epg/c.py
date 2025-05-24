@@ -481,6 +481,25 @@ for channel in tvsDE_chlist_url:
 		tvs_data_urls.append(f'{channel_id}/{day_to_grab}')
 """
 
+def fetch_broadcasts(day_to_grab, ids):
+	broadcast_files = {}
+	params = '{"date":%s,"channels":%s}' % (day_to_grab, ids)
+	url_program = "https://mobile.tvdigital.de/programbystation?data=" + urllib.parse.quote(params) + "&tmpl=app&device=androidv14&displayDensity=200&sdkInt=35"
+	response = requests.get(url_program).json()
+
+	for a in response:
+		broad = [b["id"] for b in a["broadcasts"]]
+		if not broad:
+			continue
+		params_detail = '{"broadcasts":%s}' % broad
+		url_detail = "https://mobile.tvdigital.de/broadcastdetails?data=" + urllib.parse.quote(params_detail) + "&tmpl=app&device=androidv14&displayDensity=200&sdkInt=35"
+		details = requests.get(url_detail).json()
+		for t in details:
+			if t["n"] not in broadcast_files:
+				broadcast_files[t["n"]] = []
+			broadcast_files[t["n"]].append(t)
+	return broadcast_files
+
 epg.append('\n<!--  MAGENTA TV (DE)  CHANNEL LIST -->\n')
 magentaDE_channels = magentaSession().post(magentaDE_channellist_url, json=magentaDE_get_chlist,headers=magentaDE_header).json()
 for channels in magentaDE_channels["channellist"]:
@@ -536,18 +555,16 @@ epg.append('\n<!--  TV DIGITAL (DE) PROGRAMME LIST -->')
 broadcast_files = {}
 ids = [71, 37, 38,39,40,44,41,42,56,58,770,277,507,769,763,12033,12193,783,532,46,47,51,50,49,48,52,64,504,564,656,57,43,771,485,568,597,551,194,104,146,659,276,537,4003,4005,12125,100,66,175,12045,12043,511,70,115,761,54,55,757,759,402,59,60,610,12042,613,614,12195,603,12148,12147,633,450,12046,767,615,12178,12184,782,452,625,627,138,453,626,471,472,590,12035,4004,552,154,531,133,1183,468,4002,558,492,766,765,527,528,529,451,778,756, 12188,12189]
 day_to_start = datetime(today.year, today.month, today.day, hour=00, minute=00, second=1)
-for i in range(0, days_to_grab):
-	day_to_grab = int(datetime.timestamp(day_to_start))
-	day_to_start += timedelta(days=1)
-	params = '{"date":%s,"channels":%s}' % (day_to_grab, ids)
-	for a in requests.get("https://mobile.tvdigital.de/programbystation?data="+urllib.parse.quote(params)+"&tmpl=app&device=androidv14&displayDensity=200&sdkInt=35").json():
-		broad = []
-		for b in a["broadcasts"]:
-			broad.append(b["id"])
-		params = '{"broadcasts":%s}' % broad
-		for t in requests.get("https://mobile.tvdigital.de/broadcastdetails?data="+urllib.parse.quote(params)+"&tmpl=app&device=androidv14&displayDensity=200&sdkInt=35").json():
-			if t["n"] not in broadcast_files: broadcast_files[t["n"]] = []
-			broadcast_files[t["n"]].append(t)
+day_timestamps = [int(datetime.timestamp(day_to_start + timedelta(days=i)))for i in range(days_to_grab)]
+with ThreadPoolExecutor(max_workers=days_to_grab) as executor:
+	futures = [executor.submit(fetch_broadcasts, day, ids) for day in day_timestamps]
+	for future in as_completed(futures):
+		result = future.result()
+		for key, val in result.items():
+			if key not in broadcast_files:
+				broadcast_files[key] = []
+			broadcast_files[key].extend(val)
+
 for contentID in ids:
 	for playbilllist in broadcast_files[contentID]:
 		try:
