@@ -62,7 +62,7 @@
     </extension>
 </addon>
 
-<addon id="service.takealug.epg-grabber" name="Takealug EPG Grabber" version="2.0" provider-name="DeBaschdi">
+<addon id="service.takealug.epg-grabber" name="Takealug EPG Grabber" version="2.1" provider-name="DeBaschdi">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
         <import addon="script.module.requests"/>
@@ -83,7 +83,7 @@
             <screenshot>screenshot1.png</screenshot>
             <screenshot>screenshot2.png</screenshot>
         </assets>
-        <news lang="en">1.2+ New Providers</news>
+        <news lang="en">2.1+ NEW TV-SPIELFILM API</news>
     </extension>
 </addon>
 
