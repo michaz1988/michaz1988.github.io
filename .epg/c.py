@@ -515,7 +515,8 @@ for program in epg_data:
 epg.append('\n<!--  TV DIGITAL (DE) PROGRAMME LIST -->')
 broadcast_files = {}
 day_to_start = datetime(today.year, today.month, today.day, hour=00, minute=00, second=1)
-day_timestamps = [int(datetime.timestamp(day_to_start + timedelta(days=i)))for i in range(days_to_grab)]
+day_to_start -= timedelta(days=1)
+day_timestamps = [int(datetime.timestamp(day_to_start + timedelta(days=i)))for i in range(days_to_grab+1)]
 with ThreadPoolExecutor(max_workers=days_to_grab) as executor:
 	futures = [executor.submit(fetch_broadcasts, day, tvdids) for day in day_timestamps]
 	for future in as_completed(futures):
