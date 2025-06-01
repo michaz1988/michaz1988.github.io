@@ -189,7 +189,7 @@ plugin://plugin.video.vavooto/?name=TAGESSCHAU+24
 plugin://plugin.video.joyn/?mode=play_video&video_id=tele5-at&stream_type=LIVE
 #EXTINF:-1 tvg-id="4003" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/tlc.png",TLC
 plugin://plugin.video.joyn/?mode=play_video&video_id=tlc-at&stream_type=LIVE
-#EXTINF:-1 tvg-id="TOGGO" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/toggoplus.png",Toggo
+#EXTINF:-1 tvg-id="601" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/toggoplus.png",Toggo
 plugin://plugin.video.vavooto/?name=TOGGO+PLUS
 #EXTINF:-1 tvg-id="782" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/universalchannel.png",Universal Channel
 plugin://plugin.video.vavooto/?name=UNIVERSAL+TV

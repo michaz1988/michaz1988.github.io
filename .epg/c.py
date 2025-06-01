@@ -1,5 +1,7 @@
-import requests, gzip, json, time, os, boto3, uuid, urllib, re
+import requests, gzip, json, time, os, boto3, uuid, re
 from maclist import alllist
+from dateutil.parser import parse
+from urllib.parse import quote
 from datetime import datetime, timedelta
 from concurrent.futures import ThreadPoolExecutor, as_completed
 try: 
@@ -14,8 +16,16 @@ guide_dest = os.path.join(os.path.dirname(datapath), 'guide.xml')
 guidegz_dest = os.path.join(os.path.dirname(datapath), 'guide.xml.gz')
 days_to_grab = 5
 magentacontentIDs = ["148", "389", "601", "4724"]
+tvdids = [71, 37, 38,39,40,44,41,42,56,58,770,277,507,769,763,12033,12193,783,532,46,47,51,50,49,48,52,64,504,564,656,57,43,771,485,568,597,551,194,104,146,659,276,537,4003,4005,12125,100,66,175,12045,12043,511,70,115,761,54,55,757,759,402,59,60,610,12042,613,614,12195,603,12148,12147,633,450,12046,767,615,12178,12184,782,452,625,627,138,453,626,471,472,590,12035,4004,552,154,531,133,1183,468,4002,558,492,766,765,527,528,529,451,778,756, 12188,12189]
 try: os.remove(guide_dest)
 except: pass
+addon_name = "Takealug EPG Grabber"
+addon_version = "2.1"
+lang = 'de'
+enable_rating_mapper = True
+episode_format = "onscreen"
+channel_format = 'provider'
+genre_format = "provider"
 
 ACCOUNT_ID = "145ef3f7a9832804bef0e31548db8a83"
 DATABASE_API_TOKEN = "13DEJ8ftBLkxoCHzfBU__Pkv0ZyqPLTjvRXXR_qk"
@@ -25,10 +35,40 @@ R2_SECRET_KEY = "7ad1ed517b6baa6af2fa00d50a1a18b0ce416bb0b6fb14f4c122a2960f1ab9b
 R2_BUCKET_NAME = "stbemu"
 R2_OBJECT_KEY = "stbemu-db.csv.gz"
 R2_ENDPOINT_URL = "https://145ef3f7a9832804bef0e31548db8a83.r2.cloudflarestorage.com"
+mac = str(uuid.uuid4())
+ter = str(uuid.uuid4())
+
+magentaDE_authenticate_url = 'https://api.prod.sngtv.magentatv.de/EPG/JSON/Authenticate'
+magentaDE_channellist_url = 'https://api.prod.sngtv.magentatv.de/EPG/JSON/AllChannel'
+magentaDE_data_url = 'https://api.prod.sngtv.magentatv.de/EPG/JSON/PlayBillList?userContentFilter=241221015&sessionArea=1&SID=ottall&T=PC_firefox_75'
+magentaDE_authenticate = '{"areaid":"1","cnonce":"c4b11948545fb3089720dd8b12c81f8e","mac":"'+mac+'","preSharedKeyID":"NGTV000001","subnetId":"4901","templatename":"NGTV","terminalid":"'+ter+'","terminaltype":"WEB-MTV","terminalvendor":"WebTV","timezone":"UTC","usergroup":"-1","userType":3,"utcEnable":1}'
+magentaDE_get_chlist = {'properties': [{'name': 'logicalChannel','include': '/channellist/logicalChannel/contentId,/channellist/logicalChannel/name,/channellist/logicalChannel/pictures/picture/imageType,/channellist/logicalChannel/pictures/picture/href'}],'metaDataVer': 'Channel/1.1', 'channelNamespace': '2','filterlist': [{'key': 'IsHide', 'value': '-1'}], 'returnSatChannel': '0'}
+magentaDE_header = {'Host': 'api.prod.sngtv.magentatv.de',
+					'origin': 'https://web.magentatv.de',
+					'referer': 'https://web.magentatv.de/',
+					'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36',
+					'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+					'Accept-Language': 'de,en-US;q=0.7,en;q=0.3',
+					'Accept-Encoding': 'gzip, deflate, br',
+					'Connection': 'keep-alive',
+					'Upgrade-Insecure-Requests': '1'}
 
 today = datetime.today()
 now = datetime.now()
 timestamp = datetime.timestamp(now)
+
+def magentaSession():
+	x = 0
+	while x < 120:
+		session = requests.Session()
+		t = session.post(magentaDE_authenticate_url, timeout=5, data=magentaDE_authenticate, headers=magentaDE_header)
+		if t.json().get("retcode", "0") == "-2":
+			time.sleep(0.1)
+			x = x + 1
+			continue
+		else: break
+	session.headers.update({'X_CSRFToken': session.cookies["CSRFSESSION"]})
+	return session
 
 def get_epgLength(days_to_grab, form="%Y-%m-%dT%H:%M:00.000Z"):
 	# Calculate Date and Time
@@ -38,8 +78,15 @@ def get_epgLength(days_to_grab, form="%Y-%m-%dT%H:%M:00.000Z"):
 	starttime = calc_today.strftime(form)
 	endtime = calc_then.strftime(form)
 	return starttime, endtime
+	
+page = requests.get("https://ikracccam.blogspot.com/p/link-stalcker-google-drive.html").text
+soup = BeautifulSoup(page, 'html.parser')
+for a in soup.find_all('p'):
+	if "http" in a.text:
+		url = a.text.strip()
+		break
 
-page = requests.get("https://drive.usercontent.google.com/download?id=1OSNBcIbXOmcYqkA5GjK0DP-5qo0XW1YI&export=download").text
+page = requests.get(url).text
 urls, macs = [], []
 for line in page.splitlines():
 	if "URL" in line:
@@ -47,38 +94,16 @@ for line in page.splitlines():
 		if not url.endswith("/c"): url+="/c"
 		urls.append(url)
 	if "MAC" in line: macs.append(line.lstrip("MAC: ").strip())
-	if "Status" in line and "Offline" in line:
+	if "Channels Count: 0" in line:
 		urls.pop()
 		macs.pop()
-
-for i , url in enumerate(urls):
-	if url not in alllist: alllist[url] = []
-	alllist[url].append(macs[i])
-	
-page = requests.get("https://drive.google.com/uc?export=download&id=1U3vRLeyZu4MEPdWjtkTf1LkJdP3m2CFf").text
-urls, macs = [], []
-for line in page.splitlines():
-	if "URL" in line:
-		url = line.lstrip("URL: ").rstrip("/").replace(":80/c", "/c")
-		if not url.endswith("/c"): url+="/c"
-		urls.append(url)
-	if "MAC" in line: macs.append(line.lstrip("MAC: ").strip())
-	if "Status" in line and "Offline" in line:
-		urls.pop()
-		macs.pop()
-
-for i , url in enumerate(urls):
-	if url not in alllist: alllist[url] = []
-	alllist[url].append(macs[i])
-	
-page = requests.get("https://drive.google.com/uc?export=download&id=1ztM8E64pdsOk0jomC5m0hRmOWNIn3Gxk").text
-urls, macs = [], []
-for line in page.splitlines():
-	if "URL" in line:
-		url = line.lstrip("URL: ").rstrip("/").replace(":80/c", "/c")
-		if not url.endswith("/c"): url+="/c"
-		urls.append(url)
-	if "MAC" in line: macs.append(line.lstrip("MAC: ").strip())
+	if "Expire" in line:
+		expire = line.lstrip("Expire: ").strip()
+		try:
+			if timestamp >= datetime.timestamp(parse(expire)):
+				urls.pop()
+				macs.pop()
+		except: pass
 	if "Status" in line and "Offline" in line:
 		urls.pop()
 		macs.pop()
@@ -93,15 +118,12 @@ for tag in soup.find_all('table'):
 	u, p, m, e = tag.find_all("th")
 	url, port, mac, expire = u.text.strip().rstrip("/").replace(":80/c", "/c"), p.text.strip(), m.text.strip(), e.text.strip()
 	if not url.endswith("/c"): url+="/c"
-	#url = url.replace("/stalker_portal/c", "")
 	if 'unlimited' in expire:
 		if url not in alllist: alllist[url] = []
 		if mac not in alllist[url]:
 			alllist[url].append(mac)
 	else:
-		day, month, year = expire.split("-")
-		a = datetime(year=int(year), month=int(month), day=int(day), hour=00, minute=00, second=00)
-		if datetime.timestamp(a) > timestamp:
+		if timestamp <= datetime.timestamp(parse(expire)):
 			if url not in alllist: alllist[url] = []
 			if mac not in alllist[url]:
 				alllist[url].append(mac)
@@ -124,14 +146,6 @@ sorted_dict = dict(sorted(sorted(alllist.items()), key=lambda item: len(item[1])
 with open(mac_list, "w") as k:
 	json.dump(sorted_dict, k, indent=4)
 
-addon_name = "Takealug EPG Grabber"
-addon_version = "1.1.7"
-lang = 'de'
-enable_rating_mapper = True
-episode_format = "onscreen"
-channel_format = 'provider'
-genre_format = "provider"
-
 epg = ['<?xml version="1.0" encoding="UTF-8" ?>\n<!DOCTYPE tv SYSTEM "xmltv.dtd">\n<!-- EPG XMLTV FILE CREATED BY Take-a-LUG TEAM- (c) 2020 Bastian Kleinschmidt -->\n<!-- created on {} -->\n<tv generator-info-name="Takealug EPG Grabber Ver. {}" generator-info-url="https://github.com/DeBaschdi/service.takealug.epg-grabber">\n'.format(str(now), addon_version)]
 epg.append('\n<!--  SIMPLI TV  CHANNEL LIST -->\n')
 epg.append('	<channel id="PULS24">\n')
@@ -143,45 +157,26 @@ tvdDE_header = {'user-agent': 'PIT-TVdigital-Android/14', 'accept-encoding': 'gz
 tvdDE_channels = requests.get('https://mobile.tvdigital.de/appdata?appVersion=50&bundleId=de.funke.tvdigital', headers=tvdDE_header).json()["channels"]
 for channels in tvdDE_channels: 
 	id = str(channels['id'])
+	if int(id) not in tvdids: continue
 	name= channels['name'].replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
 	channel_icon = "https://sender.epglogos.de/240x200/"+ channels['img']
 	epg.append(f'	<channel id="{id}">\n')
 	epg.append(f'		<display-name lang="{lang}">{name}</display-name>\n')
 	epg.append(f'		<icon src="{channel_icon}" />\n')
 	epg.append('	</channel>\n')
-
-
-
-mac = str(uuid.uuid4())
-ter = str(uuid.uuid4())
-
-magentaDE_authenticate_url = 'https://api.prod.sngtv.magentatv.de/EPG/JSON/Authenticate'
-magentaDE_channellist_url = 'https://api.prod.sngtv.magentatv.de/EPG/JSON/AllChannel'
-magentaDE_data_url = 'https://api.prod.sngtv.magentatv.de/EPG/JSON/PlayBillList?userContentFilter=241221015&sessionArea=1&SID=ottall&T=PC_firefox_75'
-magentaDE_authenticate = '{"areaid":"1","cnonce":"c4b11948545fb3089720dd8b12c81f8e","mac":"'+mac+'","preSharedKeyID":"NGTV000001","subnetId":"4901","templatename":"NGTV","terminalid":"'+ter+'","terminaltype":"WEB-MTV","terminalvendor":"WebTV","timezone":"UTC","usergroup":"-1","userType":3,"utcEnable":1}'
-magentaDE_get_chlist = {'properties': [{'name': 'logicalChannel','include': '/channellist/logicalChannel/contentId,/channellist/logicalChannel/name,/channellist/logicalChannel/pictures/picture/imageType,/channellist/logicalChannel/pictures/picture/href'}],'metaDataVer': 'Channel/1.1', 'channelNamespace': '2','filterlist': [{'key': 'IsHide', 'value': '-1'}], 'returnSatChannel': '0'}
-magentaDE_header = {'Host': 'api.prod.sngtv.magentatv.de',
-					'origin': 'https://web.magentatv.de',
-					'referer': 'https://web.magentatv.de/',
-					'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36',
-					'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-					'Accept-Language': 'de,en-US;q=0.7,en;q=0.3',
-					'Accept-Encoding': 'gzip, deflate, br',
-					'Connection': 'keep-alive',
-					'Upgrade-Insecure-Requests': '1'}
-
-def magentaSession():
-	x = 0
-	while x < 120:
-		session = requests.Session()
-		t = session.post(magentaDE_authenticate_url, timeout=5, data=magentaDE_authenticate, headers=magentaDE_header)
-		if t.json().get("retcode", "0") == "-2":
-			time.sleep(0.1)
-			x = x + 1
-			continue
-		else: break
-	session.headers.update({'X_CSRFToken': session.cookies["CSRFSESSION"]})
-	return session
+epg.append('\n<!--  MAGENTA TV (DE)  CHANNEL LIST -->\n')
+magentaDE_channels = magentaSession().post(magentaDE_channellist_url, json=magentaDE_get_chlist,headers=magentaDE_header).json()
+for channels in magentaDE_channels["channellist"]:
+	channel_id = channels['contentId'].replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+	if channel_id not in magentacontentIDs: continue
+	channel_name = channels['name'].replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+	for image in channels['pictures']:
+		if image['imageType'] == '15':
+			channel_icon = image['href']
+	epg.append(f'	<channel id="{channel_id}">\n')
+	epg.append(f'		<display-name lang="{lang}">{channel_name}</display-name>\n')
+	epg.append(f'		<icon src="{channel_icon}" />\n')
+	epg.append('	</channel>\n')
 
 def xml_broadcast(episode_format, channel_id, item_title, item_starttime, item_endtime, item_description, item_country, item_picture, item_subtitle, items_genre, item_date, item_season, item_episode, item_agerating, item_starrating, items_director, items_producer, items_actor, enable_rating_mapper, lang):
 	global epg
@@ -460,31 +455,10 @@ def get_epg(tvs_data_url):
 			guide.append('	</programme>\n')
 	return ''.join(guide)
 
-"""
-tvsDE_chlist_url = requests.get("https://rhea-export.tvspielfilm.de/channels").json()["data"]["data_list"]
-
-epg.append('\n<!--  TV SPIELFILM (DE)  CHANNEL LIST -->\n')
-tvs_data_urls = []
-for channel in tvsDE_chlist_url:
-	channel_id = str(channel['id']).replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
-	if channel_id not in contentIDs: continue
-	channel_icon = https://michaz1988.github.io/tvs-logos/{channel_id}.png
-	channel_name = channel['name'].replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
-	epg.append(f'	<channel id="{channel_id}">\n')
-	epg.append(f'		<display-name lang="{lang}">{channel_name}</display-name>\n')
-	epg.append(f'		<icon src="{channel_icon}" />\n')
-	epg.append('	</channel>\n')
-	day_to_start = datetime(today.year, today.month, today.day, hour=00, minute=00, second=1)
-	for i in range(0, days_to_grab):
-		day_to_grab = day_to_start.strftime("%Y-%m-%d")
-		day_to_start += timedelta(days=1)
-		tvs_data_urls.append(f'{channel_id}/{day_to_grab}')
-"""
-
 def fetch_broadcasts(day_to_grab, ids):
 	broadcast_files = {}
 	params = '{"date":%s,"channels":%s}' % (day_to_grab, ids)
-	url_program = "https://mobile.tvdigital.de/programbystation?data=" + urllib.parse.quote(params) + "&tmpl=app&device=androidv14&displayDensity=200&sdkInt=35"
+	url_program = "https://mobile.tvdigital.de/programbystation?data=" + quote(params) + "&tmpl=app&device=androidv14&displayDensity=200&sdkInt=35"
 	response = requests.get(url_program).json()
 
 	for a in response:
@@ -492,27 +466,13 @@ def fetch_broadcasts(day_to_grab, ids):
 		if not broad:
 			continue
 		params_detail = '{"broadcasts":%s}' % broad
-		url_detail = "https://mobile.tvdigital.de/broadcastdetails?data=" + urllib.parse.quote(params_detail) + "&tmpl=app&device=androidv14&displayDensity=200&sdkInt=35"
+		url_detail = "https://mobile.tvdigital.de/broadcastdetails?data=" + quote(params_detail) + "&tmpl=app&device=androidv14&displayDensity=200&sdkInt=35"
 		details = requests.get(url_detail).json()
 		for t in details:
 			if t["n"] not in broadcast_files:
 				broadcast_files[t["n"]] = []
 			broadcast_files[t["n"]].append(t)
 	return broadcast_files
-
-epg.append('\n<!--  MAGENTA TV (DE)  CHANNEL LIST -->\n')
-magentaDE_channels = magentaSession().post(magentaDE_channellist_url, json=magentaDE_get_chlist,headers=magentaDE_header).json()
-for channels in magentaDE_channels["channellist"]:
-	channel_id = channels['contentId'].replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
-	if channel_id not in magentacontentIDs: continue
-	channel_name = channels['name'].replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
-	for image in channels['pictures']:
-		if image['imageType'] == '15':
-			channel_icon = image['href']
-	epg.append(f'	<channel id="{channel_id}">\n')
-	epg.append(f'		<display-name lang="{lang}">{channel_name}</display-name>\n')
-	epg.append(f'		<icon src="{channel_icon}" />\n')
-	epg.append('	</channel>\n')
 		
 epg.append('\n<!--  SIMPLI TV PROGRAMME LIST -->')
 api_headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0', 'Content-type': 'application/json;charset=utf-8', 'X-Api-Date-Format': 'iso', 'X-Api-Camel-Case': 'true', 'referer': 'https://streaming.simplitv.at/'}
@@ -553,11 +513,10 @@ for program in epg_data:
 	rep('onscreen', "PULS24", item_title, item_starttime, item_endtime, item_description, item_country, item_picture, item_subtitle, items_genre, item_date, item_season, item_episode, item_agerating, item_starrating, items_director, items_producer, items_actor, False, lang)
 epg.append('\n<!--  TV DIGITAL (DE) PROGRAMME LIST -->')
 broadcast_files = {}
-ids = [71, 37, 38,39,40,44,41,42,56,58,770,277,507,769,763,12033,12193,783,532,46,47,51,50,49,48,52,64,504,564,656,57,43,771,485,568,597,551,194,104,146,659,276,537,4003,4005,12125,100,66,175,12045,12043,511,70,115,761,54,55,757,759,402,59,60,610,12042,613,614,12195,603,12148,12147,633,450,12046,767,615,12178,12184,782,452,625,627,138,453,626,471,472,590,12035,4004,552,154,531,133,1183,468,4002,558,492,766,765,527,528,529,451,778,756, 12188,12189]
 day_to_start = datetime(today.year, today.month, today.day, hour=00, minute=00, second=1)
 day_timestamps = [int(datetime.timestamp(day_to_start + timedelta(days=i)))for i in range(days_to_grab)]
 with ThreadPoolExecutor(max_workers=days_to_grab) as executor:
-	futures = [executor.submit(fetch_broadcasts, day, ids) for day in day_timestamps]
+	futures = [executor.submit(fetch_broadcasts, day, tvdids) for day in day_timestamps]
 	for future in as_completed(futures):
 		result = future.result()
 		for key, val in result.items():
@@ -565,7 +524,7 @@ with ThreadPoolExecutor(max_workers=days_to_grab) as executor:
 				broadcast_files[key] = []
 			broadcast_files[key].extend(val)
 
-for contentID in ids:
+for contentID in tvdids:
 	for playbilllist in broadcast_files[contentID]:
 		try:
 			item_title = playbilllist.get('title', "")
@@ -594,8 +553,8 @@ for contentID in ids:
 				items_actor = ','.join(actor_list)
 				items_director = ','.join(director_list)
 			items_producer, item_starrating = "", ""
-			item_starttime = datetime.utcfromtimestamp(item_starttime).strftime('%Y%m%d%H%M%S')
-			item_endtime = datetime.utcfromtimestamp(item_endtime).strftime('%Y%m%d%H%M%S')
+			item_starttime = datetime.fromtimestamp(item_starttime).strftime('%Y%m%d%H%M%S')
+			item_endtime = datetime.fromtimestamp(item_endtime).strftime('%Y%m%d%H%M%S')
 			if item_episode: item_episode = re.sub(r"\D+", '#', item_episode).split('#')[0]
 			if item_season: item_season = re.sub(r"\D+", '#', item_season).split('#')[0]
 			if not item_description: item_description = 'No Program Information available'
