@@ -15,8 +15,8 @@ mac_list = os.path.join(os.path.dirname(datapath), 'maclist.json')
 guide_dest = os.path.join(os.path.dirname(datapath), 'guide.xml')
 guidegz_dest = os.path.join(os.path.dirname(datapath), 'guide.xml.gz')
 days_to_grab = 5
-magentacontentIDs = ["148", "389", "601", "4724"]
-tvdids = [71, 37, 38,39,40,44,41,42,56,58,770,277,507,769,763,12033,12193,783,532,46,47,51,50,49,48,52,64,504,564,656,57,43,771,485,568,597,551,194,104,146,659,276,537,4003,4005,12125,100,66,175,12045,12043,511,70,115,761,54,55,757,759,402,59,60,610,12042,613,614,12195,603,12148,12147,633,450,12046,767,615,12178,12184,782,452,625,627,138,453,626,471,472,590,12035,4004,552,154,531,133,1183,468,4002,558,492,766,765,527,528,529,451,778,756, 12188,12189]
+magentacontentIDs = ["148", "389", "601", "4724", "18"]
+tvdids = [71, 37, 38,39,40,44,41,42,56,58,770,277,507,694,763,12033,12193,783,532,46,47,51,50,49,48,52,64,564,656,57,43,771,485,568,597,551,194,104,146,659,276,537,4003,4005,12125,100,66,175,12045,12043,511,70,115,761,54,55,757,759,402,59,60,610,12042,613,614,12195,603,12148,12147,633,450,12046,767,615,12178,12184,782,452,625,627,138,453,626,471,472,590,12035,4004,552,154,531,133,1183,468,4002,558,492,766,765,527,528,529,451,778,756, 12188,12189]
 try: os.remove(guide_dest)
 except: pass
 addon_name = "Takealug EPG Grabber"
@@ -75,7 +75,6 @@ def get_epgLength(days_to_grab, form="%Y-%m-%dT%H:%M:00.000Z"):
 	calc_today = datetime(today.year, today.month, today.day, hour=00, minute=00, second=1)
 	calc_then = datetime(today.year, today.month, today.day, hour=23, minute=59, second=59)
 	calc_then += timedelta(days=days_to_grab)
-	calc_today -= timedelta(days=1)
 	starttime = calc_today.strftime(form)
 	endtime = calc_then.strftime(form)
 	return starttime, endtime
@@ -515,8 +514,7 @@ for program in epg_data:
 epg.append('\n<!--  TV DIGITAL (DE) PROGRAMME LIST -->')
 broadcast_files = {}
 day_to_start = datetime(today.year, today.month, today.day, hour=00, minute=00, second=1)
-day_to_start -= timedelta(days=1)
-day_timestamps = [int(datetime.timestamp(day_to_start + timedelta(days=i)))for i in range(days_to_grab+1)]
+day_timestamps = [int(datetime.timestamp(day_to_start + timedelta(days=i)))for i in range(days_to_grab)]
 with ThreadPoolExecutor(max_workers=days_to_grab) as executor:
 	futures = [executor.submit(fetch_broadcasts, day, tvdids) for day in day_timestamps]
 	for future in as_completed(futures):
