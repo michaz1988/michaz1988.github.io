@@ -47,7 +47,7 @@ plugin://plugin.video.vavooto/?name=DAZN+2
 plugin://plugin.video.joyn/?mode=play_video&video_id=dmax-at&stream_type=LIVE
 #EXTINF:-1 tvg-id="389" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/eurosport1.png",Eurosport 1
 plugin://plugin.video.joyn/?mode=play_video&video_id=eurosport1-de&stream_type=LIVE
-#EXTINF:-1 tvg-id="504" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/eurosport2.png",Eurosport 2
+#EXTINF:-1 tvg-id="18" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/eurosport2.png",Eurosport 2
 plugin://plugin.video.vavooto/?name=EUROSPORT+2
 #EXTINF:-1 tvg-id="568" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/fixundfoxi.png",Fix und Foxi
 plugin://plugin.video.vavooto/?name=FIX+%26+FOXI
@@ -143,7 +143,7 @@ plugin://plugin.video.joyn/?mode=play_video&video_id=sat1gold-at&stream_type=LIV
 plugin://plugin.video.joyn/?mode=play_video&video_id=servustv-at&stream_type=LIVE
 #EXTINF:-1 tvg-id="451" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/silverline.png",Silverline
 plugin://plugin.video.vavooto/?name=SILVERLINE
-#EXTINF:-1 tvg-id="769" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/sixx.png",Sixx
+#EXTINF:-1 tvg-id="694" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/sixx.png",Sixx
 plugin://plugin.video.joyn/?mode=play_video&video_id=sixx-at&stream_type=LIVE
 #EXTINF:-1 tvg-id="767" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/skyatlantic.png",Sky Atlantic
 plugin://plugin.video.vavooto/?name=SKY+ATLANTIC
