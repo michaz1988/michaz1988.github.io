@@ -410,7 +410,7 @@
 	</extension>
 </addon>
 
-<addon id="plugin.video.xship" version="9025.06.13" name="[B]xShip[/B]" provider-name="xShip-Team">
+<addon id="plugin.video.xship" version="9025.06.18" name="[B]xShip[/B]" provider-name="xShip-Team">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
         <import addon="script.module.requests"/>
