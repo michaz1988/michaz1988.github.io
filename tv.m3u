@@ -49,7 +49,7 @@ plugin://plugin.video.joyn/?mode=play_video&video_id=dmax-at&stream_type=LIVE
 plugin://plugin.video.joyn/?mode=play_video&video_id=eurosport1-de&stream_type=LIVE
 #EXTINF:-1 tvg-id="18" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/eurosport2.png",Eurosport 2
 plugin://plugin.video.vavooto/?name=EUROSPORT+2
-#EXTINF:-1 tvg-id="568" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/fixundfoxi.png",Fix und Foxi
+#EXTINF:-1 tvg-id="568" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/fix&foxi.png",Fix und Foxi
 plugin://plugin.video.vavooto/?name=FIX+%26+FOXI
 #EXTINF:-1 tvg-id="4002" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/geotv.png",Geo
 plugin://plugin.video.vavooto/?name=GEO+TV
@@ -127,8 +127,8 @@ plugin://plugin.video.vavooto/?name=RTL+2
 plugin://plugin.video.vavooto/?name=RTL+CRIME
 #EXTINF:-1 tvg-id="528" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/rtlliving.png",RTL Living
 plugin://plugin.video.vavooto/?name=RTL+LIVING
-#EXTINF:-1 tvg-id="763" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/rtlnitro.png",RTL Nitro
-plugin://plugin.video.vavooto/?name=RTL+NITRO
+#EXTINF:-1 tvg-id="763" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/nitro.png",RTL Nitro
+plugin://plugin.video.vavooto/?name=NITRO
 #EXTINF:-1 tvg-id="529" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/rtlpassion.png",RTL Passion
 plugin://plugin.video.vavooto/?name=RTL+PASSION
 #EXTINF:-1 tvg-id="12033" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/rtlup.png",RTL up
