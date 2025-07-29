@@ -1,0 +1,217 @@
+#EXTM3U
+#EXTINF:-1 tvg-id="438460" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/13thstreet.png",13TH Street
+plugin://plugin.video.vavooto/?name=13TH+STREET
+#EXTINF:-1 tvg-id="76682" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/3sat.png",3 Sat
+plugin://plugin.video.vavooto/?name=3+SAT
+#EXTINF:-1 tvg-id="76759" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/animalplanet.png",Animal Planet
+plugin://plugin.video.vavooto/?name=ANIMAL+PLANET
+#EXTINF:-1 tvg-id="76745" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/anixe.png",Anixe
+plugin://plugin.video.vavooto/?name=ANIXE
+#EXTINF:-1 tvg-id="76674" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/ard.png",ARD
+plugin://plugin.video.vavooto/?name=ARD
+#EXTINF:-1 tvg-id="438466" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/ardalpha.png",ARD ALPHA
+plugin://plugin.video.vavooto/?name=ARD+ALPHA
+#EXTINF:-1 tvg-id="76641" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/arte.png",Arte
+plugin://plugin.video.vavooto/?name=ARTE
+#EXTINF:-1 tvg-id="76810" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/atv.png",ATV
+plugin://plugin.video.joyn/?mode=play_video&video_id=atv&stream_type=LIVE
+#EXTINF:-1 tvg-id="76638" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/atv2.png",ATV2
+plugin://plugin.video.joyn/?mode=play_video&video_id=atv2&stream_type=LIVE
+#EXTINF:-1 tvg-id="438446" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/automotorsport.png",Auto Motor Sport
+plugin://plugin.video.vavooto/?name=AUTO+MOTOR+SPORT
+#EXTINF:-1 tvg-id="438468" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/axnblack.png",AXN BLACK
+plugin://plugin.video.vavooto/?name=AXN+BLACK
+#EXTINF:-1 tvg-id="438454" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/axnwhite.png",AXN WHITE
+plugin://plugin.video.vavooto/?name=AXN+WHITE
+#EXTINF:-1 tvg-id="76712" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/br.png",BR
+plugin://plugin.video.vavooto/?name=BR
+#EXTINF:-1 tvg-id="76763" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/cartoonnetwork.png",Cartoon Network
+plugin://plugin.video.vavooto/?name=CARTOON+NETWORK
+#EXTINF:-1 tvg-id="197540" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/cartoonito.png",Cartoonito
+plugin://plugin.video.vavooto/?name=CARTOONITO
+#EXTINF:-1 tvg-id="76742" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/comedycentral.png",Comedy Central
+plugin://plugin.video.joyn/?mode=play_video&video_id=comedy-central-de&stream_type=LIVE
+#EXTINF:-1 tvg-id="76667" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/crime+investigation.png",CRIME + INVESTIGATION
+plugin://plugin.video.vavooto/?name=CRIME+%2b+INVESTIGATION
+#EXTINF:-1 tvg-id="76646" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/curiositychannel.png",Curiosity Channel
+plugin://plugin.video.vavooto/?name=CURIOSITY+CHANNEL
+#EXTINF:-1 tvg-id="76809" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/deluxemusic.png",DELUXE MUSIC
+plugin://plugin.video.vavooto/?name=DELUXE+MUSIC
+#EXTINF:-1 tvg-id="76686" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/discovery.png",Discovery
+plugin://plugin.video.vavooto/?name=DISCOVERY
+#EXTINF:-1 tvg-id="212828" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/dazn1.png",DAZN 1
+plugin://plugin.video.vavooto/?name=DAZN+1
+#EXTINF:-1 tvg-id="212840" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/dazn2.png",DAZN 2
+plugin://plugin.video.vavooto/?name=DAZN+2
+#EXTINF:-1 tvg-id="76692" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/dmax.png",DMAX
+plugin://plugin.video.joyn/?mode=play_video&video_id=dmax-at&stream_type=LIVE
+#EXTINF:-1 tvg-id="76619" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/eurosport1.png",Eurosport 1
+plugin://plugin.video.joyn/?mode=play_video&video_id=eurosport1-de&stream_type=LIVE
+#EXTINF:-1 tvg-id="76744" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/eurosport2.png",Eurosport 2
+plugin://plugin.video.vavooto/?name=EUROSPORT+2
+#EXTINF:-1 tvg-id="438467" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/fix&foxi.png",Fix und Foxi
+plugin://plugin.video.vavooto/?name=FIX+%26+FOXI
+#EXTINF:-1 tvg-id="76800" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/geotv.png",Geo
+plugin://plugin.video.vavooto/?name=GEO+TV
+#EXTINF:-1 tvg-id="76675" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/heimatkanal.png",Heimatkanal
+plugin://plugin.video.vavooto/?name=HEIMATKANAL
+#EXTINF:-1 tvg-id="438452" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/history.png",History
+plugin://plugin.video.vavooto/?name=HISTORY
+#EXTINF:-1 tvg-id="76648" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/hr.png",HR
+plugin://plugin.video.vavooto/?name=HR
+#EXTINF:-1 tvg-id="76615" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/jukebox.png",Jukebox
+plugin://plugin.video.vavooto/?name=JUKEBOX
+#EXTINF:-1 tvg-id="76622" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/nickjunior.png",Junior
+plugin://plugin.video.vavooto/?name=NICK+JUNIOR
+#EXTINF:-1 tvg-id="76792" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/kabel1.png",Kabel 1
+plugin://plugin.video.joyn/?mode=play_video&video_id=kabeleins-at&stream_type=LIVE
+#EXTINF:-1 tvg-id="76725" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/kabel1classics.png",Kabel 1 Classics
+plugin://plugin.video.vavooto/?name=KABEL+1+CLASSICS
+#EXTINF:-1 tvg-id="76715" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/kabel1doku.png",Kabel 1 Doku
+plugin://plugin.video.joyn/?mode=play_video&video_id=kabeleinsdoku-at&stream_type=LIVE
+#EXTINF:-1 tvg-id="76680" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/kika.png",KiKA
+plugin://plugin.video.vavooto/?name=KiKA
+#EXTINF:-1 tvg-id="76770" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/kinowelt.png",Kinowelt
+plugin://plugin.video.vavooto/?name=KINOWELT
+#EXTINF:-1 tvg-id="76730" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/mdr.png",MDR
+plugin://plugin.video.vavooto/?name=MDR
+#EXTINF:-1 tvg-id="76630" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/motorvision.png",Motorvision
+plugin://plugin.video.joyn/?mode=play_video&video_id=motorvision-de-hd&stream_type=LIVE
+#EXTINF:-1 tvg-id="76780" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/mtv.png",MTV
+plugin://plugin.video.joyn/?mode=play_video&video_id=mtv-de&stream_type=LIVE
+#EXTINF:-1 tvg-id="438444" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/ntv.png",N-TV
+plugin://plugin.video.vavooto/?name=NTV
+#EXTINF:-1 tvg-id="76636" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/n24doku.png",N24 Doku
+plugin://plugin.video.joyn/?mode=play_video&video_id=n24-de&stream_type=LIVE
+#EXTINF:-1 tvg-id="76628" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/nationalgeographic.png",Nat Geo
+plugin://plugin.video.vavooto/?name=NATIONAL+GEOGRAPHIC
+#EXTINF:-1 tvg-id="76783" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/natgeowild.png",Nat Geo Wild
+plugin://plugin.video.vavooto/?name=NAT+GEO+WILD
+#EXTINF:-1 tvg-id="76748" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/ndr.png",NDR
+plugin://plugin.video.vavooto/?name=NDR
+#EXTINF:-1 tvg-id="438439" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/nickelodeon.png",Nickelodeon
+plugin://plugin.video.joyn/?mode=play_video&video_id=nickelodeon-de-hd&stream_type=LIVE
+#EXTINF:-1 tvg-id="76738" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/one.png",ONE
+plugin://plugin.video.vavooto/?name=ONE
+#EXTINF:-1 tvg-id="438442" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/orf1.png",ORF 1
+plugin://plugin.video.joyn/?mode=play_video&video_id=orf1-at&stream_type=LIVE
+#EXTINF:-1 tvg-id="76616" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/orf2.png",ORF 2
+plugin://plugin.video.joyn/?mode=play_video&video_id=orf2-at&stream_type=LIVE
+#EXTINF:-1 tvg-id="76734" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/orf3.png",ORF 3
+plugin://plugin.video.joyn/?mode=play_video&video_id=orf3-at&stream_type=LIVE
+#EXTINF:-1 tvg-id="76756" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/orfsportplus.png",ORF Sport
+plugin://plugin.video.joyn/?mode=play_video&video_id=orf-sport-plus-at&stream_type=LIVE
+#EXTINF:-1 tvg-id="76649" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/phoenix.png",PHOENIX
+plugin://plugin.video.vavooto/?name=PHOENIX
+#EXTINF:-1 tvg-id="76762" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/pro7.png",ProSieben
+plugin://plugin.video.joyn/?mode=play_video&video_id=prosieben-at&stream_type=LIVE
+#EXTINF:-1 tvg-id="76749" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/pro7fun.png",ProSieben Fun
+plugin://plugin.video.vavooto/?name=PRO+7+FUN
+#EXTINF:-1 tvg-id="76702" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/pro7maxx.png",ProSieben MAXX
+plugin://plugin.video.joyn/?mode=play_video&video_id=prosiebenmaxx-at&stream_type=LIVE
+#EXTINF:-1 tvg-id="76732" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/puls4.png",PULS 4
+plugin://plugin.video.joyn/?mode=play_video&video_id=puls4-at&stream_type=LIVE
+#EXTINF:-1 tvg-id="401095" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/puls24.png",PULS 24
+plugin://plugin.video.joyn/?mode=play_video&video_id=puls24-at-hd&stream_type=LIVE
+#EXTINF:-1 tvg-id="76751" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/rbb.png",RBB
+plugin://plugin.video.vavooto/?name=RBB
+#EXTINF:-1 tvg-id="76731" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/ric.png",RiC
+plugin://plugin.video.joyn/?mode=play_video&video_id=ric&stream_type=LIVE
+#EXTINF:-1 tvg-id="76624" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/romancetv.png",Romance
+plugin://plugin.video.vavooto/?name=ROMANCE+TV
+#EXTINF:-1 tvg-id="76740" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/rtl.png",RTL
+plugin://plugin.video.vavooto/?name=RTL
+#EXTINF:-1 tvg-id="438457" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/rtl2.png",RTL 2
+plugin://plugin.video.vavooto/?name=RTL+2
+#EXTINF:-1 tvg-id="76700" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/rtlcrime.png",RTL Crime
+plugin://plugin.video.vavooto/?name=RTL+CRIME
+#EXTINF:-1 tvg-id="76673" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/rtlliving.png",RTL Living
+plugin://plugin.video.vavooto/?name=RTL+LIVING
+#EXTINF:-1 tvg-id="76787" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/nitro.png",RTL Nitro
+plugin://plugin.video.vavooto/?name=NITRO
+#EXTINF:-1 tvg-id="76804" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/rtlpassion.png",RTL Passion
+plugin://plugin.video.vavooto/?name=RTL+PASSION
+#EXTINF:-1 tvg-id="76722" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/rtlup.png",RTL up
+plugin://plugin.video.vavooto/?name=RTL+UP
+#EXTINF:-1 tvg-id="76664" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/sat1.png",Sat 1
+plugin://plugin.video.joyn/?mode=play_video&video_id=sat1-at&stream_type=LIVE
+#EXTINF:-1 tvg-id="76769" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/sat1emotions.png",Sat 1 Emotions
+plugin://plugin.video.vavooto/?name=SAT+1+EMOTIONS
+#EXTINF:-1 tvg-id="76716" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/sat1gold.png",Sat 1 Gold
+plugin://plugin.video.joyn/?mode=play_video&video_id=sat1gold-at&stream_type=LIVE
+#EXTINF:-1 tvg-id="438450" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/servustv.png",Servus TV
+plugin://plugin.video.joyn/?mode=play_video&video_id=servustv-at&stream_type=LIVE
+#EXTINF:-1 tvg-id="76631" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/silverline.png",Silverline
+plugin://plugin.video.vavooto/?name=SILVERLINE
+#EXTINF:-1 tvg-id="76614" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/sixx.png",Sixx
+plugin://plugin.video.joyn/?mode=play_video&video_id=sixx-at&stream_type=LIVE
+#EXTINF:-1 tvg-id="76774" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/skyatlantic.png",Sky Atlantic
+plugin://plugin.video.vavooto/?name=SKY+ATLANTIC
+#EXTINF:-1 tvg-id="438458" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/skycinemaaction.png",Sky Cinema Action
+plugin://plugin.video.vavooto/?name=SKY+CINEMA+ACTION
+#EXTINF:-1 tvg-id="438459" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/skycinemaclassics.png",Sky Cinema Classics
+plugin://plugin.video.vavooto/?name=SKY+CINEMA+CLASSICS
+#EXTINF:-1 tvg-id="438465" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/skycinemafamily.png",Sky Cinema Family
+plugin://plugin.video.vavooto/?name=SKY+CINEMA+FAMILY
+#EXTINF:-1 tvg-id="321554" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/skycinemahighlights.png",Sky Cinema Highlights
+plugin://plugin.video.vavooto/?name=SKY+CINEMA+HIGHLIGHTS
+#EXTINF:-1 tvg-id="438461" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/skycinemapremieren.png",Sky Cinema Premieren
+plugin://plugin.video.vavooto/?name=SKY+CINEMA+PREMIEREN
+#EXTINF:-1 tvg-id="10908" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/skycrime.png",Sky Crime
+plugin://plugin.video.vavooto/?name=SKY+CRIME
+#EXTINF:-1 tvg-id="10620" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/skydocumentaries.png",Sky Documentaries
+plugin://plugin.video.vavooto/?name=SKY+DOCUMENTARIES
+#EXTINF:-1 tvg-id="76663" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/skykrimi.png",Sky Krimi
+plugin://plugin.video.vavooto/?name=SKY+KRIMI
+#EXTINF:-1 tvg-id="10640" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/skynature.png",Sky Nature
+plugin://plugin.video.vavooto/?name=SKY+NATURE
+#EXTINF:-1 tvg-id="401732" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/sky1.png",Sky One
+plugin://plugin.video.vavooto/?name=SKY+1
+#EXTINF:-1 tvg-id="10635" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/skyreplay.png",Sky Replay
+plugin://plugin.video.vavooto/?name=SKY+REPLAY
+#EXTINF:-1 tvg-id="12184" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/skyshowcase.png",Sky Showcase
+plugin://plugin.video.vavooto/?name=SKY+SHOWCASE
+#EXTINF:-1 tvg-id="76714" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/spiegelgeschichte.png",Spiegel Geschichte
+plugin://plugin.video.vavooto/?name=SPIEGEL+GESCHICHTE
+#EXTINF:-1 tvg-id="76754" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/sport1.png",Sport 1
+plugin://plugin.video.joyn/?mode=play_video&video_id=sport1-de&stream_type=LIVE
+#EXTINF:-1 tvg-id="438441" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/sportdigital.png",Sport digital
+plugin://plugin.video.vavooto/?name=SPORT+DIGITAL
+#EXTINF:-1 tvg-id="76767" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/superrtl.png",Super RTL
+plugin://plugin.video.vavooto/?name=SUPER+RTL
+#EXTINF:-1 tvg-id="76693" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/swr.png",SWR
+plugin://plugin.video.vavooto/?name=SWR
+#EXTINF:-1 tvg-id="76764" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/syfy.png",Syfy
+plugin://plugin.video.vavooto/?name=SYFY
+#EXTINF:-1 tvg-id="76696" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/tagesschau24.png",Tagesschau 24
+plugin://plugin.video.vavooto/?name=TAGESSCHAU+24
+#EXTINF:-1 tvg-id="76708" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/tele5.png",Tele 5
+plugin://plugin.video.joyn/?mode=play_video&video_id=tele5-at&stream_type=LIVE
+#EXTINF:-1 tvg-id="76699" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/tlc.png",TLC
+plugin://plugin.video.joyn/?mode=play_video&video_id=tlc-at&stream_type=LIVE
+#EXTINF:-1 tvg-id="76789" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/toggoplus.png",Toggo
+plugin://plugin.video.vavooto/?name=TOGGO+PLUS
+#EXTINF:-1 tvg-id="76662" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/universaltv.png",Universal Channel
+plugin://plugin.video.vavooto/?name=UNIVERSAL+TV
+#EXTINF:-1 tvg-id="76704" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/vox.png",VOX
+plugin://plugin.video.vavooto/?name=VOX
+#EXTINF:-1 tvg-id="76796" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/voxup.png",Vox UP
+plugin://plugin.video.vavooto/?name=VOX+UP
+#EXTINF:-1 tvg-id="76679" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/warnertvcomedy.png",WarnerTV Comedy
+plugin://plugin.video.vavooto/?name=WARNER+TV+COMEDY
+#EXTINF:-1 tvg-id="76645" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/warnertvfilm.png",WarnerTV Film
+plugin://plugin.video.vavooto/?name=WARNER+TV+FILM
+#EXTINF:-1 tvg-id="76806" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/warnertvserie.png",WarnerTV Serie
+plugin://plugin.video.vavooto/?name=WARNER+TV+SERIE
+#EXTINF:-1 tvg-id="76684" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/wdr.png",WDR
+plugin://plugin.video.vavooto/?name=WDR
+#EXTINF:-1 tvg-id="76795" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/welt.png",WELT
+plugin://plugin.video.joyn/?mode=play_video&video_id=welt-de&stream_type=LIVE
+#EXTINF:-1 tvg-id="438440" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/weltderwunder.png",WELT DER WUNDER
+plugin://plugin.video.vavooto/?name=WELT+DER+WUNDER
+#EXTINF:-1 tvg-id="76627" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/zdf.png",ZDF
+plugin://plugin.video.vavooto/?name=ZDF
+#EXTINF:-1 tvg-id="76718" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/zdfinfo.png",ZDF info
+plugin://plugin.video.vavooto/?name=ZDF+INFO
+#EXTINF:-1 tvg-id="76739" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/zdfneo.png",ZDF neo
+plugin://plugin.video.vavooto/?name=ZDF+NEO
