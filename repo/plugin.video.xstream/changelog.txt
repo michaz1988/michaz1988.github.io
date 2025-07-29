@@ -1,0 +1,52 @@
+[B]Version: 4.3.0.5[/B]
+
+
+06.07.2025
+
+- [bs.to] Recaptcha Code in den Solver überführt
+- [Recaptcha] Captchasolver und helper integriert
+- [Recaptcha] Solver Dienst 2Captcha in eigene Klasse ausgelagert
+- [Recaptcha] 9kw.eu als zweiten Solver Dienst hinzugefügt, nicht so stabil wie 2Captcha
+
+
+05.07.2025
+
+- [xStream] Domains aktualisiert
+- [xStream] Bugfixes und Fehlerbeseitigungen im Rahmen der Performanceverbesserungen
+
+
+30.06.2025
+
+- [Kinox] Fix für Menüpunkt Neues, Bei Filme Menüpunkt Neue Filme hinzugefügt
+- [xStream] weitere Verbesserungen Performance und Menüaufbau
+- [xStream] Bugfixes und fehlende Funktionen nachgerüstet
+
+
+28.06.2025
+
+- [Requesthandler] POST Methode hinzugefügt
+- [BurningSeries] Benutzt nun Requesthandler, Suche verbessert, Optische Verbesserungen
+- [Aniworld] Performanceverbesserungen
+- [Serienstream] Performanceverbesserungen
+- [Generell] Performanceschub im Aufbau und Wechsel der Menüs
+- [Generell] Diverse Bugfixes
+
+22.06.2025
+
+- [Burningseries] Einen Fehler korrigiert, dass sich die Domain nicht automatisch in die
+  Settings schreibt
+
+
+21.06.2025
+
+- [BurningSeries] Neuer Scraper Thx @ Alex für den Code und an Kyle fürs Logo.
+- [BurningSeries] Exception Handler für fehlenden API Key hinzugefügt
+
+[color yellow] WICHTIG! BurningSeries ist im Standard deaktiviert. Ihr benötigt zwingend
+ein Konto bei 2Captcha und müsst einen API Key mit Guthaben in xStream hinterlegen,
+sonst funktioniert BurningSeries nicht! Anleitung findet sich in unserer Wiki unter
+Punkt 5.4.2.9[/color]
+
+- [API_Suche] Caching für Hoster-Listen aktiviert
+- [TMDB Helper] Neue Player zum Download verfügbar
+

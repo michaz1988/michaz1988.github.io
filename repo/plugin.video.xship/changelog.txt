@@ -1,0 +1,32 @@
+[B]xShip Version: 2024.12.18[/B]
+
+18.12.2024 Watchone
+- edit player.py  - inputstream.adaptive
+- edit indexers - context menu
+- edit control.py - openSettings()
+
+17.12.2024 Watchone
+- add kinox
+- fix serienstream 'prioHoster'
+- edit checkVersion()
+
+16.12.2024 Watchone
+- add prioHoster
+  die gefundenen Streams werden nach Hoster Prioritat sortiert (Einstellungen in resolveUrl)
+- alle Scraper und weiterer Code wurden dafür angepasst - isBlockedHoster()
+- Sourcecode bereinigt
+
+07.12.2024 Watchone
+- edit flags
+- edit serien-streams
+- edit serienstream 
+
+02.12.2024 Watchone
+- [Flimmerstube] fix Suche
+
+01.12.2024 xS-Team-Dev
+- [xShip] Public Release
+- [xShip Repository] erstellt in der Version 1.5.0
+- [xShip TMDb Player] erstellt und zu Download bereit
+- [xShip Webseite] https://tiny.one/xship
+- [xShip Kodi Quelle] https://tiny.one/xship/zips/
