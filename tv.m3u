@@ -59,7 +59,7 @@ plugin://plugin.video.vavooto/?name=HEIMATKANAL
 plugin://plugin.video.vavooto/?name=HISTORY
 #EXTINF:-1 tvg-id="49" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/hr.png",HR
 plugin://plugin.video.vavooto/?name=HR
-#EXTINF:-1 tvg-id="558" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/jukebox.png",Jukebox
+#EXTINF:-1 tvg-id="218" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/jukebox.png",Jukebox
 plugin://plugin.video.vavooto/?name=JUKEBOX
 #EXTINF:-1 tvg-id="485" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/nickjunior.png",Junior
 plugin://plugin.video.vavooto/?name=NICK+JUNIOR
