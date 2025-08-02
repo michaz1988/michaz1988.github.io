@@ -137,7 +137,7 @@ plugin://plugin.video.vavooto/?name=RTL+UP
 plugin://plugin.video.joyn/?mode=play_video&video_id=sat1-at&stream_type=LIVE
 #EXTINF:-1 tvg-id="766" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/sat1emotions.png",Sat 1 Emotions
 plugin://plugin.video.vavooto/?name=SAT+1+EMOTIONS
-#EXTINF:-1 tvg-id="12193" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/sat1gold.png",Sat 1 Gold
+#EXTINF:-1 tvg-id="338" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/sat1gold.png",Sat 1 Gold
 plugin://plugin.video.joyn/?mode=play_video&video_id=sat1gold-at&stream_type=LIVE
 #EXTINF:-1 tvg-id="770" group-title="Standart" tvg-logo="https://michaz1988.github.io/logos/servustv.png",Servus TV
 plugin://plugin.video.joyn/?mode=play_video&video_id=servustv-at&stream_type=LIVE
