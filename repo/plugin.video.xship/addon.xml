@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="plugin.video.xship" version="2025.08.02" name="[B]xShip[/B]" provider-name="Michaz">
+<addon id="plugin.video.xship" version="2025.08.03" name="[B]xShip[/B]" provider-name="Michaz">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
         <import addon="script.module.requests"/>
@@ -16,25 +16,12 @@
     </extension>
     <extension point="xbmc.service" library="service.py" start="startup" />
     <extension point="xbmc.addon.metadata">
-        <summary lang="de_DE">xShip: Das Original</summary>
-        <summary lang="en_GB">xShip: The Original</summary>
-        <description lang="de">xShip wurde als Video-Addon entwickelt, um Streams verschiedenster Webseiten zu sammeln und anzuzeigen. Der Inhalt von xShip, als auch das Angebot an Webseiten-Inhalten wird von den xShip Entwicklern wieder weiter entwickelt.</description>
-        <description lang="en_GB">xShip was developed as a video add-on to collect and display streams from various websites. The content of xShip, as well as the range of website content, is being further developed by the xShip developers.</description>
-        <disclaimer lang="de_DE">Mit diesem Video-Addon kannst du auf alle angebotenen Streams verschiedenster deutscher Quellen zugreifen. Dieses Addon ist kein offizieller Teil des Kodi Media Center und wird daher nicht von den offiziellen Support-Kanälen abgedeckt! xShip durchsucht die enthaltenen Webseiten nach Streams und stellt diese in einer Übersicht dar. Der bereitgestellte Inhalt der Webseiten steht in keinem Bezug zu xShip oder den Entwicklern! xShip durchsucht die enthaltenen Webseiten nach Streams und stellt diese in einer Übersicht dar.</disclaimer>
-        <disclaimer lang="en_GB">With this video add-on you can access all streams offered by various German sources. This add-on is not an official part of the Kodi Media Center and is therefore not covered by the official support channels! xShip searches the included websites for streams and displays them in an overview. The content provided by the websites has no connection to xShip or the developers! xShip searches the included websites for streams and displays them in an overview.</disclaimer>
-        <language>de</language>
-		<platform>all</platform>
-		<license>GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007</license>
-        <website>https://tiny.one/xship</website>
+        <summary lang="de_DE">xShip: Der Fake</summary>
+        <summary lang="en_GB">xShip: The Fake</summary>
         <assets>
 			<icon>resources/icon.png</icon>
 			<fanart>resources/fanart.jpg</fanart>
 			<banner>resources/media/banner.png</banner>
-			<clearlogo>resources/media/clearlogo.png</clearlogo>
-			<screenshot>resources/media/screenshot-01.jpg</screenshot>
-			<screenshot>resources/media/screenshot-02.jpg</screenshot>
-			<screenshot>resources/media/screenshot-03.jpg</screenshot>
-			<screenshot>resources/media/screenshot-04.jpg</screenshot>
 		</assets>
     </extension>
 </addon>
