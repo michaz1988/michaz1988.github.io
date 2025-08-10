@@ -381,14 +381,14 @@
   </extension>
 </addon>
 
-<addon id="plugin.video.xship" version="2025.08.03" name="[B]xShip[/B]" provider-name="Michaz">
+<addon id="plugin.video.xship" version="2025.08.10" name="[B]xShip[/B]" provider-name="Michaz">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
         <import addon="script.module.requests"/>
         <import addon="script.module.download-m3u8" optional="true"/>
         <import addon="script.module.six"/>
         <import addon="script.module.pyaes"/>
-        <import addon="script.module.infotagger" optional="true" />
+        <import addon="script.module.infotagger"/>
         <import addon="script.module.resolveurl" version="5.1.100"/>
         <!-- for remote debug -->
         <import addon="script.module.pydevd" optional="true"/>
