@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<addon id="plugin.video.vavooto" name="VAVOO.TO" version="2025.08.13" provider-name="kasi,michaz">
+<addon id="plugin.video.vavooto" name="VAVOO.TO" version="2025.08.14" provider-name="kasi,michaz">
 	<requires>
 		<import addon="script.module.requests"/>
 		<import addon="script.module.resolveurl"/>
@@ -11,7 +11,7 @@
 		<!-- only for debug -->
 		<import addon="script.module.pydevd" optional="true"/>
 	</requires>
-	<extension point="xbmc.python.pluginsource" library="main.py">
+	<extension point="xbmc.python.pluginsource" library="resources/main.py">
 		<provides>video</provides>
 	</extension>
 	<extension point="xbmc.python.module" library="resources" />
