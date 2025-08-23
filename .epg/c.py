@@ -142,6 +142,29 @@ for a in csv_content:
 		if mac not in alllist[url]:
 			alllist[url].append(mac)
 			
+def get_portals():
+	urls, macs = [], []
+	url = f'https://stbstalker.alaaeldinee.com/{now.strftime("%Y/%m")}/smart-stb-emu-pro-{now.strftime("%d-%m-%Y")}.html?m=1'
+	for b in requests.get(url).text.splitlines():
+		if "PORTAL :" in b:
+			c = re.findall("PORTAL : .*", b.replace("PORTAL", "\nPORTAL"))
+			for d in c: 
+				if not "datePublished" in d:
+					huii = re.findall("(?<= : ).*?(?=</p>)", d)
+					if huii and len(huii) == 5:
+						portal, mac, expired = huii[0], huii[3], huii[4]
+						if timestamp <= datetime.timestamp(parse(expired)):
+							urls.append(portal)
+							macs.append(mac)
+	return urls, macs
+
+try:
+	urls, macs = get_portals()
+	for i , url in enumerate(urls):
+		if url not in alllist: alllist[url] = []
+		alllist[url].append(macs[i])
+except: pass
+			
 sorted_dict = dict(sorted(sorted(alllist.items()), key=lambda item: len(item[1]), reverse=True))
 with open(mac_list, "w") as k:
 	json.dump(sorted_dict, k, indent=4)
