@@ -69,9 +69,8 @@ def magentaSession():
 
 def get_epgLength(days_to_grab, form="%Y-%m-%dT%H:%M:00.000Z"):
 	# Calculate Date and Time
-	calc_today = datetime(today.year, today.month, today.day, hour=00, minute=00, second=1)
-	calc_then = datetime(today.year, today.month, today.day, hour=23, minute=59, second=59)
-	calc_then += timedelta(days=days_to_grab)
+	calc_today = datetime.now()
+	calc_then = calc_today+ timedelta(days=days_to_grab)
 	starttime = calc_today.strftime(form)
 	endtime = calc_then.strftime(form)
 	return starttime, endtime
