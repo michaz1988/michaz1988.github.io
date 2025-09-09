@@ -81,31 +81,33 @@ soup = BeautifulSoup(page, 'html.parser')
 for a in soup.find_all('p'):
 	if "http" in a.text:
 		url = a.text.strip()
-		page = requests.get(url).text
-		urls, macs = [], []
-		for line in page.splitlines():
-			if "URL" in line:
-				url = line.lstrip("URL: ").rstrip("/").replace(":80/c", "/c")
-				if not url.endswith("/c"): url+="/c"
-				urls.append(url)
-			if "MAC" in line: macs.append(line.lstrip("MAC: ").strip())
-			if "Channels Count: 0" in line:
-				urls.pop()
-				macs.pop()
-			if "Expire" in line:
-				expire = line.lstrip("Expire: ").strip()
-				try:
-					if timestamp >= datetime.timestamp(parse(expire)):
-						urls.pop()
-						macs.pop()
-				except: pass
-			if "Status" in line and "Offline" in line:
-				urls.pop()
-				macs.pop()
+		break
 
-		for i , url in enumerate(urls):
-			if url not in alllist: alllist[url] = []
-			alllist[url].append(macs[i])
+page = requests.get(url).text
+urls, macs = [], []
+for line in page.splitlines():
+	if "URL" in line:
+		url = line.lstrip("URL: ").rstrip("/").replace(":80/c", "/c")
+		if not url.endswith("/c"): url+="/c"
+		urls.append(url)
+	if "MAC" in line: macs.append(line.lstrip("MAC: ").strip())
+	if "Channels Count: 0" in line:
+		urls.pop()
+		macs.pop()
+	if "Expire" in line:
+		expire = line.lstrip("Expire: ").strip()
+		try:
+			if timestamp >= datetime.timestamp(parse(expire)):
+				urls.pop()
+				macs.pop()
+		except: pass
+	if "Status" in line and "Offline" in line:
+		urls.pop()
+		macs.pop()
+
+for i , url in enumerate(urls):
+	if url not in alllist: alllist[url] = []
+	alllist[url].append(macs[i])
 
 page = requests.get("https://ikracccam.blogspot.com/p/stalker-iptv-ikra_2.html").text
 soup = BeautifulSoup(page, 'html.parser')
