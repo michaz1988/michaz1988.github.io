@@ -69,8 +69,8 @@ def magentaSession():
 
 def get_epgLength(days_to_grab, form="%Y-%m-%dT%H:%M:00.000Z"):
 	# Calculate Date and Time
-	calc_today = datetime.now()
-	calc_then = calc_today+ timedelta(days=days_to_grab)
+	calc_today = datetime.now()-timedelta(days=1)
+	calc_then = calc_today+ timedelta(days=days_to_grab+1)
 	starttime = calc_today.strftime(form)
 	endtime = calc_then.strftime(form)
 	return starttime, endtime
@@ -532,9 +532,9 @@ for program in epg_data:
 	rep('onscreen', "PULS24", item_title, item_starttime, item_endtime, item_description, item_country, item_picture, item_subtitle, items_genre, item_date, item_season, item_episode, item_agerating, item_starrating, items_director, items_producer, items_actor, False, lang)
 epg.append('\n<!--  TV DIGITAL (DE) PROGRAMME LIST -->')
 broadcast_files = {}
-day_to_start = datetime(today.year, today.month, today.day, hour=00, minute=00, second=1)
-day_timestamps = [int(datetime.timestamp(day_to_start + timedelta(days=i)))for i in range(days_to_grab)]
-with ThreadPoolExecutor(max_workers=days_to_grab) as executor:
+day_to_start = datetime.now()-timedelta(days=1)
+day_timestamps = [int(datetime.timestamp(day_to_start + timedelta(days=i)))for i in range(days_to_grab+1)]
+with ThreadPoolExecutor(max_workers=days_to_grab+1) as executor:
 	futures = [executor.submit(fetch_broadcasts, day, tvdids) for day in day_timestamps]
 	for future in as_completed(futures):
 		result = future.result()
@@ -582,10 +582,10 @@ for contentID in tvdids:
 
 
 epg.append('\n<!--  {MAGENTA TV (DE)}  PROGRAMME LIST -->')
-starttime, endtime = get_epgLength(days_to_grab, form="%Y%m%d%H%M%S")
 sess = magentaSession()
 
 def mag(contentID):
+	starttime, endtime = get_epgLength(days_to_grab, form="%Y%m%d%H%M%S")
 	magentaDE_data = {'channelid': contentID, 'type': '2', 'offset': '0', 'count': '-1', 'isFillProgram': '1','properties': '[{"name":"playbill","include":"ratingForeignsn,id,channelid,name,subName,starttime,endtime,cast,casts,country,producedate,ratingid,pictures,type,introduce,foreignsn,seriesID,genres,subNum,seasonNum"}]','endtime': endtime, 'begintime': starttime}
 	magentaData = sess.post(magentaDE_data_url, json=magentaDE_data, headers=magentaDE_header).json()['playbilllist']
 	return magentaData
