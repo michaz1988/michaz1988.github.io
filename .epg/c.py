@@ -79,8 +79,11 @@ def get_epgLength(days_to_grab, form="%Y-%m-%dT%H:%M:00.000Z"):
 page = requests.get("https://ikracccam.blogspot.com/p/link-stalcker-google-drive.html").text
 soup = BeautifulSoup(page, 'html.parser')
 for a in soup.find_all('p'):
+	print(a)
 	if "http" in a.text:
-		page = requests.get(a.text.strip()).text
+		urlb = a.text.strip()
+		page = requests.get(urlb).text
+		print(page)
 		break
 
 
@@ -105,9 +108,10 @@ for line in page.splitlines():
 		urls.pop()
 		macs.pop()
 
-for i , url in enumerate(urls):
-	if url not in alllist: alllist[url] = []
-	alllist[url].append(macs[i])
+if urls and macs:
+	for i , url in enumerate(urls):
+		if url not in alllist: alllist[url] = []
+		alllist[url].append(macs[i])
 
 page = requests.get("https://ikracccam.blogspot.com/p/stalker-iptv-ikra_2.html").text
 soup = BeautifulSoup(page, 'html.parser')
