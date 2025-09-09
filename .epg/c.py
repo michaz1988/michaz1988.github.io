@@ -75,14 +75,15 @@ def get_epgLength(days_to_grab, form="%Y-%m-%dT%H:%M:00.000Z"):
 	endtime = calc_then.strftime(form)
 	return starttime, endtime
 	
+	
 page = requests.get("https://ikracccam.blogspot.com/p/link-stalcker-google-drive.html").text
 soup = BeautifulSoup(page, 'html.parser')
 for a in soup.find_all('p'):
 	if "http" in a.text:
-		url = a.text.strip()
+		page = requests.get(a.text.strip()).text
 		break
 
-page = requests.get(url).text
+
 urls, macs = [], []
 for line in page.splitlines():
 	if "URL" in line:
