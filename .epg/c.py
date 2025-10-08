@@ -95,8 +95,10 @@ for line in page.splitlines():
 		urls.append(url)
 	if "MAC" in line: macs.append(line.lstrip("MAC: ").strip())
 	if "Channels Count: 0" in line:
-		urls.pop()
-		macs.pop()
+		try:
+			urls.pop()
+			macs.pop()
+		except: pass
 	if "Expire" in line:
 		expire = line.lstrip("Expire: ").strip()
 		try:
@@ -105,8 +107,10 @@ for line in page.splitlines():
 				macs.pop()
 		except: pass
 	if "Status" in line and "Offline" in line:
-		urls.pop()
-		macs.pop()
+		try:
+			urls.pop()
+			macs.pop()
+		except: pass
 
 if urls and macs:
 	for i , url in enumerate(urls):
