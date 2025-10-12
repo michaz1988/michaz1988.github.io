@@ -79,11 +79,11 @@ def get_epgLength(days_to_grab, form="%Y-%m-%dT%H:%M:00.000Z"):
 page = requests.get("https://ikracccam.blogspot.com/p/link-stalcker-google-drive.html").text
 soup = BeautifulSoup(page, 'html.parser')
 for a in soup.find_all('p'):
-	print(a)
+	#print(a)
 	if "http" in a.text:
 		urlb = a.text.strip()
 		page = requests.get(urlb).text
-		print(page)
+		#print(page)
 		break
 
 
@@ -94,17 +94,18 @@ for line in page.splitlines():
 		if not url.endswith("/c"): url+="/c"
 		urls.append(url)
 	if "MAC" in line: macs.append(line.lstrip("MAC: ").strip())
-	if "Channels Count: 0" in line:
-		try:
-			urls.pop()
-			macs.pop()
-		except: pass
+	#if "Channels Count: 0" in line:
+	#	try:
+#			urls.pop()
+#			macs.pop()
+#		except: pass
 	if "Expire" in line:
 		expire = line.lstrip("Expire: ").strip()
 		try:
-			if timestamp >= datetime.timestamp(parse(expire)):
-				urls.pop()
-				macs.pop()
+			if not "null" in expire:
+				if timestamp >= datetime.timestamp(parse(expire)):
+					urls.pop()
+					macs.pop()
 		except: pass
 	if "Status" in line and "Offline" in line:
 		try:
