@@ -492,7 +492,7 @@
   </extension>
 </addon>
 
-<addon id="plugin.video.xstream" name="xStream" version="2025.10.12" provider-name="xStream-Team">
+<addon id="plugin.video.xstream" name="xStream" version="2025.10.13" provider-name="Michaz">
 	<requires>
 		<import addon="xbmc.python" version="3.0.0"/>
 		<import addon="script.module.requests"/>
@@ -523,10 +523,6 @@
 			<fanart>resources/fanart.jpg</fanart>
 			<banner>resources/banner.png</banner>
 			<clearlogo>resources/clearlogo.png</clearlogo>
-			<screenshot>resources/screenshot-01.jpg</screenshot>
-			<screenshot>resources/screenshot-02.jpg</screenshot>
-			<screenshot>resources/screenshot-03.jpg</screenshot>
-			<screenshot>resources/screenshot-04.jpg</screenshot>
 		</assets>
 	</extension>
 </addon>
