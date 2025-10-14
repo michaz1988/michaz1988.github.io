@@ -75,64 +75,39 @@ def get_epgLength(days_to_grab, form="%Y-%m-%dT%H:%M:00.000Z"):
 	endtime = calc_then.strftime(form)
 	return starttime, endtime
 	
-	
-page = requests.get("https://ikracccam.blogspot.com/p/link-stalcker-google-drive.html").text
-soup = BeautifulSoup(page, 'html.parser')
-for a in soup.find_all('p'):
-	#print(a)
-	if "http" in a.text:
-		urlb = a.text.strip()
-		page = requests.get(urlb).text
-		#print(page)
-		break
+blog = requests.get("https://ikracccam.blogspot.com/p/link-stalcker-google-drive.html").content
+link = BeautifulSoup(blog, 'html.parser').find("div", {"class": "titre-content"}).find("p").text.strip()
+page = requests.get(link).text
 
-
-urls, macs = [], []
 for line in page.splitlines():
 	if "URL" in line:
 		url = line.lstrip("URL: ").rstrip("/").replace(":80/c", "/c")
 		if not url.endswith("/c"): url+="/c"
-		urls.append(url)
-	if "MAC" in line: macs.append(line.lstrip("MAC: ").strip())
-	#if "Channels Count: 0" in line:
-	#	try:
-#			urls.pop()
-#			macs.pop()
-#		except: pass
+	if "MAC" in line: mac = line.lstrip("MAC: ").strip()
 	if "Expire" in line:
 		expire = line.lstrip("Expire: ").strip()
 		try:
-			if not "null" in expire:
-				if timestamp >= datetime.timestamp(parse(expire)):
-					urls.pop()
-					macs.pop()
+			if timestamp >= datetime.timestamp(parse(expire)):
+				continue
 		except: pass
-	if "Status" in line and "Offline" in line:
-		try:
-			urls.pop()
-			macs.pop()
-		except: pass
-
-if urls and macs:
-	for i , url in enumerate(urls):
 		if url not in alllist: alllist[url] = []
-		alllist[url].append(macs[i])
+		if mac not in alllist[url]:
+			alllist[url].append(mac)
 
+"""
 page = requests.get("https://ikracccam.blogspot.com/p/stalker-iptv-ikra_2.html").text
 soup = BeautifulSoup(page, 'html.parser')
 for tag in soup.find_all('table'):
 	u, p, m, e = tag.find_all("th")
 	url, port, mac, expire = u.text.strip().rstrip("/").replace(":80/c", "/c"), p.text.strip(), m.text.strip(), e.text.strip()
 	if not url.endswith("/c"): url+="/c"
-	if 'unlimited' in expire:
-		if url not in alllist: alllist[url] = []
-		if mac not in alllist[url]:
-			alllist[url].append(mac)
-	else:
-		if timestamp <= datetime.timestamp(parse(expire)):
-			if url not in alllist: alllist[url] = []
-			if mac not in alllist[url]:
-				alllist[url].append(mac)
+	try:
+		if timestamp >= datetime.timestamp(parse(expire)): continue
+	except: pass
+	if url not in alllist: alllist[url] = []
+	if mac not in alllist[url]:
+		alllist[url].append(mac)
+"""
 
 s3_client = boto3.client("s3", aws_access_key_id=R2_ACCESS_KEY, aws_secret_access_key=R2_SECRET_KEY, endpoint_url=R2_ENDPOINT_URL)
 response = s3_client.get_object(Bucket=R2_BUCKET_NAME, Key=R2_OBJECT_KEY)
@@ -164,13 +139,15 @@ def get_portals():
 							macs.append(mac)
 	return urls, macs
 
+"""
 try:
 	urls, macs = get_portals()
 	for i , url in enumerate(urls):
 		if url not in alllist: alllist[url] = []
 		alllist[url].append(macs[i])
 except: pass
-			
+"""
+
 sorted_dict = dict(sorted(sorted(alllist.items()), key=lambda item: len(item[1]), reverse=True))
 with open(mac_list, "w") as k:
 	json.dump(sorted_dict, k, indent=4)
