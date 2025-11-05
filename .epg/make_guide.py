@@ -11,7 +11,6 @@ datapath = os.path.abspath(os.path.dirname(__file__))
 mac_list = os.path.join(os.path.dirname(datapath), 'maclist.json')
 guide_dest = os.path.join(os.path.dirname(datapath), 'guide.xml')
 guidegz_dest = os.path.join(os.path.dirname(datapath), 'guide.xml.gz')
-logo_md5 = os.path.join(os.path.dirname(datapath), 'tvsp.md5')
 days_to_grab = 3
 magentacontentIDs = ["148", "389", "601", "4724", "18", "218", "338"]
 tvdids = [71, 37, 38,39,40,44,41,42,56,58,770,277,507,694,763,12033,783,532,46,47,51,50,49,48,52,64,564,656,57,43,771,485,568,597,551,194,104,146,659,276,537,4003,4005,12125,100,66,175,12045,12043,511,70,115,761,54,55,757,759,402,59,60,610,12042,613,614,12195,603,12148,12147,633,450,12046,767,615,12178,12184,782,452,625,627,138,453,626,471,472,590,12035,4004,552,154,531,133,1183,468,4002,492,766,765,527,528,529,451,778,756, 12188,12189]
@@ -24,22 +23,7 @@ enable_rating_mapper = True
 episode_format = "onscreen"
 channel_format = 'provider'
 genre_format = "provider"
-with open(logo_md5) as k:
-	logomd5 = k.read()
-	
-tvsDE_channels = requests.get('https://rhea-export.tvspielfilm.de/channels/epg').json()["data"]["data_list"]
-newmd5 = hashlib.md5(json.dumps(tvsDE_channels).encode()).hexdigest()
-if logomd5 != newmd5:
-	tvs_logos = os.path.join(os.path.dirname(datapath), 'tvs-logos')
-	shutil.rmtree(tvs_logos)
-	os.mkdir(tvs_logos)
-	with open(logo_md5, "w") as k:
-		k.write(newmd5)
-	for b in tvsDE_channels:
-		logo = b["logo"].replace("data:image/png;base64,","")
-		with open(os.path.join(tvs_logos, f"{b['id']}.png"), "wb") as k:
-			k.write(base64.b64decode(logo))
-	print("New tvs-logos")
+
 
 ACCOUNT_ID = "145ef3f7a9832804bef0e31548db8a83"
 DATABASE_API_TOKEN = "13DEJ8ftBLkxoCHzfBU__Pkv0ZyqPLTjvRXXR_qk"
