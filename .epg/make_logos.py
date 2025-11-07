@@ -1,4 +1,4 @@
-import hashlib, os, json, requests, shutil
+import hashlib, os, json, requests, shutil, base64
 datapath = os.path.abspath(os.path.dirname(__file__))
 logo_md5 = os.path.join(os.path.dirname(datapath), 'tvsp.md5')
 with open(logo_md5) as k:
