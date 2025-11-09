@@ -46,19 +46,14 @@ jobs:
             maclist.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Delete workflow runs
-        uses: Mattraks/delete-workflow-runs@v2
-        with:
-          token:  ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.repository }}
-          retain_days: 0
-          keep_minimum_runs: 0
-          
+
       - name: Delete releases and workflows runs
         uses: ophub/delete-releases-workflows@main
         with:
           delete_releases: true
-          releases_keep_latest: 0
+          releases_keep_latest: 1
           delete_workflows: true
-          workflows_keep_day: 0
+          workflows_keep_day: 1
+          delete_tags: true
+          tags_keep_latest: 1
           gh_token: ${{ secrets.GITHUB_TOKEN }}
