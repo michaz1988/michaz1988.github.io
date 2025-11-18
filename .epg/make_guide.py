@@ -477,7 +477,11 @@ def fetch_broadcasts(day_to_grab, ids):
 			continue
 		params_detail = '{"broadcasts":%s}' % broad
 		url_detail = "https://mobile.tvdigital.de/broadcastdetails?data=" + quote(params_detail) + "&tmpl=app&device=androidv14&displayDensity=200&sdkInt=35"
-		details = requests.get(url_detail).json()
+		try:details = requests.get(url_detail).json()
+		except: 
+			print("error %s "% url_detail)
+			try:details = requests.get(url_detail).json()
+			except: return {}
 		for t in details:
 			if t["n"] not in broadcast_files:
 				broadcast_files[t["n"]] = []
