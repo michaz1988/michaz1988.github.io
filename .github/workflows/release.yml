@@ -31,15 +31,9 @@ jobs:
       - name: Run EPG Generator
         run: python -c "import os; os.chdir('.epg'); import make_guide"     
 
-      - name: Set date tag
-        run: echo "TAG=v$(date -u +'%Y-%m-%d')" >> $GITHUB_ENV
-
       - name: Upload XML + GZ as release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ env.TAG }}
-          name: "EPG ${{ env.TAG }}"
-          body: "Automated daily EPG update."
           files: |
             guide.xml
             guide.xml.gz
