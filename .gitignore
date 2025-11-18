@@ -4,6 +4,7 @@ out/
 benchmarks.test
 *.out
 *.pyc
+*.pack
 __pycache__/
 # Jetbrains Goland
 .idea/
