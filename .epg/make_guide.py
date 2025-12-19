@@ -116,7 +116,8 @@ gzip_file = gzip.GzipFile(fileobj=response["Body"])
 csv_content = gzip_file.read().decode("utf-8").splitlines()
 for a in csv_content:
 	if "," in a:
-		url, mac = a.split(",")
+		b = a.split(",")
+		url, mac = b[0], b[1]
 		url = url.strip().rstrip("/").replace(":80/c", "/c")
 		if not url.endswith("/c"): url+="/c"
 		#url = url.replace("/stalker_portal/c", "")
