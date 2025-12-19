@@ -118,9 +118,9 @@ for a in csv_content:
 	if "," in a:
 		b = a.split(",")
 		url, mac = b[0], b[1]
+		if timestamp >= datetime.timestamp(parse(b[2]+","+b[3]+","+b[4], fuzzy_with_tokens=True)[0]): continue
 		url = url.strip().rstrip("/").replace(":80/c", "/c")
 		if not url.endswith("/c"): url+="/c"
-		#url = url.replace("/stalker_portal/c", "")
 		if url not in alllist: alllist[url] = []
 		if mac not in alllist[url]:
 			alllist[url].append(mac)
