@@ -492,7 +492,7 @@
   </extension>
 </addon>
 
-<addon id="plugin.video.xstream" name="xStream" version="2025.12.28" provider-name="Michaz">
+<addon id="plugin.video.xstream" name="xStream" version="2025.12.29" provider-name="Michaz">
 	<requires>
 		<import addon="xbmc.python" version="3.0.0"/>
 		<import addon="script.module.requests"/>
