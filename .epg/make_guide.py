@@ -5,10 +5,12 @@ from urllib.parse import quote
 from datetime import datetime, timedelta
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from bs4 import BeautifulSoup
+xstreamlist = {}
     
 datapath = os.path.abspath(os.path.dirname(__file__))
 #datapath = "/sdcard/"
 mac_list = os.path.join(os.path.dirname(datapath), 'maclist.json')
+xstream_list = os.path.join(os.path.dirname(datapath), 'xstreamlist.json')
 guide_dest = os.path.join(os.path.dirname(datapath), 'guide.xml')
 guidegz_dest = os.path.join(os.path.dirname(datapath), 'guide.xml.gz')
 days_to_grab = 3
@@ -24,14 +26,8 @@ episode_format = "onscreen"
 channel_format = 'provider'
 genre_format = "provider"
 
-
-ACCOUNT_ID = "145ef3f7a9832804bef0e31548db8a83"
-DATABASE_API_TOKEN = "13DEJ8ftBLkxoCHzfBU__Pkv0ZyqPLTjvRXXR_qk"
-DATABASE_API_URL = f"https://api.cloudflare.com/client/v4/accounts/{ACCOUNT_ID}/d1/database/c56590c1-dd25-4d7f-8812-6c6cd1ec69bd/query"
 R2_ACCESS_KEY = "4b36152b6b64b8a9f4d7010b84f535fc"
 R2_SECRET_KEY = "7ad1ed517b6baa6af2fa00d50a1a18b0ce416bb0b6fb14f4c122a2960f1ab9bc"
-R2_BUCKET_NAME = "stbemu"
-R2_OBJECT_KEY = "stbemu.csv.gz"
 R2_ENDPOINT_URL = "https://145ef3f7a9832804bef0e31548db8a83.r2.cloudflarestorage.com"
 mac = str(uuid.uuid4())
 ter = str(uuid.uuid4())
@@ -95,6 +91,11 @@ for line in page.splitlines():
 		if mac not in alllist[url]:
 			alllist[url].append(mac)
 
+
+#blog = requests.get("https://ikracccam.blogspot.com/p/link-google-drive-new.html").content
+#link = BeautifulSoup(blog, 'html.parser').find("div", {"class": "titre-content"}).find("p").text.strip()
+#page = requests.get(link).text.strip()
+
 """
 page = requests.get("https://ikracccam.blogspot.com/p/stalker-iptv-ikra_2.html").text
 soup = BeautifulSoup(page, 'html.parser')
@@ -110,20 +111,29 @@ for tag in soup.find_all('table'):
 		alllist[url].append(mac)
 """
 
-s3_client = boto3.client("s3", aws_access_key_id=R2_ACCESS_KEY, aws_secret_access_key=R2_SECRET_KEY, endpoint_url=R2_ENDPOINT_URL)
-response = s3_client.get_object(Bucket=R2_BUCKET_NAME, Key=R2_OBJECT_KEY)
-gzip_file = gzip.GzipFile(fileobj=response["Body"])
-csv_content = gzip_file.read().decode("utf-8").splitlines()
-for a in csv_content:
-	if "," in a:
-		b = a.split(",")
-		url, mac = b[0], b[1]
-		if timestamp >= datetime.timestamp(parse(b[2]+","+b[3]+","+b[4], fuzzy_with_tokens=True)[0]): continue
-		url = url.strip().rstrip("/").replace(":80/c", "/c")
-		if not url.endswith("/c"): url+="/c"
-		if url not in alllist: alllist[url] = []
-		if mac not in alllist[url]:
-			alllist[url].append(mac)
+def get_boto(BUCKET_NAME, OBJECT_KEY):
+	rows = []
+	s3_client = boto3.client("s3", aws_access_key_id=R2_ACCESS_KEY, aws_secret_access_key=R2_SECRET_KEY, endpoint_url=R2_ENDPOINT_URL)
+	response = s3_client.get_object(Bucket=BUCKET_NAME, Key=OBJECT_KEY)
+	with gzip.GzipFile(fileobj=response["Body"]) as gz:
+		for line in gz: rows.append(line.decode("utf-8").replace('"', "").replace("\\", "").replace('"', '').strip().split(","))
+	return rows
+
+xstreamlist = []
+for row in get_boto("xtreamity", "xtreamity-db.csv.gz"):
+	if timestamp > datetime.timestamp(parse(row[3] + row[4])): continue
+	xstreamlist.append({"url": f"{row[0]}/player_api.php", "username":row[1], "password":row[2],"group": row[5]})
+
+with open(xstream_list, "w") as k:
+	json.dump(xstreamlist, k, indent=4)
+print("New xstream list created")
+
+for row in get_boto("stbemu", "stbemu.csv.gz"):
+	if timestamp > datetime.timestamp(parse(row[2] + row[3] + row[4])): continue
+	url = row[0].strip().rstrip("/").replace(":80/c", "/c")
+	if not url.endswith("/c"): url+="/c"
+	if url not in alllist: alllist[url] = []
+	if mac not in alllist[url]: alllist[url].append(mac)
 			
 def get_portals():
 	urls, macs = [], []
