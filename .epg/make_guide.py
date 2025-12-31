@@ -120,12 +120,14 @@ def get_boto(BUCKET_NAME, OBJECT_KEY):
 	return rows
 
 xstreamlist = []
+groups = []
 for row in get_boto("xtreamity", "xtreamity-db.csv.gz"):
+	if row[5] not in groups: groups.append(row[5])
 	if timestamp > datetime.timestamp(parse(row[3] + row[4])): continue
 	xstreamlist.append({"url": f"{row[0]}/player_api.php", "username":row[1], "password":row[2],"group": row[5]})
 
 with open(xstream_list, "w") as k:
-	json.dump(xstreamlist, k, indent=4)
+	json.dump({"xlist": xstreamlist, "groups":groups}, k, indent=4)
 print("New xstream list created")
 
 for row in get_boto("stbemu", "stbemu.csv.gz"):
