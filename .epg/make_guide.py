@@ -5,12 +5,11 @@ from urllib.parse import quote
 from datetime import datetime, timedelta
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from bs4 import BeautifulSoup
-xstreamlist = {}
     
 datapath = os.path.abspath(os.path.dirname(__file__))
 #datapath = "/sdcard/"
 mac_list = os.path.join(os.path.dirname(datapath), 'maclist.json')
-xstream_list = os.path.join(os.path.dirname(datapath), 'xstreamlist.json')
+xtream = os.path.join(os.path.dirname(datapath), 'xtream.json')
 guide_dest = os.path.join(os.path.dirname(datapath), 'guide.xml')
 guidegz_dest = os.path.join(os.path.dirname(datapath), 'guide.xml.gz')
 days_to_grab = 3
@@ -119,16 +118,30 @@ def get_boto(BUCKET_NAME, OBJECT_KEY):
 		for line in gz: rows.append(line.decode("utf-8").replace('"', "").replace("\\", "").replace('"', '').strip().split(","))
 	return rows
 
-xstreamlist = []
-groups = []
-for row in get_boto("xtreamity", "xtreamity-db.csv.gz"):
-	if row[5] not in groups: groups.append(row[5])
+xtreamlist = {}
+groups = ["all"]
+urls = {}
+lines = get_boto("xtreamity", "xtreamity-db.csv.gz")
+for row in lines:
 	if timestamp > datetime.timestamp(parse(row[3] + row[4])): continue
-	xstreamlist.append({"url": f"{row[0]}/player_api.php", "username":row[1], "password":row[2],"group": row[5]})
+	if row[5] not in xtreamlist: xtreamlist[row[5]] = []
+	if row[0] not in xtreamlist[row[5]]: xtreamlist[row[5]][row[0]] = []
+	if row[0] not in xtreamlist["all"]: xtreamlist["all"][row[0]] = []
+	xtreamlist[row[5]][row[0]].append(f"/player_api.php?username={row[1]}&password={row[2]}")
+	
+for a in sorted(groups):
+	xtreamlist[a] = []
+	
+	
+	if k not in allchannels: allchannels[k] = []
+	
+	if timestamp > datetime.timestamp(parse(row[3] + row[4])): continue
+	if 
+	xtreamlist.append({"url": f"{row[0]}" "/player_api.php?username={row[1]}&password={row[2]}"
 
 with open(xstream_list, "w") as k:
-	json.dump({"xlist": xstreamlist, "groups": sorted(groups)}, k, indent=4)
-print("New xstream list created")
+	json.dump({"groups": sorted(groups), "xlist": xtreamlist, }, k, indent=4)
+print("New xtream list created")
 
 for row in get_boto("stbemu", "stbemu.csv.gz"):
 	if timestamp > datetime.timestamp(parse(row[2] + row[3] + row[4])): continue
