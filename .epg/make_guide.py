@@ -115,6 +115,7 @@ for entry in xtreamlist:
 	grouped[key]["userpasses"].append(entry["userpass"])
 
 result = list(grouped.values())
+result.sort(key=lambda x: len(x["userpasses"]), reverse=True)
 with open(xtream_list, "w") as k:
 	json.dump({"groups": sorted(groups), "urls": result}, k, indent=4)
 print("New xtream list created")
