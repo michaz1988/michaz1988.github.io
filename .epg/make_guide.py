@@ -1,5 +1,6 @@
 import requests, gzip, json, time, os, boto3, uuid, re, hashlib, shutil, base64
 from maclist import alllist
+from collections import defaultdict
 from dateutil.parser import parse
 from urllib.parse import quote
 from datetime import datetime, timedelta
@@ -9,7 +10,7 @@ from bs4 import BeautifulSoup
 datapath = os.path.abspath(os.path.dirname(__file__))
 #datapath = "/sdcard/"
 mac_list = os.path.join(os.path.dirname(datapath), 'maclist.json')
-xtream = os.path.join(os.path.dirname(datapath), 'xtream.json')
+xtream_list = os.path.join(os.path.dirname(datapath), 'xtreamlist.json')
 guide_dest = os.path.join(os.path.dirname(datapath), 'guide.xml')
 guidegz_dest = os.path.join(os.path.dirname(datapath), 'guide.xml.gz')
 days_to_grab = 3
@@ -90,26 +91,6 @@ for line in page.splitlines():
 		if mac not in alllist[url]:
 			alllist[url].append(mac)
 
-
-#blog = requests.get("https://ikracccam.blogspot.com/p/link-google-drive-new.html").content
-#link = BeautifulSoup(blog, 'html.parser').find("div", {"class": "titre-content"}).find("p").text.strip()
-#page = requests.get(link).text.strip()
-
-"""
-page = requests.get("https://ikracccam.blogspot.com/p/stalker-iptv-ikra_2.html").text
-soup = BeautifulSoup(page, 'html.parser')
-for tag in soup.find_all('table'):
-	u, p, m, e = tag.find_all("th")
-	url, port, mac, expire = u.text.strip().rstrip("/").replace(":80/c", "/c"), p.text.strip(), m.text.strip(), e.text.strip()
-	if not url.endswith("/c"): url+="/c"
-	try:
-		if timestamp >= datetime.timestamp(parse(expire)): continue
-	except: pass
-	if url not in alllist: alllist[url] = []
-	if mac not in alllist[url]:
-		alllist[url].append(mac)
-"""
-
 def get_boto(BUCKET_NAME, OBJECT_KEY):
 	rows = []
 	s3_client = boto3.client("s3", aws_access_key_id=R2_ACCESS_KEY, aws_secret_access_key=R2_SECRET_KEY, endpoint_url=R2_ENDPOINT_URL)
@@ -118,29 +99,24 @@ def get_boto(BUCKET_NAME, OBJECT_KEY):
 		for line in gz: rows.append(line.decode("utf-8").replace('"', "").replace("\\", "").replace('"', '').strip().split(","))
 	return rows
 
-xtreamlist = {}
-groups = ["all"]
-urls = {}
-lines = get_boto("xtreamity", "xtreamity-db.csv.gz")
-for row in lines:
+xtreamlist = []
+groups = []
+for row in get_boto("xtreamity", "xtreamity-db.csv.gz"):
 	if timestamp > datetime.timestamp(parse(row[3] + row[4])): continue
-	if row[5] not in xtreamlist: xtreamlist[row[5]] = []
-	if row[0] not in xtreamlist[row[5]]: xtreamlist[row[5]][row[0]] = []
-	if row[0] not in xtreamlist["all"]: xtreamlist["all"][row[0]] = []
-	xtreamlist[row[5]][row[0]].append(f"/player_api.php?username={row[1]}&password={row[2]}")
-	
-for a in sorted(groups):
-	xtreamlist[a] = []
-	
-	
-	if k not in allchannels: allchannels[k] = []
-	
-	if timestamp > datetime.timestamp(parse(row[3] + row[4])): continue
-	if 
-	xtreamlist.append({"url": f"{row[0]}" "/player_api.php?username={row[1]}&password={row[2]}"
+	if row[5] not in groups: groups.append(row[5])
+	xtreamlist.append({"url": row[0], "userpass": f"username={row[1]}&password={row[2]}", "group": row[5]})
 
-with open(xstream_list, "w") as k:
-	json.dump({"groups": sorted(groups), "xlist": xtreamlist, }, k, indent=4)
+grouped = defaultdict(lambda: {"url": None,"userpasses": [],"group": None})
+
+for entry in xtreamlist:
+	key = (entry["url"], entry["group"])
+	grouped[key]["url"] = entry["url"]
+	grouped[key]["group"] = entry["group"]
+	grouped[key]["userpasses"].append(entry["userpass"])
+
+result = list(grouped.values())
+with open(xtream_list, "w") as k:
+	json.dump({"groups": sorted(groups), "urls": result}, k, indent=4)
 print("New xtream list created")
 
 for row in get_boto("stbemu", "stbemu.csv.gz"):
@@ -165,15 +141,6 @@ def get_portals():
 							urls.append(portal)
 							macs.append(mac)
 	return urls, macs
-
-"""
-try:
-	urls, macs = get_portals()
-	for i , url in enumerate(urls):
-		if url not in alllist: alllist[url] = []
-		alllist[url].append(macs[i])
-except: pass
-"""
 
 sorted_dict = dict(sorted(sorted(alllist.items()), key=lambda item: len(item[1]), reverse=True))
 with open(mac_list, "w") as k:
