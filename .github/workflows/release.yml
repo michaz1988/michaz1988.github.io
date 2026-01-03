@@ -41,7 +41,7 @@ jobs:
             guide.xml
             guide.xml.gz
             maclist.json
-            xstreamlist.json
+            xtreamlist.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
