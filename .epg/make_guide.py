@@ -6,7 +6,7 @@ from urllib.parse import quote
 from datetime import datetime, timedelta
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from bs4 import BeautifulSoup
-    
+
 datapath = os.path.abspath(os.path.dirname(__file__))
 #datapath = "/sdcard/"
 mac_list = os.path.join(os.path.dirname(datapath), 'maclist.json')
@@ -78,16 +78,18 @@ link = BeautifulSoup(blog, 'html.parser').find("div", {"class": "titre-content"}
 page = requests.get(link).text
 
 pattern = re.compile(
-    r'URL:\s*(http://[^:\s]+:\d+)'
-    r'[\s\S]*?MAC:\s*([0-9A-Fa-f:]{17})'
-    r'[\s\S]*?Expire:\s*(Unlimited|unlimited|Unknown|unknown|'
-    r'[A-Za-z]+\s+\d{1,2},\s+\d{4},\s+[\d:]+\s+[ap]m)',
-    re.DOTALL | re.IGNORECASE
+	r"URL:\s*(?P<url>\S+)\s*.*?"
+	r"MAC:\s*(?P<mac>(?:[0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2})\s*.*?"
+	r"Expire:\s*(?P<expire>[A-Za-z]+\s+\d{1,2},\s+\d{4},\s+\d{1,2}:\d{2}\s*(?:am|pm)|unknown|unlimited)",
+	re.IGNORECASE | re.DOTALL
 )
 
-matches = pattern.findall(page)
-
-for url, mac, expire in matches:
+for m in pattern.finditer(page):
+	url = m.group("url").strip().rstrip("/")
+	if not url.endswith("/c"): url+="/c"
+	url = url.replace(":80/c", "/c")
+	mac = m.group("mac")
+	expire = m.group("expire")
 	try:
 		if weekstamp > datetime.timestamp(parse(expire)): continue
 	except: pass
@@ -111,7 +113,7 @@ pattern = re.compile(r'^(https?://[^:/]+:\d+)/get\.php\?(username=[^&]+&password
 for url in page.splitlines():
 	m = pattern.match(url)
 	if m:
-		xtreamlist.append({"url": m.group(1), "userpass": m.group(2),"group": None})
+		xtreamlist.append({"url": m.group(1).rstrip("/"), "userpass": m.group(2),"group": None})
 
 groups = []
 for row in get_boto("xtreamity", "xtreamity-db.csv.gz"):
@@ -119,7 +121,7 @@ for row in get_boto("xtreamity", "xtreamity-db.csv.gz"):
 		if weekstamp > datetime.timestamp(parse(row[3] + row[4])): continue
 	except: pass
 	if row[5] not in groups: groups.append(row[5])
-	xtreamlist.append({"url": row[0], "userpass": f"username={row[1]}&password={row[2]}", "group": row[5]})
+	xtreamlist.append({"url": row[0].rstrip("/"), "userpass": f"username={row[1]}&password={row[2]}", "group": row[5]})
 
 grouped = defaultdict(lambda: {"url": None,"userpasses": [],"group": None})
 
@@ -139,11 +141,12 @@ for row in get_boto("stbemu", "stbemu.csv.gz"):
 	try:
 		if weekstamp > datetime.timestamp(parse(row[2] + row[3] + row[4])): continue
 	except: pass
-	url = row[0].strip().rstrip("/").replace(":80/c", "/c")
+	url = row[0].strip().rstrip("/")
 	if not url.endswith("/c"): url+="/c"
+	url = url.replace(":80/c", "/c")
 	if url not in alllist: alllist[url] = []
 	if mac not in alllist[url]: alllist[url].append(mac)
-			
+
 try:
 	url = f'https://stbstalker.alaaeldinee.com/{now.strftime("%Y/%m")}/smart-stb-emu-pro-{now.strftime("%d-%m-%Y")}.html?m=1'
 	for b in requests.get(url).text.splitlines():
@@ -153,7 +156,9 @@ try:
 				if not "datePublished" in d:
 					huii = re.findall("(?<= : ).*?(?=</p>)", d)
 					if huii and len(huii) == 5:
-						portal, mac, expired = huii[0], huii[3], huii[4]
+						portal, mac, expired = huii[0].strip().rstrip("/"), huii[3], huii[4]
+						if not portal.endswith("/c"): portal+="/c"
+						portal = portal.replace(":80/c", "/c")
 						try:
 							if weekstamp > datetime.timestamp(parse(expired)): continue
 						except: pass
