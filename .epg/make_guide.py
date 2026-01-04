@@ -1,6 +1,6 @@
 import requests, gzip, json, time, os, boto3, uuid, re, hashlib, shutil, base64
-from maclist import alllist
 from collections import defaultdict
+from maclist import alllist
 from dateutil.parser import parse
 from urllib.parse import quote
 from datetime import datetime, timedelta
@@ -50,6 +50,7 @@ magentaDE_header = {'Host': 'api.prod.sngtv.magentatv.de',
 today = datetime.today()
 now = datetime.now()
 timestamp = datetime.timestamp(now)
+weekstamp = datetime.timestamp(now+timedelta(days=7))
 
 def magentaSession():
 	x = 0
@@ -76,20 +77,22 @@ blog = requests.get("https://ikracccam.blogspot.com/p/link-stalcker-google-drive
 link = BeautifulSoup(blog, 'html.parser').find("div", {"class": "titre-content"}).find("p").text.strip()
 page = requests.get(link).text
 
-for line in page.splitlines():
-	if "URL" in line:
-		url = line.lstrip("URL: ").rstrip("/").replace(":80/c", "/c")
-		if not url.endswith("/c"): url+="/c"
-	if "MAC" in line: mac = line.lstrip("MAC: ").strip()
-	if "Expire" in line:
-		expire = line.lstrip("Expire: ").strip()
-		try:
-			if timestamp >= datetime.timestamp(parse(expire)):
-				continue
-		except: pass
-		if url not in alllist: alllist[url] = []
-		if mac not in alllist[url]:
-			alllist[url].append(mac)
+pattern = re.compile(
+    r'URL:\s*(http://[^:\s]+:\d+)'
+    r'[\s\S]*?MAC:\s*([0-9A-Fa-f:]{17})'
+    r'[\s\S]*?Expire:\s*(Unlimited|unlimited|Unknown|unknown|'
+    r'[A-Za-z]+\s+\d{1,2},\s+\d{4},\s+[\d:]+\s+[ap]m)',
+    re.DOTALL | re.IGNORECASE
+)
+
+matches = pattern.findall(page)
+
+for url, mac, expire in matches:
+	try:
+		if weekstamp > datetime.timestamp(parse(expire)): continue
+	except: pass
+	if url not in alllist: alllist[url] = []
+	if mac not in alllist[url]: alllist[url].append(mac)
 
 def get_boto(BUCKET_NAME, OBJECT_KEY):
 	rows = []
@@ -100,9 +103,21 @@ def get_boto(BUCKET_NAME, OBJECT_KEY):
 	return rows
 
 xtreamlist = []
+
+blog = requests.get("https://ikracccam.blogspot.com/p/link-google-drive-new.html").content
+link = BeautifulSoup(blog, 'html.parser').find("div", {"class": "titre-content"}).find("p").text.strip()
+page = requests.get(link).text.strip()
+pattern = re.compile(r'^(https?://[^:/]+:\d+)/get\.php\?(username=[^&]+&password=[^&]+)(?:&type=m3u)?$')
+for url in page.splitlines():
+	m = pattern.match(url)
+	if m:
+		xtreamlist.append({"url": m.group(1), "userpass": m.group(2),"group": None})
+
 groups = []
 for row in get_boto("xtreamity", "xtreamity-db.csv.gz"):
-	if timestamp > datetime.timestamp(parse(row[3] + row[4])): continue
+	try:
+		if weekstamp > datetime.timestamp(parse(row[3] + row[4])): continue
+	except: pass
 	if row[5] not in groups: groups.append(row[5])
 	xtreamlist.append({"url": row[0], "userpass": f"username={row[1]}&password={row[2]}", "group": row[5]})
 
@@ -121,14 +136,15 @@ with open(xtream_list, "w") as k:
 print("New xtream list created")
 
 for row in get_boto("stbemu", "stbemu.csv.gz"):
-	if timestamp > datetime.timestamp(parse(row[2] + row[3] + row[4])): continue
+	try:
+		if weekstamp > datetime.timestamp(parse(row[2] + row[3] + row[4])): continue
+	except: pass
 	url = row[0].strip().rstrip("/").replace(":80/c", "/c")
 	if not url.endswith("/c"): url+="/c"
 	if url not in alllist: alllist[url] = []
 	if mac not in alllist[url]: alllist[url].append(mac)
 			
-def get_portals():
-	urls, macs = [], []
+try:
 	url = f'https://stbstalker.alaaeldinee.com/{now.strftime("%Y/%m")}/smart-stb-emu-pro-{now.strftime("%d-%m-%Y")}.html?m=1'
 	for b in requests.get(url).text.splitlines():
 		if "PORTAL :" in b:
@@ -138,10 +154,12 @@ def get_portals():
 					huii = re.findall("(?<= : ).*?(?=</p>)", d)
 					if huii and len(huii) == 5:
 						portal, mac, expired = huii[0], huii[3], huii[4]
-						if timestamp <= datetime.timestamp(parse(expired)):
-							urls.append(portal)
-							macs.append(mac)
-	return urls, macs
+						try:
+							if weekstamp > datetime.timestamp(parse(expired)): continue
+						except: pass
+						if portal not in alllist: alllist[portal] = []
+						if mac not in alllist[portal]: alllist[portal].append(mac)
+except:pass
 
 sorted_dict = dict(sorted(sorted(alllist.items()), key=lambda item: len(item[1]), reverse=True))
 with open(mac_list, "w") as k:
