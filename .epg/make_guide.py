@@ -113,38 +113,38 @@ pattern = re.compile(r'^(https?://[^:/]+:\d+)/get\.php\?(username=[^&]+&password
 for url in page.splitlines():
 	m = pattern.match(url)
 	if m:
-		xtreamlist.append({"url": m.group(1).rstrip("/"), "userpass": m.group(2),"group": None})
+		xtreamlist.append({"url": m.group(1).rstrip("/"), "userpass": m.group(2),"region": None})
 
-groups = []
+regions = []
 for row in get_boto("xtreamity", "xtreamity-db.csv.gz"):
 	try:
 		if weekstamp > datetime.timestamp(parse(row[3] + row[4])): continue
 	except: pass
-	if row[5] not in groups: groups.append(row[5])
-	xtreamlist.append({"url": row[0].rstrip("/"), "userpass": f"username={row[1]}&password={row[2]}", "group": row[5]})
+	if row[5] not in regions: regions.append(row[5])
+	xtreamlist.append({"url": row[0].rstrip("/"), "userpass": f"username={row[1]}&password={row[2]}", "region": row[5]})
 
 # Schritt 1: bekannte Gruppen pro URL sammeln
-url_groups = {}
+url_regions = {}
 for entry in xtreamlist:
-    if entry.get("group"):
-        url_groups.setdefault(entry["url"], entry["group"])
+    if entry.get("region"):
+        url_regions.setdefault(entry["url"], entry["region"])
 
-# Schritt 2: group=None durch vorhandene Gruppe ersetzen
+# Schritt 2: region=None durch vorhandene Gruppe ersetzen
 for entry in xtreamlist:
-    if entry.get("group") is None and entry["url"] in url_groups:
-        entry["group"] = url_groups[entry["url"]]
+    if entry.get("region") is None and entry["url"] in url_regions:
+        entry["region"] = url_regions[entry["url"]]
 
 # Schritt 3: Gruppieren und Duplikate entfernen
 grouped = defaultdict(lambda: {
     "url": None,
-    "group": None,
+    "region": None,
     "userpasses": set()
 })
 
 for entry in xtreamlist:
-    key = (entry["url"], entry["group"])
+    key = (entry["url"], entry["region"])
     grouped[key]["url"] = entry["url"]
-    grouped[key]["group"] = entry["group"]
+    grouped[key]["region"] = entry["region"]
     grouped[key]["userpasses"].add(entry["userpass"])
 
 # Schritt 4: Sets → Listen, Sortierung nach Anzahl userpasses
@@ -156,7 +156,7 @@ for v in grouped.values():
 result.sort(key=lambda x: len(x["userpasses"]), reverse=True)
 
 with open(xtream_list, "w") as k:
-	json.dump({"groups": sorted(groups), "urls": result}, k, indent=4)
+	json.dump({"region": sorted(regions), "urls": result}, k, indent=4)
 print("New xtream list created")
 
 for row in get_boto("stbemu", "stbemu.csv.gz"):
