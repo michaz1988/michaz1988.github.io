@@ -156,7 +156,7 @@ for v in grouped.values():
 result.sort(key=lambda x: len(x["userpasses"]), reverse=True)
 
 with open(xtream_list, "w") as k:
-	json.dump({"region": sorted(regions), "urls": result}, k, indent=4)
+	json.dump({"regions": sorted(regions), "urls": result}, k, indent=4)
 print("New xtream list created")
 
 for row in get_boto("stbemu", "stbemu.csv.gz"):
