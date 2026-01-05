@@ -123,16 +123,38 @@ for row in get_boto("xtreamity", "xtreamity-db.csv.gz"):
 	if row[5] not in groups: groups.append(row[5])
 	xtreamlist.append({"url": row[0].rstrip("/"), "userpass": f"username={row[1]}&password={row[2]}", "group": row[5]})
 
-grouped = defaultdict(lambda: {"url": None,"userpasses": [],"group": None})
+# Schritt 1: bekannte Gruppen pro URL sammeln
+url_groups = {}
+for entry in xtreamlist:
+    if entry.get("group"):
+        url_groups.setdefault(entry["url"], entry["group"])
+
+# Schritt 2: group=None durch vorhandene Gruppe ersetzen
+for entry in xtreamlist:
+    if entry.get("group") is None and entry["url"] in url_groups:
+        entry["group"] = url_groups[entry["url"]]
+
+# Schritt 3: Gruppieren und Duplikate entfernen
+grouped = defaultdict(lambda: {
+    "url": None,
+    "group": None,
+    "userpasses": set()
+})
 
 for entry in xtreamlist:
-	key = (entry["url"], entry["group"])
-	grouped[key]["url"] = entry["url"]
-	grouped[key]["group"] = entry["group"]
-	grouped[key]["userpasses"].append(entry["userpass"])
+    key = (entry["url"], entry["group"])
+    grouped[key]["url"] = entry["url"]
+    grouped[key]["group"] = entry["group"]
+    grouped[key]["userpasses"].add(entry["userpass"])
 
-result = list(grouped.values())
+# Schritt 4: Sets → Listen, Sortierung nach Anzahl userpasses
+result = []
+for v in grouped.values():
+    v["userpasses"] = sorted(v["userpasses"])
+    result.append(v)
+
 result.sort(key=lambda x: len(x["userpasses"]), reverse=True)
+
 with open(xtream_list, "w") as k:
 	json.dump({"groups": sorted(groups), "urls": result}, k, indent=4)
 print("New xtream list created")
