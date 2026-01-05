@@ -1,0 +1,48 @@
+version 0.1.13
+- folder passwords
+
+version 0.1.12
+- maintenance tool (url must be a zip containing folders tree)
+- Folder colour option
+- Folder name formatting (colour choice overrides formatting)
+
+version 0.1.9-11
+- should respect the media type better now (videos, music, programs, pictures)
+- returns to Simple Favourites after playing link: ActiveWindow(media,url,return)
+- Fanart
+- Setting to turn off Edit commands in context menu
+
+version 0.1.8
+- Move to Folder
+
+version 0.1.6-7
+- Settings \ Appearance \ Show Add Button
+-   if off look for Add Menu in Context Menu
+
+version 0.1.5
+- Settings \ Appearance \ Sort
+- Move if Sort is off
+
+version 0.1.0-4
+- BIG CHANGES! EVERYTHING MUST BE RE-ADDED! SORRY!
+- New Folder Structure in addon_data\folders
+- No Context Menu
+
+version 0.0.5-10
+- Import/Export in Add if enabled in Settings\Advanced
+- import/export file is userdata\addon_data\plugin.program.simple.folders\favourites.json
+
+version 0.0.4
+- path fix (hopefully)
+- Files and Browse are in Settings \ Advanced (they may not work on some devices)
+
+version 0.0.3
+- Files (use protocol eg c:\ http:// smb:// nfs:// special://)
+- Note: files will be filtered depending on where addon was started (Video,Music,Pictures etc)
+
+version 0.0.2
+- user icons (make a folder called userdata\addon_data\plugin.program.simple.folders\icons)
+- (current icons needed are: audio.png favourites.png music.png settings.png tv.png video.png)
+
+version 0.0.1
+- first release
