@@ -109,7 +109,7 @@ xtreamlist = []
 blog = requests.get("https://ikracccam.blogspot.com/p/link-google-drive-new.html").content
 link = BeautifulSoup(blog, 'html.parser').find("div", {"class": "titre-content"}).find("p").text.strip()
 page = requests.get(link).text.strip()
-pattern = re.compile(r'^(https?://[^:/]+:\d+)/get\.php\?(username=[^&]+&password=[^&]+)(?:&type=m3u)?$')
+pattern = re.compile(r'^(https?://[^:/]+:\d+)/get\.php\?username=([^&]+)&password=([^&]+)(?:&type=m3u)?$')
 for url in page.splitlines():
 	m = pattern.match(url)
 	if m:
