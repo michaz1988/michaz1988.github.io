@@ -109,7 +109,7 @@ xtreamlist = []
 blog = requests.get("https://ikracccam.blogspot.com/p/link-google-drive-new.html").content
 link = BeautifulSoup(blog, 'html.parser').find("div", {"class": "titre-content"}).find("p").text.strip()
 page = requests.get(link).text.strip()
-pattern = re.compile(r'^(https?://[^:/]+:\d+)/get\.php\?username=([^&]+)&password=([^&]+)(?:&type=m3u)?$')
+pattern = re.compile(r'^(https?://[^:/]+:\d+)/get\.php\?(username=[^&]+&password=[^&]+)(?:&type=m3u)?$')
 for url in page.splitlines():
 	m = pattern.match(url)
 	if m:
@@ -154,6 +154,19 @@ for v in grouped.values():
     result.append(v)
 
 result.sort(key=lambda x: len(x["userpasses"]), reverse=True)
+
+pattern = re.compile(r"username=([^&]+)&password=(.+)")
+
+for entry in result:
+    converted = []
+    for up in entry.get("userpasses", []):
+        m = pattern.search(up)
+        if m:
+            converted.append({
+                "user": m.group(1),
+                "pass": m.group(2)
+            })
+    entry["userpasses"] = converted
 
 with open(xtream_list, "w") as k:
 	json.dump({"regions": sorted(regions), "urls": result}, k, indent=4)
