@@ -1,45 +1,87 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addons>
-<addon id="plugin.video.vavooto" name="VAVOO.TO" version="2025.11.10" provider-name="kasi,michaz">
-	<requires>
-		<import addon="script.module.requests"/>
-		<import addon="script.module.resolveurl"/>
-		<import addon="script.module.dateutil"/>
-		<import addon="inputstream.adaptive"/>
-		<import addon="inputstream.ffmpegdirect"/>
-		<import addon="script.module.infotagger"/>
-	</requires>
-	<extension point="xbmc.python.pluginsource" library="resources/main.py">
-		<provides>video</provides>
-	</extension>
-	<extension point="xbmc.python.module" library="resources" />
-	<extension point="xbmc.addon.metadata">
-		<assets>
-			<icon>icon.png</icon>
-		</assets>
-	</extension>
-</addon>
-
-<addon id="script.module.xstreamscraper" name="xStream Scraper" provider-name="michaz1988" version="2025.08.14">
-	<requires>
-		<import addon="plugin.video.vavooto"/>
-        <import addon="script.module.requests"/>
-        <import addon="script.module.six"/>
-        <import addon="script.module.resolveurl"/>
-        <import addon="plugin.video.xstream"/>
-        <import addon="script.module.pyaes"/>
-        <import addon="script.module.pydevd" optional="true"/>
+<addon id="plugin.program.autocompletion" name="AutoCompletion for virtual keyboard" version="2.1.3" provider-name="Philipp Temminghoff (phil65), sualfred, xulek, finkleandeinhorn">
+    <requires>
+        <import addon="xbmc.python" version="3.0.0" />
+        <import addon="script.module.autocompletion" version="2.0.5"/>
     </requires>
-    <extension point="xbmc.python.pluginsource" library="main.py">
-        <provides>video</provides>
+    <extension point="xbmc.python.script" library="default.py">
+        <provides>executable</provides>
     </extension>
-    <extension point="xbmc.service" library="service.py" start="startup" />
+    <extension point="xbmc.python.pluginsource" library="plugin.py" />
+
     <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">AutoCompletion for the virtual keyboard (needs skin support)</summary>
+        <description lang="en_GB">AutoCompletion for the virtual keyboard (needs skin support)</description>
+        <summary lang="es_ES">Autocompletar para el teclado virtual (necesita soporte de skin)</summary>
+        <description lang="es_ES">Autocompletar para el teclado virtual (necesita soporte de skin)</description>
+        <platform>all</platform>
+        <license>GPL-2.0-or-later</license>
+        <source>https://github.com/finkleandeinhorn/plugin.program.autocompletion</source>
         <assets>
-            <icon>icon.png</icon>
-            <screenshot>icon.png</screenshot>
+            <icon>resources/icon.png</icon>
+            <screenshot>resources/screenshot-01.jpg</screenshot>
+            <screenshot>resources/screenshot-02.jpg</screenshot>
+            <screenshot>resources/screenshot-03.jpg</screenshot>
         </assets>
     </extension>
+</addon>
+
+<addon id="plugin.program.simple.favourites"
+       version="0.1.17"
+       name="Simple Favourites"
+       provider-name="primaeval">
+    <requires>
+        <import addon="xbmc.python" version="3.0.0"/>
+        <import addon="script.module.xbmcswift2"/>
+        <import addon="script.module.requests"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="main.py">
+        <provides>executable</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en">Simple Favourites</summary>
+        <description lang="en"/>
+        <disclaimer lang="en">.</disclaimer>
+    </extension>
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+
+            <item library="add_item_context.py">
+                <label>Add to simple favorites</label>
+                <visible>true</visible>
+            </item>
+
+        </menu>
+    </extension>
+</addon>
+
+<addon id="plugin.video.stalkermod" name="Stalker Client Mod" version="1.0.1" provider-name="michaz">
+	<requires>
+		<import addon="xbmc.python" version="3.0.1"/>
+		<import addon="script.module.requests" version="2.27.1"/>
+	</requires>
+	<extension point="xbmc.python.pluginsource" library="addon_entry.py">
+		<provides>video</provides>
+	</extension>
+	<extension point="xbmc.service" library="service_entry.py"/>
+	<extension point="xbmc.addon.metadata">
+		<reuselanguageinvoker>true</reuselanguageinvoker>
+		<platform>all</platform>
+		<summary lang="en_GB">Stalker VOD Client</summary>
+		<description lang="en_GB">Kodi Stalker client for accessing on demand videos and channels from Stalker middleware</description>
+		<license>GPL-3.0-or-later</license>
+		<language>en</language>
+		<source>https://github.com/rickeylohia/plugin.video.stalkervod</source>
+		<website>https://github.com/rickeylohia/plugin.video.stalkervod</website>
+		<assets>
+			<icon>resources/media/icon.png</icon>
+			<screenshot>resources/media/screenshot_1.png</screenshot>
+			<screenshot>resources/media/screenshot_2.png</screenshot>
+			<screenshot>resources/media/screenshot_3.png</screenshot>
+			<screenshot>resources/media/screenshot_4.png</screenshot>
+		</assets>
+	</extension>
 </addon>
 
 <addon id="plugin.video.tools" name="Tools" version="2025.08.06" provider-name="Michaz">
@@ -61,29 +103,86 @@
     </extension>
 </addon>
 
-<addon id="service.takealug.epg-grabber" name="Takealug EPG Grabber" version="2.1.3" provider-name="DeBaschdi">
+<addon id="plugin.video.vavooto" name="VAVOO.TO" version="2025.11.10" provider-name="kasi,michaz">
+	<requires>
+		<import addon="script.module.requests"/>
+		<import addon="script.module.resolveurl"/>
+		<import addon="script.module.dateutil"/>
+		<import addon="inputstream.adaptive"/>
+		<import addon="inputstream.ffmpegdirect"/>
+		<import addon="script.module.infotagger"/>
+	</requires>
+	<extension point="xbmc.python.pluginsource" library="resources/main.py">
+		<provides>video</provides>
+	</extension>
+	<extension point="xbmc.python.module" library="resources" />
+	<extension point="xbmc.addon.metadata">
+		<assets>
+			<icon>icon.png</icon>
+		</assets>
+	</extension>
+</addon>
+
+<addon id="plugin.video.xship" version="2026.01.18" name="[B]xShip[/B]" provider-name="Michaz">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
         <import addon="script.module.requests"/>
+        <import addon="script.module.download-m3u8" optional="true"/>
+        <import addon="script.module.six"/>
+        <import addon="script.module.pyaes"/>
+        <import addon="script.module.infotagger"/>
+        <import addon="script.module.resolveurl" version="5.1.100"/>
+        <!-- for remote debug -->
+        <import addon="script.module.pydevd" optional="true"/>
     </requires>
+    <extension point="xbmc.python.pluginsource" library="default.py">
+        <provides>video</provides>
+    </extension>
     <extension point="xbmc.service" library="service.py" start="startup" />
     <extension point="xbmc.addon.metadata">
-        <platform>all</platform>
-        <summary>EPG Grabber</summary>
-        <description lang="en">Grabbs EPG Data from Different IPTV Sources and generate an xmltv Guide</description>
-        <description lang="de">Grabbt EPG Daten von verschiedenen IPTV Quellen und erstellt eine guide.xml</description>
-        <source>https://github.com/DeBaschdi/repo/tree/master/service.takealug.epg-grabber/</source>
-        <forum>https://www.kodinerds.net/index.php/Thread/64901-RELEASE-Takealug-EPG-Grabber/</forum>
+        <summary lang="de_DE">xShip: Der Fake</summary>
+        <summary lang="en_GB">xShip: The Fake</summary>
         <assets>
-            <icon>icon.png</icon>
-            <fanart>fanart.jpg</fanart>
-            <screenshot>fanart.jpg</screenshot>
-            <screenshot>screenshot3.png</screenshot>
-            <screenshot>screenshot1.png</screenshot>
-            <screenshot>screenshot2.png</screenshot>
-        </assets>
-        <news lang="en">2.1+ NEW TV-SPIELFILM API</news>
+			<icon>resources/icon.png</icon>
+			<fanart>resources/fanart.jpg</fanart>
+			<banner>resources/media/banner.png</banner>
+		</assets>
     </extension>
+</addon>
+
+<addon id="plugin.video.xstream" name="xStream" version="2026.02.11" provider-name="Michaz">
+	<requires>
+		<import addon="xbmc.python" version="3.0.0"/>
+		<import addon="script.module.requests"/>
+		<import addon="script.module.resolveurl" version="5.1.173"/>
+		<import addon="script.module.six" version="1.11.0"/>
+		<import addon="script.module.pyaes"/>
+		<import addon="repository.resolveurl" optional="true"/>
+		<import addon="script.module.inputstreamhelper" version="0.3.3" optional="true"/>
+		<import addon="script.module.pydevd" optional="true" />
+		<import addon="script.module.web-pdb" optional="true" />
+	</requires>
+	<extension point="xbmc.python.pluginsource" library="default.py">
+		<provides>video</provides>
+	</extension>
+    <extension point="xbmc.service" library="service.py" start="startup" />
+	<extension point="xbmc.addon.metadata">
+		<summary lang="de">xStream</summary>
+		<summary lang="en_GB">xStream</summary>
+		<description lang="de">xStream ist ein Video-Addon für Kodi. xStream dient als Suchmaschine für Filme und Serien auf verschiedenen Webseiten.</description>
+		<description lang="en_GB">xStream is a video add-on for Kodi. xStream serves as a search engine for films and series on various websites.</description>
+		<disclaimer lang="de">Sie können dieses Video Addon gerne verwenden. Der bereitgestellte Inhalt der Webseiten steht in keinem Bezug zu xStream oder den Entwicklern! Weitere Informationen finden Sie in unserer Wiki und FaQ.</disclaimer>
+		<disclaimer lang="en_GB">You are welcome to use this video addon. The content provided on the websites has no connection to xStream or the developers! For more information, see our Wiki and FaQ.</disclaimer>
+		<language>de en</language>
+		<platform>all</platform>
+		<license>GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007</license>
+		<assets>
+			<icon>resources/icon.png</icon>
+			<fanart>resources/fanart.jpg</fanart>
+			<banner>resources/banner.png</banner>
+			<clearlogo>resources/clearlogo.png</clearlogo>
+		</assets>
+	</extension>
 </addon>
 
 <addon id="repository.castagnait" name="CastagnaIT Repository" version="2.0.1" provider-name="castagnait">
@@ -378,61 +477,6 @@
   </extension>
 </addon>
 
-<addon id="plugin.video.xship" version="2026.01.18" name="[B]xShip[/B]" provider-name="Michaz">
-    <requires>
-        <import addon="xbmc.python" version="3.0.0"/>
-        <import addon="script.module.requests"/>
-        <import addon="script.module.download-m3u8" optional="true"/>
-        <import addon="script.module.six"/>
-        <import addon="script.module.pyaes"/>
-        <import addon="script.module.infotagger"/>
-        <import addon="script.module.resolveurl" version="5.1.100"/>
-        <!-- for remote debug -->
-        <import addon="script.module.pydevd" optional="true"/>
-    </requires>
-    <extension point="xbmc.python.pluginsource" library="default.py">
-        <provides>video</provides>
-    </extension>
-    <extension point="xbmc.service" library="service.py" start="startup" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="de_DE">xShip: Der Fake</summary>
-        <summary lang="en_GB">xShip: The Fake</summary>
-        <assets>
-			<icon>resources/icon.png</icon>
-			<fanart>resources/fanart.jpg</fanart>
-			<banner>resources/media/banner.png</banner>
-		</assets>
-    </extension>
-</addon>
-
-<addon id="plugin.video.stalkermod" name="Stalker Client Mod" version="1.0.1" provider-name="michaz">
-	<requires>
-		<import addon="xbmc.python" version="3.0.1"/>
-		<import addon="script.module.requests" version="2.27.1"/>
-	</requires>
-	<extension point="xbmc.python.pluginsource" library="addon_entry.py">
-		<provides>video</provides>
-	</extension>
-	<extension point="xbmc.service" library="service_entry.py"/>
-	<extension point="xbmc.addon.metadata">
-		<reuselanguageinvoker>true</reuselanguageinvoker>
-		<platform>all</platform>
-		<summary lang="en_GB">Stalker VOD Client</summary>
-		<description lang="en_GB">Kodi Stalker client for accessing on demand videos and channels from Stalker middleware</description>
-		<license>GPL-3.0-or-later</license>
-		<language>en</language>
-		<source>https://github.com/rickeylohia/plugin.video.stalkervod</source>
-		<website>https://github.com/rickeylohia/plugin.video.stalkervod</website>
-		<assets>
-			<icon>resources/media/icon.png</icon>
-			<screenshot>resources/media/screenshot_1.png</screenshot>
-			<screenshot>resources/media/screenshot_2.png</screenshot>
-			<screenshot>resources/media/screenshot_3.png</screenshot>
-			<screenshot>resources/media/screenshot_4.png</screenshot>
-		</assets>
-	</extension>
-</addon>
-
 <addon id="script.module.asyn" name="asyn" version="1.0" provider-name="michaz">
   <requires>
     <import addon="xbmc.python" version="3.0.0" />
@@ -443,33 +487,6 @@
       <icon>resources/icon.png</icon>
     </assets>
   </extension>
-</addon>
-
-<addon id="plugin.program.autocompletion" name="AutoCompletion for virtual keyboard" version="2.1.3" provider-name="Philipp Temminghoff (phil65), sualfred, xulek, finkleandeinhorn">
-    <requires>
-        <import addon="xbmc.python" version="3.0.0" />
-        <import addon="script.module.autocompletion" version="2.0.5"/>
-    </requires>
-    <extension point="xbmc.python.script" library="default.py">
-        <provides>executable</provides>
-    </extension>
-    <extension point="xbmc.python.pluginsource" library="plugin.py" />
-
-    <extension point="xbmc.addon.metadata">
-        <summary lang="en_GB">AutoCompletion for the virtual keyboard (needs skin support)</summary>
-        <description lang="en_GB">AutoCompletion for the virtual keyboard (needs skin support)</description>
-        <summary lang="es_ES">Autocompletar para el teclado virtual (necesita soporte de skin)</summary>
-        <description lang="es_ES">Autocompletar para el teclado virtual (necesita soporte de skin)</description>
-        <platform>all</platform>
-        <license>GPL-2.0-or-later</license>
-        <source>https://github.com/finkleandeinhorn/plugin.program.autocompletion</source>
-        <assets>
-            <icon>resources/icon.png</icon>
-            <screenshot>resources/screenshot-01.jpg</screenshot>
-            <screenshot>resources/screenshot-02.jpg</screenshot>
-            <screenshot>resources/screenshot-03.jpg</screenshot>
-        </assets>
-    </extension>
 </addon>
 
 <addon id="script.module.download-m3u8" name="download-m3u8" version="1.0.0" provider-name="kasi45">
@@ -492,67 +509,50 @@
   </extension>
 </addon>
 
-<addon id="plugin.video.xstream" name="xStream" version="2026.01.21" provider-name="Michaz">
+<addon id="script.module.xstreamscraper" name="xStream Scraper" provider-name="michaz1988" version="2025.08.14">
 	<requires>
-		<import addon="xbmc.python" version="3.0.0"/>
-		<import addon="script.module.requests"/>
-		<import addon="script.module.resolveurl" version="5.1.173"/>
-		<import addon="script.module.six" version="1.11.0"/>
-		<import addon="script.module.pyaes"/>
-		<import addon="repository.resolveurl" optional="true"/>
-		<import addon="script.module.inputstreamhelper" version="0.3.3" optional="true"/>
-		<import addon="script.module.pydevd" optional="true" />
-		<import addon="script.module.web-pdb" optional="true" />
-	</requires>
-	<extension point="xbmc.python.pluginsource" library="default.py">
-		<provides>video</provides>
-	</extension>
-    <extension point="xbmc.service" library="service.py" start="startup" />
-	<extension point="xbmc.addon.metadata">
-		<summary lang="de">xStream</summary>
-		<summary lang="en_GB">xStream</summary>
-		<description lang="de">xStream ist ein Video-Addon für Kodi. xStream dient als Suchmaschine für Filme und Serien auf verschiedenen Webseiten.</description>
-		<description lang="en_GB">xStream is a video add-on for Kodi. xStream serves as a search engine for films and series on various websites.</description>
-		<disclaimer lang="de">Sie können dieses Video Addon gerne verwenden. Der bereitgestellte Inhalt der Webseiten steht in keinem Bezug zu xStream oder den Entwicklern! Weitere Informationen finden Sie in unserer Wiki und FaQ.</disclaimer>
-		<disclaimer lang="en_GB">You are welcome to use this video addon. The content provided on the websites has no connection to xStream or the developers! For more information, see our Wiki and FaQ.</disclaimer>
-		<language>de en</language>
-		<platform>all</platform>
-		<license>GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007</license>
-		<assets>
-			<icon>resources/icon.png</icon>
-			<fanart>resources/fanart.jpg</fanart>
-			<banner>resources/banner.png</banner>
-			<clearlogo>resources/clearlogo.png</clearlogo>
-		</assets>
-	</extension>
-</addon>
-
-<addon id="plugin.program.simple.favourites"
-       version="0.1.17"
-       name="Simple Favourites"
-       provider-name="primaeval">
-    <requires>
-        <import addon="xbmc.python" version="3.0.0"/>
-        <import addon="script.module.xbmcswift2"/>
+		<import addon="plugin.video.vavooto"/>
         <import addon="script.module.requests"/>
+        <import addon="script.module.six"/>
+        <import addon="script.module.resolveurl"/>
+        <import addon="plugin.video.xstream"/>
+        <import addon="script.module.pyaes"/>
+        <import addon="script.module.pydevd" optional="true"/>
     </requires>
     <extension point="xbmc.python.pluginsource" library="main.py">
-        <provides>executable</provides>
+        <provides>video</provides>
     </extension>
+    <extension point="xbmc.service" library="service.py" start="startup" />
     <extension point="xbmc.addon.metadata">
-        <summary lang="en">Simple Favourites</summary>
-        <description lang="en"/>
-        <disclaimer lang="en">.</disclaimer>
+        <assets>
+            <icon>icon.png</icon>
+            <screenshot>icon.png</screenshot>
+        </assets>
     </extension>
-    <extension point="kodi.context.item">
-        <menu id="kodi.core.main">
+</addon>
 
-            <item library="add_item_context.py">
-                <label>Add to simple favorites</label>
-                <visible>true</visible>
-            </item>
-
-        </menu>
+<addon id="service.takealug.epg-grabber" name="Takealug EPG Grabber" version="2.1.3" provider-name="DeBaschdi">
+    <requires>
+        <import addon="xbmc.python" version="3.0.0"/>
+        <import addon="script.module.requests"/>
+    </requires>
+    <extension point="xbmc.service" library="service.py" start="startup" />
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <summary>EPG Grabber</summary>
+        <description lang="en">Grabbs EPG Data from Different IPTV Sources and generate an xmltv Guide</description>
+        <description lang="de">Grabbt EPG Daten von verschiedenen IPTV Quellen und erstellt eine guide.xml</description>
+        <source>https://github.com/DeBaschdi/repo/tree/master/service.takealug.epg-grabber/</source>
+        <forum>https://www.kodinerds.net/index.php/Thread/64901-RELEASE-Takealug-EPG-Grabber/</forum>
+        <assets>
+            <icon>icon.png</icon>
+            <fanart>fanart.jpg</fanart>
+            <screenshot>fanart.jpg</screenshot>
+            <screenshot>screenshot3.png</screenshot>
+            <screenshot>screenshot1.png</screenshot>
+            <screenshot>screenshot2.png</screenshot>
+        </assets>
+        <news lang="en">2.1+ NEW TV-SPIELFILM API</news>
     </extension>
 </addon>
 </addons>
