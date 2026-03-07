@@ -4,7 +4,6 @@ from maclist import alllist
 from dateutil.parser import parse
 from urllib.parse import quote
 from datetime import datetime, timedelta
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from bs4 import BeautifulSoup
 
 datapath = os.path.abspath(os.path.dirname(__file__))
@@ -584,14 +583,12 @@ epg.append('\n<!--  TV DIGITAL (DE) PROGRAMME LIST -->')
 broadcast_files = {}
 day_to_start = datetime.now()-timedelta(days=1)
 day_timestamps = [int(datetime.timestamp(day_to_start + timedelta(days=i)))for i in range(days_to_grab+1)]
-with ThreadPoolExecutor(max_workers=days_to_grab+1) as executor:
-	futures = [executor.submit(fetch_broadcasts, day, tvdids) for day in day_timestamps]
-	for future in as_completed(futures):
-		result = future.result()
-		for key, val in result.items():
-			if key not in broadcast_files:
-				broadcast_files[key] = []
-			broadcast_files[key].extend(val)
+for day in day_timestamps:
+	result = fetch_broadcasts(day, tvdids)
+	for key, val in result.items():
+		if key not in broadcast_files:
+			broadcast_files[key] = []
+		broadcast_files[key].extend(val)
 
 for contentID in tvdids:
 	for playbilllist in broadcast_files[contentID]:
@@ -641,12 +638,9 @@ def mag(contentID):
 	magentaData = sess.post(magentaDE_data_url, json=magentaDE_data, headers=magentaDE_header).json()['playbilllist']
 	return magentaData
 
-with ThreadPoolExecutor(len(magentacontentIDs)) as executor:
-	future_to_url = {executor.submit(mag, contentID):contentID for contentID in magentacontentIDs}
-	for future in as_completed(future_to_url):
-		contentID = future_to_url[future]
-		o = future.result()
-		for playbilllist in o:
+for contentID in magentacontentIDs:
+	o = mag(contentID)
+	for playbilllist in o:
 			item_title = playbilllist.get('name')
 			item_starttime = playbilllist.get('starttime')
 			item_endtime = playbilllist.get('endtime')
