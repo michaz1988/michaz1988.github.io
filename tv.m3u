@@ -167,7 +167,7 @@ plugin://plugin.video.vavooto/?name=SKY+KRIMI
 plugin://plugin.video.vavooto/?name=SKY+NATURE
 #EXTINF:-1 tvg-id="12046" group-title="Standard" tvg-logo="https://michaz1988.github.io/logos/sky1.png",Sky ONE
 plugin://plugin.video.vavooto/?name=SKY+ONE
-#EXTINF:-1 tvg-id="12178" group-title="Standard" tvg-logo="https://michaz1988.github.io/logos/skyreplay.png",Sky Replay
+#EXTINF:-1 tvg-id="3756" group-title="Standard" tvg-logo="https://michaz1988.github.io/logos/skyreplay.png",Sky Replay
 plugin://plugin.video.vavooto/?name=SKY+REPLAY
 #EXTINF:-1 tvg-id="12184" group-title="Standard" tvg-logo="https://michaz1988.github.io/logos/skyshowcase.png",Sky Showcase
 plugin://plugin.video.vavooto/?name=SKY+SHOWCASE
