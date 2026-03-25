@@ -557,7 +557,7 @@
     </extension>
 </addon>
 
-<addon id="plugin.video.joyn-at" name="Joyn-at" version="2.5.41+matrix.1" provider-name="knaerzche, Maven">
+<addon id="plugin.video.joyn" name="Joyn" version="2.5.42+matrix.1" provider-name="knaerzche, Maven">
 	<requires>
 		<import addon="inputstream.adaptive" version="2.5.0"/>
 		<import addon="script.module.inputstreamhelper" version="0.4.4"/>
@@ -570,8 +570,8 @@
 	<extension point="xbmc.service" library="service.py" start="login"/>
 	<extension point="xbmc.addon.metadata">
 		<reuselanguageinvoker>true</reuselanguageinvoker>
-		<summary lang="en_GB">Joyn Video On Demand  and Live TV for AT</summary>
-		<summary lang="de_DE">Joyn Video On Demand und Live TV Austria</summary>
+		<summary lang="en_GB">Joyn Video On Demand  and Live TV</summary>
+		<summary lang="de_DE">Joyn Video On Demand and Live TV</summary>
 		<description lang="en_GB">Watch VOD content und Live TV provided by Joyn</description>
 		<description lang="de_DE">Video On Demand und Live TV von Joyn</description>
 		<disclaimer lang="en_GB">The use of this addon may violate the terms and conditions of Joyn GmbH - especially, but not exclusively, if it is used outside of Germany.</disclaimer>

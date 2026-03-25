@@ -1,5 +1,5 @@
-2.5.41-at
-- changed headers for AT channels
+2.5.42
+- fix: Headers for Austria and Swiss
 2.5.41
 - fix: update regex for API key
 - chore: update operation name and hash for seasons
