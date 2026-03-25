@@ -1,0 +1,254 @@
+2.5.41-at
+- changed headers for AT channels
+2.5.41
+- fix: update regex for API key
+- chore: update operation name and hash for seasons
+2.5.40
+- chore: updated hashes
+2.5.39
+- fix: update search functionality to include pagination and handle empty items
+2.5.38
+- fix: add handling for ENT_VALIDATION_TOKEN_ERROR in entitlement data retrieval
+2.5.37
+- fix: remove duplicate condition for CollectionLane in categories function
+- fix: update view settings to use 'Custom' instead of numeric values
+2.5.36
+- fix: enhance EPG metadata handling for livestream branding
+- chore: updated hashes
+2.5.35
+- fix: logout doesn't work
+2.5.34
+- fix: content that does not require a login cannot be played
+- fix: not all content is visible in the media libraries
+- fix: error if a response item is null
+- chore: updated operation 'ACCOUNT'
+2.5.33
+- chore: removed script.module.uepg
+- chore: refactoring live tv
+- fix: error if the data provided for the duration is null
+- fix: not all episodes are visible for some series
+2.5.32
+- fix: saved credentials cannot be decrypted
+2.5.31
+- chore: define regex pattern as raw string
+- fix: saved credentials cannot be decrypted
+2.5.30
+- chore: removed dependency on distutils
+- chore: remoded unused imports
+- fix: not all content is visible in the media libraries
+- chore: updated hashes
+- fix: content that does not require a login cannot be played
+2.5.29
+- feat: support for Switzerland
+- chore: updated constants
+2.5.28
+- fixed: config init
+2.5.27
+- chore: updated hashes
+2.5.26
+- fixed: logindata encryption/decryption
+2.5.25
+- chore: updated hashes
+2.5.24
+- fixed: not all content is displayed for plus accounts
+2.5.23
+- fixed: API Key invalid
+2.5.22
+- chore: updated hashes and consts
+2.5.21
+- feat: support for Austria
+2.5.20
+- fixed: read entitlementBaseUrl and playbackApiBaseUrl from const
+2.5.19
+- fixed: x-api-key could not be extracted
+- cleanup
+2.5.18
+- fixed: content is not displayed for Plus accounts
+- fixed: not all channels are displayed in the media library
+2.5.17
+- updated operation hashes
+2.5.16
+- changed regex for x-api-key to fix invalid key error
+2.5.15
+- fixed sending empty post data with Python 2
+2.5.14
+- fixed reference error
+2.5.13
+- fixed and improved login flow
+2.5.12
+- fixed login (thanks easy4me again)
+2.5.11
+- fixed login for kodi 18 and 19
+2.5.10
+- added missing import
+2.5.9
+- fixed login (thanks easy4me)
+2.5.8
+- updated operation hashes
+2.5.7
+- updated tvshow operation and operation hashes
+- fixed error when content for last seen or favorites is no longer available
+2.5.6
+- fixed config init and playback
+2.5.5
+- fixed categories in main menu
+2.5.4
+- updated operation hashes
+2.5.3
+- fixed config init
+2.5.2
+- fixed channels
+2.5.1
+- fixed init error
+2.5.0
+- fixed config init
+- added movies, tv shows and sport section
+- refactoring for newer API
+- search does not return the same results as the website
+2.4.1
+- fixed config init on some devices
+2.4.0
+- fixed config init
+2.3.9
+- fixed HTML unescaping
+2.3.8
+- fixed login
+2.3.7
+- fixed config init
+2.3.6
+- fixed login
+- speedup config init
+2.3.5
+- fixed url error when init config
+2.3.4
+- improved 'clientData' for retrieving the manifest
+2.3.3
+- import translatePath from xbmcvfs for kodi matrix
+- fixed init config
+2.3.2
+- get filtered manifest
+- replaced LOGNOTICE with LOGINFO for kodi matrix
+2.3.1.10
+- implement new config generation
+- fix index error in lastseen
+- drop "ip spoofing"
+2.3.1.9
+- implement 7pass sso login
+- cosmetics
+2.3.1.8
+- allow videos to be played without prior api request
+- matrix property name change inputstreamaddon -> inputstream
+2.3.1.7
+- fix decoding issue in PY2
+2.3.1.6
+- add support for another error response format
+2.3.1.5
+- implement API changes
+- try to get manifest up to 5 times, if it fails
+2.3.1.4
+- revert using api based license filter
+- check is* stuff just before video starts
+- minor fixes
+2.3.1.3
+- fix DST bug
+- implement xbmc.python 3.0.0 api changes
+2.3.1.2
+- fix license based display for tvshows, season, epsiodes
+- add license based display for complation/-items
+- make installation of script.module.uepg optional / on demand
+- minor other bugfixes
+2.3.1.1
+- hotfix: website changed again
+2.3.1
+- improve addon overall addon performance by reusing languageinvoker/splitting into submodules/logging on demand only
+- create singleton-instances on per addon-handle basis
+- cache epg/landing-page in libjoyn-instance
+- fix playback on OSX
+- create fake-uuid for allwinner android sdk level 24 (importing uuid module crashes kodi)
+- implement own get_node() and make it more unique (espacially on android)
+- fix set sort as per settings on matrix
+- use window.setProperty for asset_id instead of 'hiding' in it imdb-infolabel
+- make sure only playback for this addon is tracked in service.py
+- fix relogin issue, when decrypting username/password fails
+- fix language files
+- make sure addon is used on kodi >= 18
+2.3.0
+- add api-based resume postions
+- partly fixed live stream audio sync issue
+- add save username/password option
+- add option to show categories in main menu
+- add ask-for-login dialog on first addon start
+- show content based on current subscription
+- add option to hightlight premium content
+- rework some stuff
+2.2.2
+- fixed: re-set container-focus fails on some systems
+- refix access to ip-api.com fails
+- add usage disclaimer
+2.2.1
+- fix: re-set container-focus after 'refresh'
+2.2.0
+- implement sign-in
+- implement joyn bookmarks
+- implement 'Plus+'
+- implement MPAA-Pin setting
+2.0.8
+- workaround ip-api.com error
+2.0.6
+- implement simple caching system
+- favor simplejson for json processing
+2.0.5
+- add support from PlayReady DRM
+- add preliminary for foreign countries
+- add proxy settings
+- add slection for joyn platform
+- fixed dates in far future on 32-bit platforms
+- add support for movies
+2.0.0
+- make old live tv url work again
+- show recommendation
+- implement (anonymous) auth
+- option to show epsiodes immediately
+- improve secret detection
+1.9.6
+- implement new GraphQL API
+- improve Py3 support
+1.1.4
+- fix: secret idx changed again, add fallback for newly changed index
+1.1.3
+- fix: secret idx changed
+1.1.0
+- fixed:  translation errors; changed nameing of some settings
+- fixed:  max. 30 episodes per season where shown
+- fixed:  string multline-error for Android user agent
+- fixed:  use correct translation setting for ip-api country detection
+- fixed:  add/remove category with unicode letters to/from watchlist
+- new:  added cast information for season/episodes (if available)
+- new:  changed Studio infomation from channelname to copyright owner
+- new:  add clearlogo for episodes (if available)
+- new:  option to exclude watchlist from lastseen
+- new:  add correct contentype for each foldertype
+- new:  set viewtype for each contenttype in addon settings (can be disabled (if you like your lists))
+- new:  set sort order for episodes/seasons in addon settings (default descending as on Joyn Website)
+- new:  show title according to container content
+- new:  option to disable folder cache
+- new:  some performance improvements
+1.0.0
+- bump inputstreamhelper version requirement
+- automatic country detection; prepare mult-country support
+- increase script.module.inputstreamhelper version dependency
+- open inputstream.adaptive, uEPG setting from addon settings
+- clear cache from addon settings
+0.0.4.2
+- add sort by date for watchlist
+0.0.4.1
+ - add favorites, last seen, EPG via uEPG, more sort methods for videos
+ - fixed season name, speedup categories fetching
+ - full PY 3.7 compat
+0.0.3.1
+- increase EPG offset
+0.0.3.0
+- add categories, aearch and EPG for live tv
+- unify artwork
+0.0.2.1
+- tidy up, fix season images
