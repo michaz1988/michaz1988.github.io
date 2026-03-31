@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<addon id="plugin.video.vavooto" name="VAVOO.TO" version="2026.03.02" provider-name="kasi,michaz">
+<addon id="plugin.video.vavooto" name="VAVOO.TO" version="2026.03.31" provider-name="kasi,michaz">
 	<requires>
+		<import addon="xbmc.python" version="3.0.1"/>
 		<import addon="script.module.requests"/>
 		<import addon="script.module.resolveurl"/>
 		<import addon="script.module.dateutil"/>
@@ -13,6 +14,9 @@
 	</extension>
 	<extension point="xbmc.python.module" library="resources" />
 	<extension point="xbmc.addon.metadata">
+		<summary lang="de_DE">VAVOO.TO Video Add-on</summary>
+		<description lang="de_DE">Video-Add-on für Live-TV, Filme und Serien mit VAVOO- und Stalker-Quellen.</description>
+		<platform>all</platform>
 		<assets>
 			<icon>icon.png</icon>
 		</assets>
