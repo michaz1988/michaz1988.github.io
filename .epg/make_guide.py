@@ -1,4 +1,4 @@
-import requests, gzip, json, time, os, boto3, uuid, re, hashlib, shutil, base64
+import requests, gzip, json, time, os, boto3, uuid, re, hashlib, shutil, base64, csv
 from collections import defaultdict
 from maclist import alllist
 from dateutil.parser import parse
@@ -28,6 +28,7 @@ genre_format = "provider"
 R2_ACCESS_KEY = "4b36152b6b64b8a9f4d7010b84f535fc"
 R2_SECRET_KEY = "7ad1ed517b6baa6af2fa00d50a1a18b0ce416bb0b6fb14f4c122a2960f1ab9bc"
 R2_ENDPOINT_URL = "https://145ef3f7a9832804bef0e31548db8a83.r2.cloudflarestorage.com"
+STBEMU_PUBLIC_URL = "https://pub-38f23eb5f3304328b9774fadfa233a38.r2.dev/stbemu.csv.gz"
 mac = str(uuid.uuid4())
 ter = str(uuid.uuid4())
 
@@ -103,6 +104,28 @@ def get_boto(BUCKET_NAME, OBJECT_KEY):
 		for line in gz: rows.append(line.decode("utf-8").replace('"', "").replace("\\", "").replace('"', '').strip().split(","))
 	return rows
 
+def add_stbemu_mac(url, mac):
+	url = url.strip().rstrip("/")
+	if not url.endswith("/c"): url+="/c"
+	url = url.replace(":80/c", "/c")
+	mac = mac.strip()
+	if url not in alllist: alllist[url] = []
+	if mac not in alllist[url]: alllist[url].append(mac)
+
+def add_stbemu_rows(rows):
+	for row in rows:
+		if len(row) < 3: continue
+		try:
+			if weekstamp > datetime.timestamp(parse(" ".join(row[2:]))): continue
+		except: pass
+		add_stbemu_mac(row[0], row[1])
+
+def get_public_stbemu_rows():
+	response = requests.get(STBEMU_PUBLIC_URL, headers={"User-Agent": "Mozilla/5.0"}, timeout=30)
+	response.raise_for_status()
+	content = gzip.decompress(response.content).decode("utf-8", errors="replace").splitlines()
+	return list(csv.reader(content))
+
 xtreamlist = []
 
 blog = requests.get("https://ikracccam.blogspot.com/p/link-google-drive-new.html").content
@@ -171,15 +194,11 @@ with open(xtream_list, "w") as k:
 	json.dump({"regions": sorted(regions), "urls": result}, k, indent=4)
 print("New xtream list created")
 
-for row in get_boto("stbemu", "stbemu.csv.gz"):
-	try:
-		if weekstamp > datetime.timestamp(parse(row[2] + row[3] + row[4])): continue
-	except: pass
-	url = row[0].strip().rstrip("/")
-	if not url.endswith("/c"): url+="/c"
-	url = url.replace(":80/c", "/c")
-	if url not in alllist: alllist[url] = []
-	if mac not in alllist[url]: alllist[url].append(mac)
+add_stbemu_rows(get_boto("stbemu", "stbemu.csv.gz"))
+try:
+	add_stbemu_rows(get_public_stbemu_rows())
+except Exception as e:
+	print(f"stbemu public list error: {e}")
 
 try:
 	url = f'https://stbstalker.alaaeldinee.com/{now.strftime("%Y/%m")}/smart-stb-emu-pro-{now.strftime("%d-%m-%Y")}.html?m=1'
