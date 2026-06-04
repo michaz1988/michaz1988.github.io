@@ -195,7 +195,7 @@ for entry in result:
 #with open(xtream_list, "w") as k:
 	#json.dump({"regions": sorted(regions), "urls": result}, k, indent=4)
 #print("New xtream list created")
-
+"""
 add_stbemu_rows(get_boto("stbemu", "stbemu.csv.gz"))
 try:
 	add_stbemu_rows(get_public_stbemu_rows())
@@ -220,12 +220,12 @@ try:
 						if portal not in alllist: alllist[portal] = []
 						if mac not in alllist[portal]: alllist[portal].append(mac)
 except:pass
+"""
 
 sorted_dict = dict(sorted(sorted(alllist.items()), key=lambda item: len(item[1]), reverse=True))
 with open(mac_list, "w") as k:
 	json.dump(sorted_dict, k, indent=4)
 print("New maclist created")
-
 epg = ['<?xml version="1.0" encoding="UTF-8" ?>\n<!DOCTYPE tv SYSTEM "xmltv.dtd">\n<!-- EPG XMLTV FILE CREATED BY Take-a-LUG TEAM- (c) 2020 Bastian Kleinschmidt -->\n<!-- created on {} -->\n<tv generator-info-name="Takealug EPG Grabber Ver. {}" generator-info-url="https://github.com/DeBaschdi/service.takealug.epg-grabber">\n'.format(str(now), addon_version)]
 epg.append('\n<!--  SIMPLI TV  CHANNEL LIST -->\n')
 epg.append('	<channel id="PULS24">\n')
