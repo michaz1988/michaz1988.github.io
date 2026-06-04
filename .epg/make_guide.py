@@ -192,9 +192,9 @@ for entry in result:
             })
     entry["userpasses"] = converted
 
-with open(xtream_list, "w") as k:
-	json.dump({"regions": sorted(regions), "urls": result}, k, indent=4)
-print("New xtream list created")
+#with open(xtream_list, "w") as k:
+	#json.dump({"regions": sorted(regions), "urls": result}, k, indent=4)
+#print("New xtream list created")
 
 add_stbemu_rows(get_boto("stbemu", "stbemu.csv.gz"))
 try:
