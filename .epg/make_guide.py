@@ -137,6 +137,8 @@ for url in page.splitlines():
 	if m:
 		xtreamlist.append({"url": m.group(1).rstrip("/"), "userpass": m.group(2),"region": None})
 
+"""
+
 regions = []
 for row in get_boto("xtreamity", "xtreamity-db.csv.gz"):
 	try:
@@ -144,7 +146,7 @@ for row in get_boto("xtreamity", "xtreamity-db.csv.gz"):
 	except: pass
 	if row[5] not in regions: regions.append(row[5])
 	xtreamlist.append({"url": row[0].rstrip("/"), "userpass": f"username={row[1]}&password={row[2]}", "region": row[5]})
-
+"""
 # Schritt 1: bekannte Gruppen pro URL sammeln
 url_regions = {}
 for entry in xtreamlist:
