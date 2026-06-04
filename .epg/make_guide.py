@@ -168,7 +168,7 @@ grouped = defaultdict(lambda: {
 for entry in xtreamlist:
     key = (entry["url"], entry["region"])
     grouped[key]["url"] = entry["url"]
-    grouped[key]["region"] = entry["region"]
+    #grouped[key]["region"] = entry["region"]
     grouped[key]["userpasses"].add(entry["userpass"])
 
 # Schritt 4: Sets → Listen, Sortierung nach Anzahl userpasses
