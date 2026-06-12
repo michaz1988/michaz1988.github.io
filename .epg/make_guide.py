@@ -104,6 +104,14 @@ def get_boto(BUCKET_NAME, OBJECT_KEY):
 		for line in gz: rows.append(line.decode("utf-8").replace('"', "").replace("\\", "").replace('"', '').strip().split(","))
 	return rows
 
+def get_boto2(url):
+	rows = []
+	response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"}, timeout=30)
+	response.raise_for_status()
+	content = gzip.decompress(response.content).decode("utf-8", errors="replace").splitlines()
+	for line in content: rows.append(line.replace('"', "").replace("\\", "").replace('"', '').strip().split(","))
+	return rows
+
 def add_stbemu_mac(url, mac):
 	url = url.strip().rstrip("/")
 	if not url.endswith("/c"): url+="/c"
@@ -137,16 +145,16 @@ for url in page.splitlines():
 	if m:
 		xtreamlist.append({"url": m.group(1).rstrip("/"), "userpass": m.group(2),"region": None})
 
-"""
+
 
 regions = []
-for row in get_boto("xtreamity", "xtreamity-db.csv.gz"):
+for row in get_boto2("https://pub-38f23eb5f3304328b9774fadfa233a38.r2.dev/xtreamity-db.csv.gz"):
 	try:
 		if weekstamp > datetime.timestamp(parse(row[3] + row[4])): continue
 	except: pass
 	if row[5] not in regions: regions.append(row[5])
 	xtreamlist.append({"url": row[0].rstrip("/"), "userpass": f"username={row[1]}&password={row[2]}", "region": row[5]})
-"""
+
 # Schritt 1: bekannte Gruppen pro URL sammeln
 url_regions = {}
 for entry in xtreamlist:
@@ -168,7 +176,7 @@ grouped = defaultdict(lambda: {
 for entry in xtreamlist:
     key = (entry["url"], entry["region"])
     grouped[key]["url"] = entry["url"]
-    #grouped[key]["region"] = entry["region"]
+    grouped[key]["region"] = entry["region"]
     grouped[key]["userpasses"].add(entry["userpass"])
 
 # Schritt 4: Sets → Listen, Sortierung nach Anzahl userpasses
@@ -192,11 +200,11 @@ for entry in result:
             })
     entry["userpasses"] = converted
 
-#with open(xtream_list, "w") as k:
-	#json.dump({"regions": sorted(regions), "urls": result}, k, indent=4)
-#print("New xtream list created")
-"""
-add_stbemu_rows(get_boto("stbemu", "stbemu.csv.gz"))
+with open(xtream_list, "w") as k:
+	json.dump({"regions": sorted(regions), "urls": result}, k, indent=4)
+print("New xtream list created")
+
+#add_stbemu_rows(get_boto2("stbemu", "stbemu.csv.gz"))
 try:
 	add_stbemu_rows(get_public_stbemu_rows())
 except Exception as e:
@@ -220,7 +228,6 @@ try:
 						if portal not in alllist: alllist[portal] = []
 						if mac not in alllist[portal]: alllist[portal].append(mac)
 except:pass
-"""
 
 sorted_dict = dict(sorted(sorted(alllist.items()), key=lambda item: len(item[1]), reverse=True))
 with open(mac_list, "w") as k:
