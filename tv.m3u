@@ -140,7 +140,7 @@ plugin://plugin.video.vavooto/?name=SAT+1+EMOTIONS
 #EXTINF:-1 tvg-id="338" group-title="Standard" tvg-logo="https://michaz1988.github.io/logos/sat1gold.png",Sat 1 Gold
 plugin://plugin.video.joyn/?mode=play_video&video_id=sat1gold-at&stream_type=LIVE
 #EXTINF:-1 tvg-id="770" group-title="Standard" tvg-logo="https://michaz1988.github.io/logos/servustv.png",Servus TV
-plugin://plugin.video.servustv_com/?mode=play_video&amp;link=https://dms.redbull.tv/v5/destination/stv/PN0B1EC15B2FE10/personal_computer/http/de/at/playlist.m3u8&amp;action=LIVE_PLAY
+plugin://plugin.video.servustv_com/?mode=play_video&link=https%3A%2F%2Fdms.redbull.tv%2Fv5%2Fdestination%2Fstv%2FPN0B1EC15B2FE10%2Fpersonal_computer%2Fhttp%2Fde%2Fat%2Fplaylist.m3u8&action=LIVE_PLAY
 #EXTINF:-1 tvg-id="451" group-title="Standard" tvg-logo="https://michaz1988.github.io/logos/silverline.png",Silverline
 plugin://plugin.video.vavooto/?name=SILVERLINE
 #EXTINF:-1 tvg-id="694" group-title="Standard" tvg-logo="https://michaz1988.github.io/logos/sixx.png",Sixx
