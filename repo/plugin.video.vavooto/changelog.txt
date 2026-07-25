@@ -1,0 +1,8 @@
+2026.07.25
+- Film- und Serienkatalog auf die neue MediaHubMX-Katalog-API umgestellt.
+- „Beliebt“ und „Angesagt“ für Filme und Serien an die neuen Katalog-IDs und Sortierungen angepasst.
+- Genre-Auswahl auf den neuen filter.genre-Parameter umgestellt.
+- Genre-Namen mit Sonderzeichen wie „Action & Adventure“ werden korrekt übertragen.
+- Pagination für Katalog, Genre-Auswahl und Suche an nextCursor angepasst.
+- TMDB-IDs aus der neuen API-Antwort werden für Filme und Serien normalisiert.
+- Alten CCAPI-Listen- und Cachepfad entfernt.
