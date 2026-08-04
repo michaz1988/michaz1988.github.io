@@ -31,6 +31,10 @@ R2_ENDPOINT_URL = "https://145ef3f7a9832804bef0e31548db8a83.r2.cloudflarestorage
 STBEMU_PUBLIC_URL = "https://pub-38f23eb5f3304328b9774fadfa233a38.r2.dev/stbemu.csv.gz"
 mac = str(uuid.uuid4())
 ter = str(uuid.uuid4())
+BROWSER_UA  = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+               "AppleWebKit/537.36 (KHTML, like Gecko) "
+               "Chrome/124.0.0.0 Safari/537.36")
+_headers = {"accept": "*/*", "user-agent": BROWSER_UA, "Accept-Encoding": "gzip, deflate"}
 
 magentaDE_authenticate_url = 'https://api.prod.sngtv.magentatv.de/EPG/JSON/Authenticate'
 magentaDE_channellist_url = 'https://api.prod.sngtv.magentatv.de/EPG/JSON/AllChannel'
@@ -73,7 +77,7 @@ def get_epgLength(days_to_grab, form="%Y-%m-%dT%H:%M:00.000Z"):
 	endtime = calc_then.strftime(form)
 	return starttime, endtime
 	
-blog = requests.get("https://ikracccam.blogspot.com/p/link-stalcker-google-drive.html").content
+blog = requests.get("https://ikracccam.blogspot.com/p/link-stalcker-google-drive.html", headers=_headers).content
 link = BeautifulSoup(blog, 'html.parser').find("div", {"class": "titre-content hidden-link"}).find("p").text.strip()
 page = requests.get(link).text
 
@@ -136,7 +140,7 @@ def get_public_stbemu_rows():
 
 xtreamlist = []
 
-blog = requests.get("https://ikracccam.blogspot.com/p/link-stalker-ikra.html").content
+blog = requests.get("https://ikracccam.blogspot.com/p/link-stalker-ikra.html", headers=_headers).content
 link = BeautifulSoup(blog, 'html.parser').find("div", {"class": "titre-content hidden-link"}).find("p").text.strip()
 page = requests.get(link).text.strip()
 pattern = re.compile(r'^(https?://[^:/]+:\d+)/get\.php\?(username=[^&]+&password=[^&]+)(?:&type=m3u)?$')
