@@ -74,7 +74,7 @@ def get_epgLength(days_to_grab, form="%Y-%m-%dT%H:%M:00.000Z"):
 	return starttime, endtime
 	
 blog = requests.get("https://ikracccam.blogspot.com/p/link-stalcker-google-drive.html").content
-link = BeautifulSoup(blog, 'html.parser').find("div", {"class": "titre-content"}).find("p").text.strip()
+link = BeautifulSoup(blog, 'html.parser').find("div", {"class": "titre-content hidden-link"}).find("p").text.strip()
 page = requests.get(link).text
 
 pattern = re.compile(
