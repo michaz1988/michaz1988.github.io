@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<addon id="repository.kus.allinone" name="[COLORdeepskyblue]K.U.S[/COLOR] AllInOne Repository" version="3.8" provider-name="[COLORdeepskyblue]K.U.S Team[/COLOR]">
+	<extension point="xbmc.addon.repository" name="K.U.S AllInOne Repository">
+        <dir minversion="19.0.0" maxversion="22.0.0">
+            <info compressed="false">https://kodi-unlimited-support.de/repo/data/addons.xml.gz</info>
+            <checksum verify="sha256">https://kodi-unlimited-support.de/repo/data/addons.xml.gz.sha256</checksum>
+            <datadir zip="true">https://kodi-unlimited-support.de/repo/data</datadir>
+            <hashes>sha256</hashes>
+        </dir>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">[COLORdeepskyblue]K.U.S[/COLOR] AllInOne Repository</summary>
+		<summary lang="de_DE">[COLORdeepskyblue]K.U.S[/COLOR] AllInOne Repository</summary>
+        <description lang="en_GB">Download and install addons from the KODI Unlimited Support repository.[CR]Contact + support:[CR][COLORdeepskyblue]https://www.facebook.com/groups/kodiunlimited[/COLOR][CR]Donation:[CR][COLORdeepskyblue]https://www.paypal.me/KodiUnlimited[/COLOR]</description>
+        <description lang="de_DE">Downloade und installiere Addons aus dem KODI Unlimited Support Repository.[CR]Kontakt + Support:[CR][COLORdeepskyblue]https://www.facebook.com/groups/kodiunlimited[/COLOR][CR]Spenden-Link:[CR][COLORdeepskyblue]https://www.paypal.me/KodiUnlimited[/COLOR]</description>
+        <disclaimer lang="en_GB">[COLORred]This is a third party repository and is unrelated to the official Kodi team.[/COLOR]</disclaimer>
+		<disclaimer lang="de_DE">[COLORred]Dies ist ein Drittanbieter-Repository und steht nicht in Zusammenhang mit dem offiziellen Team Kodi.[/COLOR]</disclaimer>
+		<language>de</language>
+		<platform>all</platform>
+		<license></license>
+		<forum></forum>
+		<website></website>
+		<email></email>
+		<source></source>
+		<news></news>
+        <assets>
+            <icon>resources/icon.png</icon>
+			<fanart>resources/fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon>

@@ -127,69 +127,6 @@
 	</extension>
 </addon>
 
-<addon id="plugin.video.xship" version="2026.03.01" name="[B]xShip[/B]" provider-name="Michaz">
-    <requires>
-        <import addon="xbmc.python" version="3.0.0"/>
-        <import addon="script.module.requests"/>
-        <import addon="script.module.download-m3u8" optional="true"/>
-        <import addon="script.module.six"/>
-        <import addon="script.module.kodi-six"/>
-        <import addon="script.module.pyaes"/>
-        <import addon="script.module.infotagger"/>
-        <import addon="script.module.resolveurl" version="5.1.100"/>
-        <!-- for remote debug -->
-        <import addon="script.module.pydevd" optional="true"/>
-    </requires>
-    <extension point="xbmc.python.pluginsource" library="default.py">
-        <provides>video</provides>
-    </extension>
-    <extension point="xbmc.service" library="service.py" start="startup" />
-    <extension point="xbmc.addon.metadata">
-        <summary lang="de_DE">xShip: Der Fake</summary>
-        <summary lang="en_GB">xShip: The Fake</summary>
-        <assets>
-			<icon>resources/icon.png</icon>
-			<fanart>resources/fanart.jpg</fanart>
-			<banner>resources/media/banner.png</banner>
-		</assets>
-    </extension>
-</addon>
-
-<addon id="plugin.video.xstream" name="xStream" version="2026.02.11" provider-name="Michaz">
-	<requires>
-		<import addon="xbmc.python" version="3.0.0"/>
-		<import addon="script.module.requests"/>
-		<import addon="script.module.resolveurl" version="5.1.173"/>
-		<import addon="script.module.six" version="1.11.0"/>
-		<import addon="script.module.pyaes"/>
-		<import addon="repository.resolveurl" optional="true"/>
-		<import addon="script.module.inputstreamhelper" version="0.3.3" optional="true"/>
-		<import addon="script.module.pydevd" optional="true" />
-		<import addon="script.module.web-pdb" optional="true" />
-	</requires>
-	<extension point="xbmc.python.pluginsource" library="default.py">
-		<provides>video</provides>
-	</extension>
-    <extension point="xbmc.service" library="service.py" start="startup" />
-	<extension point="xbmc.addon.metadata">
-		<summary lang="de">xStream</summary>
-		<summary lang="en_GB">xStream</summary>
-		<description lang="de">xStream ist ein Video-Addon für Kodi. xStream dient als Suchmaschine für Filme und Serien auf verschiedenen Webseiten.</description>
-		<description lang="en_GB">xStream is a video add-on for Kodi. xStream serves as a search engine for films and series on various websites.</description>
-		<disclaimer lang="de">Sie können dieses Video Addon gerne verwenden. Der bereitgestellte Inhalt der Webseiten steht in keinem Bezug zu xStream oder den Entwicklern! Weitere Informationen finden Sie in unserer Wiki und FaQ.</disclaimer>
-		<disclaimer lang="en_GB">You are welcome to use this video addon. The content provided on the websites has no connection to xStream or the developers! For more information, see our Wiki and FaQ.</disclaimer>
-		<language>de en</language>
-		<platform>all</platform>
-		<license>GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007</license>
-		<assets>
-			<icon>resources/icon.png</icon>
-			<fanart>resources/fanart.jpg</fanart>
-			<banner>resources/banner.png</banner>
-			<clearlogo>resources/clearlogo.png</clearlogo>
-		</assets>
-	</extension>
-</addon>
-
 <addon id="repository.castagnait" name="CastagnaIT Repository" version="2.0.1" provider-name="castagnait">
 	<extension point="xbmc.addon.repository" name="CastagnaIT Repository">
 		<dir minversion="19.0.0">
@@ -594,6 +531,56 @@
 			<screenshot>resources/media/screenshot03.jpg</screenshot>
 		</assets>
 	</extension>
+</addon>
+
+<addon id="repository.kus.allinone" name="[COLORdeepskyblue]K.U.S[/COLOR] AllInOne Repository" version="3.8" provider-name="[COLORdeepskyblue]K.U.S Team[/COLOR]">
+	<extension point="xbmc.addon.repository" name="K.U.S AllInOne Repository">
+        <dir minversion="19.0.0" maxversion="22.0.0">
+            <info compressed="false">https://kodi-unlimited-support.de/repo/data/addons.xml.gz</info>
+            <checksum verify="sha256">https://kodi-unlimited-support.de/repo/data/addons.xml.gz.sha256</checksum>
+            <datadir zip="true">https://kodi-unlimited-support.de/repo/data</datadir>
+            <hashes>sha256</hashes>
+        </dir>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary lang="en_GB">[COLORdeepskyblue]K.U.S[/COLOR] AllInOne Repository</summary>
+		<summary lang="de_DE">[COLORdeepskyblue]K.U.S[/COLOR] AllInOne Repository</summary>
+        <description lang="en_GB">Download and install addons from the KODI Unlimited Support repository.[CR]Contact + support:[CR][COLORdeepskyblue]https://www.facebook.com/groups/kodiunlimited[/COLOR][CR]Donation:[CR][COLORdeepskyblue]https://www.paypal.me/KodiUnlimited[/COLOR]</description>
+        <description lang="de_DE">Downloade und installiere Addons aus dem KODI Unlimited Support Repository.[CR]Kontakt + Support:[CR][COLORdeepskyblue]https://www.facebook.com/groups/kodiunlimited[/COLOR][CR]Spenden-Link:[CR][COLORdeepskyblue]https://www.paypal.me/KodiUnlimited[/COLOR]</description>
+        <disclaimer lang="en_GB">[COLORred]This is a third party repository and is unrelated to the official Kodi team.[/COLOR]</disclaimer>
+		<disclaimer lang="de_DE">[COLORred]Dies ist ein Drittanbieter-Repository und steht nicht in Zusammenhang mit dem offiziellen Team Kodi.[/COLOR]</disclaimer>
+		<language>de</language>
+		<platform>all</platform>
+		<license></license>
+		<forum></forum>
+		<website></website>
+		<email></email>
+		<source></source>
+		<news></news>
+        <assets>
+            <icon>resources/icon.png</icon>
+			<fanart>resources/fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon>
+
+<addon id="repository.kodi.media" name="Kodi Media Repository" version="1.0.0" provider-name="mr-evil1">
+    <extension point="xbmc.addon.repository">
+        <dir>
+            <info>https://mr-evil1.github.io/kodi-media-repo/addons.xml</info>
+            <checksum>https://mr-evil1.github.io/kodi-media-repo/addons.xml.md5</checksum>
+            <datadir zip="true">https://mr-evil1.github.io/kodi-media-repo/</datadir>
+        </dir>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary>Kodi Media Repository</summary>
+        <description>Repository von Kodi Media Addons und Abhängigkeiten.</description>
+        <platform>all</platform>
+        <assets>
+            <icon>kodi-media.jpg</icon>
+            <fanart>kodi-media.jpg</fanart>
+        </assets>
+    </extension>
 </addon>
 
 <addon id="script.module.streamsscraper" name="Streams Scraper" provider-name="michaz1988" version="2026.07.08">

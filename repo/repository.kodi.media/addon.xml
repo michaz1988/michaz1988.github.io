@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="repository.kodi.media" name="Kodi Media Repository" version="1.0.0" provider-name="mr-evil1">
+    <extension point="xbmc.addon.repository">
+        <dir>
+            <info>https://mr-evil1.github.io/kodi-media-repo/addons.xml</info>
+            <checksum>https://mr-evil1.github.io/kodi-media-repo/addons.xml.md5</checksum>
+            <datadir zip="true">https://mr-evil1.github.io/kodi-media-repo/</datadir>
+        </dir>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary>Kodi Media Repository</summary>
+        <description>Repository von Kodi Media Addons und Abhängigkeiten.</description>
+        <platform>all</platform>
+        <assets>
+            <icon>kodi-media.jpg</icon>
+            <fanart>kodi-media.jpg</fanart>
+        </assets>
+    </extension>
+</addon>
