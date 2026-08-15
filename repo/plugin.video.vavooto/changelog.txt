@@ -1,3 +1,8 @@
+2026.08.15.1
+- Stalker-TV berücksichtigt use_http_tmp_link und use_load_balancing.
+- Direkte Portal-URLs werden nicht mehr unnötig in kurzlebige Links umgewandelt.
+- Einmaligen Stalker-Watchdog-Aufruf nach der Profilinitialisierung ergänzt.
+
 2026.07.25
 - Film- und Serienkatalog auf die neue MediaHubMX-Katalog-API umgestellt.
 - „Beliebt“ und „Angesagt“ für Filme und Serien an die neuen Katalog-IDs und Sortierungen angepasst.
