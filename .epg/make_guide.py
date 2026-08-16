@@ -78,28 +78,28 @@ def get_epgLength(days_to_grab, form="%Y-%m-%dT%H:%M:00.000Z"):
 	return starttime, endtime
 	
 
-#blog = requests.get("https://ikracccam.blogspot.com/p/link-stalcker-google-drive.html", headers=_headers).content
-#link = BeautifulSoup(blog, 'html.parser').find("div", {"class": "titre-content hidden-link"}).find("p").text.strip()
-#page = requests.get(link).text
+blog = requests.get("https://ikracccam.blogspot.com/p/link-stalcker-google-drive.html", headers=_headers).content
+link = BeautifulSoup(blog, 'html.parser').find("div", {"class": "titre-content hidden-link"}).find("p").text.strip()
+page = requests.get(link).text
 
-#pattern = re.compile(
-#	r"URL:\s*(?P<url>\S+)\s*.*?"
-#	r"MAC:\s*(?P<mac>(?:[0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2})\s*.*?"
-#	r"Expire:\s*(?P<expire>[A-Za-z]+\s+\d{1,2},\s+\d{4},\s+\d{1,2}:\d{2}\s*(?:am|pm)|unknown|unlimited)",
-#	re.IGNORECASE | re.DOTALL
-#)
+pattern = re.compile(
+	r"URL:\s*(?P<url>\S+)\s*.*?"
+	r"MAC:\s*(?P<mac>(?:[0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2})\s*.*?"
+	r"Expire:\s*(?P<expire>[A-Za-z]+\s+\d{1,2},\s+\d{4},\s+\d{1,2}:\d{2}\s*(?:am|pm)|unknown|unlimited)",
+	re.IGNORECASE | re.DOTALL
+)
 
-#for m in pattern.finditer(page):
-#	url = m.group("url").strip().rstrip("/")
-#	if not url.endswith("/c"): url+="/c"
-#	url = url.replace(":80/c", "/c")
-#	mac = m.group("mac")
-#	expire = m.group("expire")
-#	try:
-#		if weekstamp > datetime.timestamp(parse(expire)): continue
-#	except: pass
-#	if url not in alllist: alllist[url] = []
-#	if mac not in alllist[url]: alllist[url].append(mac)
+for m in pattern.finditer(page):
+	url = m.group("url").strip().rstrip("/")
+	if not url.endswith("/c"): url+="/c"
+	url = url.replace(":80/c", "/c")
+	mac = m.group("mac")
+	expire = m.group("expire")
+	try:
+		if weekstamp > datetime.timestamp(parse(expire)): continue
+	except: pass
+	if url not in alllist: alllist[url] = []
+	if mac not in alllist[url]: alllist[url].append(mac)
 
 
 
@@ -144,14 +144,14 @@ def get_public_stbemu_rows():
 xtreamlist = []
 
 
-#blog = requests.get("https://ikracccam.blogspot.com/p/link-stalker-ikra.html", headers=_headers).content
-#link = BeautifulSoup(blog, 'html.parser').find("div", {"class": "titre-content hidden-link"}).find("p").text.strip()
-#page = requests.get(link).text.strip()
-#pattern = re.compile(r'^(https?://[^:/]+:\d+)/get\.php\?(username=[^&]+&password=[^&]+)(?:&type=m3u)?$')
-#for url in page.splitlines():
-#	m = pattern.match(url)
-#	if m:
-#		xtreamlist.append({"url": m.group(1).rstrip("/"), "userpass": m.group(2),"region": None})
+blog = requests.get("https://ikracccam.blogspot.com/p/link-stalker-ikra.html", headers=_headers).content
+link = BeautifulSoup(blog, 'html.parser').find("div", {"class": "titre-content hidden-link"}).find("p").text.strip()
+page = requests.get(link).text.strip()
+pattern = re.compile(r'^(https?://[^:/]+:\d+)/get\.php\?(username=[^&]+&password=[^&]+)(?:&type=m3u)?$')
+for url in page.splitlines():
+	m = pattern.match(url)
+	if m:
+		xtreamlist.append({"url": m.group(1).rstrip("/"), "userpass": m.group(2),"region": None})
 
 
 regions = []
