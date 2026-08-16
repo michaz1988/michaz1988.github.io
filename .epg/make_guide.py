@@ -78,8 +78,50 @@ def get_epgLength(days_to_grab, form="%Y-%m-%dT%H:%M:00.000Z"):
 	return starttime, endtime
 	
 
-blog = requests.get("https://ikracccam.blogspot.com/p/link-stalcker-google-drive.html", headers=_headers).content
-link = BeautifulSoup(blog, 'html.parser').find("div", {"class": "titre-content hidden-link"}).find("p").text.strip()
+def get_blogger_hidden_link(page_url):
+	"""Return the hidden download link, also when Blogger serves a reduced page."""
+	errors = []
+	for suffix in ("", "?m=1"):
+		try:
+			response = requests.get(page_url + suffix, headers=_headers, timeout=20)
+			response.raise_for_status()
+			node = BeautifulSoup(response.content, "html.parser").select_one(
+				"div.titre-content.hidden-link p"
+			)
+			if node and node.get_text(strip=True):
+				return node.get_text(strip=True)
+			errors.append(f"{response.url}: link missing ({len(response.content)} bytes)")
+		except requests.RequestException as exc:
+			errors.append(f"{page_url + suffix}: {exc}")
+
+	# GitHub-hosted runners sometimes receive different Blogspot HTML.  The
+	# public Blogger pages feed contains the original page body and is a more
+	# stable fallback than the rendered template.
+	try:
+		feed_url = "https://ikracccam.blogspot.com/feeds/pages/default?alt=json&max-results=100"
+		response = requests.get(feed_url, headers=_headers, timeout=20)
+		response.raise_for_status()
+		for entry in response.json().get("feed", {}).get("entry", []):
+			alternate_urls = [
+				item.get("href", "").split("?", 1)[0]
+				for item in entry.get("link", [])
+				if item.get("rel") == "alternate"
+			]
+			if page_url.split("?", 1)[0] not in alternate_urls:
+				continue
+			node = BeautifulSoup(
+				entry.get("content", {}).get("$t", ""), "html.parser"
+			).select_one("div.titre-content.hidden-link p")
+			if node and node.get_text(strip=True):
+				return node.get_text(strip=True)
+		errors.append(f"{feed_url}: matching page/link missing")
+	except (requests.RequestException, ValueError) as exc:
+		errors.append(f"Blogger feed: {exc}")
+
+	raise RuntimeError("Could not obtain Blogger download link: " + "; ".join(errors))
+
+
+link = get_blogger_hidden_link("https://ikracccam.blogspot.com/p/link-stalcker-google-drive.html")
 page = requests.get(link).text
 
 pattern = re.compile(
@@ -144,8 +186,7 @@ def get_public_stbemu_rows():
 xtreamlist = []
 
 
-blog = requests.get("https://ikracccam.blogspot.com/p/link-stalker-ikra.html", headers=_headers).content
-link = BeautifulSoup(blog, 'html.parser').find("div", {"class": "titre-content hidden-link"}).find("p").text.strip()
+link = get_blogger_hidden_link("https://ikracccam.blogspot.com/p/link-stalker-ikra.html")
 page = requests.get(link).text.strip()
 pattern = re.compile(r'^(https?://[^:/]+:\d+)/get\.php\?(username=[^&]+&password=[^&]+)(?:&type=m3u)?$')
 for url in page.splitlines():
