@@ -1,3 +1,7 @@
+2026.08.17
+- Fehlgeschlagene Stalker-Portalaufrufe werden einmalig mit einem Chrome-User-Agent wiederholt.
+- Nach erfolgreichem Fallback wird der Chrome-User-Agent für weitere Portalaufrufe beibehalten.
+
 2026.08.15.1
 - Stalker-TV berücksichtigt use_http_tmp_link und use_load_balancing.
 - Direkte Portal-URLs werden nicht mehr unnötig in kurzlebige Links umgewandelt.

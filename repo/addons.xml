@@ -56,6 +56,29 @@
     </extension>
 </addon>
 
+<addon id="repository.skinbase.omega" name="[COLOR orange]G[/COLOR]UIDO[COLOR orange]S[/COLOR] [COLOR orange]S[/COLOR]KINBAS[COLOR orange]E[/COLOR] Only Skins for [COLOR orange]Kodi Omega[/COLOR] " version="4.0.00" provider-name="[COLOR orange]TEAM SKINBASE[/COLOR]">
+	<extension point="xbmc.addon.repository" name="GUIDOS SKINBASE REPO">
+		<dir minversion="20.9.0">
+			<info compressed="false">https://raw.github.com/kaffepausse71/SKINBASE.OMEGA/master/addons.xml</info>
+			<checksum>https://raw.github.com/kaffepausse71/SKINBASE.OMEGA/master/addons.xml.md5</checksum>
+			<datadir zip="true">https://raw.github.com/kaffepausse71/SKINBASE.OMEGA/master/</datadir>
+		</dir>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+		<summary>[COLOR orange]G[/COLOR]uido[COLOR orange]s[/COLOR] [COLOR orange]S[/COLOR]KINBAS[COLOR orange]E[/COLOR] Repo</summary>
+		<description lang="de_DE">In Guidos SKINBASE findet ihr Skins ab Kodi Version 16 aus aller Welt. Von den Standard Skins bis hin zu stark Modifizierten. Die Skins sind für die jeweiligen Kodi Versionen farblich markiert. Viel Spass wünschen euch das SKINBASE TEAM.</description>
+		<description lang="en_GB">In Guido's SKINBASE you will find skins from Kodi version 16 from all over the world. From the standard skins to heavily modified ones. The skins are color coded for the respective Kodi versions. The SKINBASE TEAM wish you a lot of fun.</description>
+		<platform>all</platform>
+		<assets>
+			<icon>resources/icon.png</icon>
+			<fanart>resources/fanart.jpg</fanart>
+			<screenshot>resources/screenshot-01.jpg</screenshot>
+			<screenshot>resources/screenshot-02.jpg</screenshot>
+			<screenshot>resources/screenshot-03.jpg</screenshot>
+		</assets>
+	</extension>
+</addon>
+
 <addon id="plugin.video.tools" name="Tools" version="2025.08.06" provider-name="Michaz">
     <requires>
         <import addon="script.module.requests"/>
@@ -75,7 +98,7 @@
     </extension>
 </addon>
 
-<addon id="plugin.video.vavooto" name="VAVOO.TO" version="2026.08.15.1" provider-name="kasi,michaz">
+<addon id="plugin.video.vavooto" name="VAVOO.TO" version="2026.08.17" provider-name="kasi,michaz">
 	<requires>
 		<import addon="xbmc.python" version="3.0.1"/>
 		<import addon="script.module.requests"/>
@@ -118,17 +141,12 @@
 	</extension>
 </addon>
 
-<addon id="repository.gujal" name="Gujal Addons Repository" version="2.0.3" provider-name="gujal">
+<addon id="repository.gujal" name="Gujal Addons Repository" version="2.0.4" provider-name="gujal">
 	<extension point="xbmc.addon.repository" name="Gujal Addons Repository">
 		<dir>
 	        <info compressed="false">https://raw.githubusercontent.com/Gujal00/smrzips/master/addons.xml</info>
 	        <checksum>https://raw.githubusercontent.com/Gujal00/smrzips/master/addons.xml.md5</checksum>
 	        <datadir zip="true">https://raw.githubusercontent.com/Gujal00/smrzips/master/zips/</datadir>
-		</dir>
-		<dir>
-			<info compressed="false">https://raw.github.com/Gujal00/GujalKodiWork/master/addons.xml</info>
-			<checksum>https://raw.github.com/Gujal00/GujalKodiWork/master/addons.xml.md5</checksum>
-			<datadir zip="true">https://raw.github.com/Gujal00/GujalKodiWork/master/zips/</datadir>
 		</dir>
         <dir>
             <info compressed="false">https://raw.githubusercontent.com/Goldenfreddy0703/repository.otaku/master/repo/zips/addons.xml</info>
@@ -261,37 +279,12 @@
     </extension>
 </addon>
 
-<addon id="repository.michaz" name="Michaz Repository" provider-name="Michaz" version="5.0">
+<addon id="repository.michaz" name="Michaz Repository" provider-name="Michaz" version="5.1">
 	<extension point="xbmc.addon.repository" name="Michaz Repository">
 		<dir>
 			<info compressed="false">https://michaz1988.github.io/repo/addons.xml</info>
 			<checksum>https://michaz1988.github.io/repo/addons.xml.md5</checksum>
 			<datadir zip="true">https://michaz1988.github.io/repo/</datadir>
-		</dir>
-			<dir minversion="19.0.0" maxversion="19.9.0">
-			<info compressed="false">https://raw.github.com/kaffepausse71/SKINBASE19/master/addons.xml</info>
-			<checksum>https://raw.github.com/kaffepausse71/SKINBASE19/master/addons.xml.md5</checksum>
-			<datadir zip="true">https://raw.github.com/kaffepausse71/SKINBASE19/master/</datadir>
-		</dir>
-		<dir minversion="20.0.0" maxversion="20.9.0">
-			<info compressed="false">https://raw.github.com/kaffepausse71/SKINBASE.NEXUS/master/addons.xml</info>
-			<checksum>https://raw.github.com/kaffepausse71/SKINBASE.NEXUS/master/addons.xml.md5</checksum>
-			<datadir zip="true">https://raw.github.com/kaffepausse71/SKINBASE.NEXUS/master/</datadir>
-		</dir>
-		<dir minversion="21.0.0" maxversion="21.9.0">
-			<info compressed="false">https://raw.github.com/kaffepausse71/SKINBASE.OMEGA/master/addons.xml</info>
-			<checksum>https://raw.github.com/kaffepausse71/SKINBASE.OMEGA/master/addons.xml.md5</checksum>
-			<datadir zip="true">https://raw.github.com/kaffepausse71/SKINBASE.OMEGA/master/</datadir>
-		</dir>
-		<dir minversion="22.0.0" maxversion="22.9.0">
-			<info compressed="false">https://raw.github.com/kaffepausse71/SKINBASE.PEGASUS/master/addons.xml</info>
-			<checksum>https://raw.github.com/kaffepausse71/SKINBASE.PEGASUS/master/addons.xml.md5</checksum>
-			<datadir zip="true">https://raw.github.com/kaffepausse71/SKINBASE.PEGASUS/master/</datadir>
-		</dir>
-		<dir>
-			<info compressed="false">https://raw.githubusercontent.com/Gujal00/smrzips/master/addons.xml</info>
-			<checksum>https://raw.githubusercontent.com/Gujal00/smrzips/master/addons.xml.md5</checksum>
-			<datadir zip="true">https://raw.githubusercontent.com/Gujal00/smrzips/master/zips/</datadir>
 		</dir>
 	</extension>
 	<extension point="xbmc.addon.metadata">
@@ -349,22 +342,26 @@
 	</extension>
 </addon>
 
-<addon id="repository.skinbase.nexus" name="[COLOR orange]G[/COLOR]UIDO[COLOR orange]S[/COLOR] [COLOR orange]S[/COLOR]KINBAS[COLOR orange]E[/COLOR] Only Skins for [COLOR orange]Kodi 19+20[/COLOR] " version="3.0.02" provider-name="[COLOR orange]SKINBASE[/COLOR] | [COLOR skyblue]Kodiman[/COLOR] | [COLOR orange]HSK-DE[/COLOR]">
+<addon id="repository.skinbase.nexus" name="[COLOR orange]G[/COLOR]UIDO[COLOR orange]S[/COLOR] [COLOR orange]S[/COLOR]KINBAS[COLOR orange]E[/COLOR] Only Skins for [COLOR orange]Kodi NEXUS[/COLOR] " version="4.0.03" provider-name="[COLOR orange]TEAM SKINBASE[/COLOR]">
 	<extension point="xbmc.addon.repository" name="GUIDOS SKINBASE REPO">
-	<dir>
-		<info compressed="false">https://raw.github.com/kaffepausse71/SKINBASE.NEXUS/master/addons.xml</info>
-		<checksum>https://raw.github.com/kaffepausse71/SKINBASE.NEXUS/master/addons.xml.md5</checksum>
-		<datadir zip="true">https://raw.github.com/kaffepausse71/SKINBASE.NEXUS/master/</datadir>
-	</dir>
+		<dir>
+			<info compressed="false">https://raw.github.com/kaffepausse71/SKINBASE.NEXUS/master/addons.xml</info>
+			<checksum>https://raw.github.com/kaffepausse71/SKINBASE.NEXUS/master/addons.xml.md5</checksum>
+			<datadir zip="true">https://raw.github.com/kaffepausse71/SKINBASE.NEXUS/master/</datadir>
+		</dir>
 	</extension>
 	<extension point="xbmc.addon.metadata">
 		<summary>[COLOR orange]G[/COLOR]uido[COLOR orange]s[/COLOR] [COLOR orange]S[/COLOR]KINBAS[COLOR orange]E[/COLOR] Repo</summary>
-        <description lang="de_DE">In Guidos SKINBASE findet ihr Skins ab Kodi Version 16 aus aller Welt. Von den Standard Skins bis hin zu stark Modifizierten. Die Skins sind für die jeweiligen Kodi Versionen farblich markiert.  Viel Spass wünschen euch das SKINBASE TEAM.</description>
+		<description lang="de_DE">In Guidos SKINBASE findet ihr Skins ab Kodi Version 16 aus aller Welt. Von den Standard Skins bis hin zu stark Modifizierten. Die Skins sind für die jeweiligen Kodi Versionen farblich markiert. Viel Spass wünschen euch das SKINBASE TEAM.</description>
 		<description lang="en_GB">In Guido's SKINBASE you will find skins from Kodi version 16 from all over the world. From the standard skins to heavily modified ones. The skins are color coded for the respective Kodi versions. The SKINBASE TEAM wish you a lot of fun.</description>
-        <platform>all</platform>
+		<platform>all</platform>
 		<assets>
-			<icon>icon.png</icon>
-			<fanart>icon.png</fanart>
+			<icon>resources/icon.png</icon>
+			<fanart>resources/fanart.jpg</fanart>
+			<screenshot>resources/screenshot-01.jpg</screenshot>
+			<screenshot>resources/screenshot-02.jpg</screenshot>
+			<screenshot>resources/screenshot-03.jpg</screenshot>
+			<screenshot>resources/screenshot-04.jpg</screenshot>
 		</assets>
 	</extension>
 </addon>
