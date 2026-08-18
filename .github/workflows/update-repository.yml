@@ -15,10 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Add-on-Quellen auschecken
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Bestehende Repository-Webseite auschecken
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           repository: michaz1988/michaz1988.github.io
           ssh-key: ${{ secrets.PAGES_DEPLOY_KEY }}
@@ -40,4 +40,3 @@ jobs:
           fi
           git commit -m "Kodi repository update $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
           git push
-
