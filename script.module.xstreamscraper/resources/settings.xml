@@ -1,0 +1,31 @@
+<settings>
+ <category label="Einrichten">
+  <setting label="TMDB-HELPER einrichten" type="action" action="RunPlugin(plugin://script.module.xstreamscraper/?action=true)"/>
+ </category>
+ <category label="VIDEO">
+  <setting default="1" id="stream_select" label="Stream Auswahl" type="enum" values="Hoster|Automatisch"/>
+  <setting default="true" id="auto_try_next_stream" type="bool" subsetting="true" visible="eq(-1,0)" label="Automatisch nächsten ähnlichen Stream versuchen"/>
+ </category>
+ <category label="VAVOO">
+  <setting default="true" id="vavoo" label="Vavoo" type="bool"/>
+ </category>
+ <category label="Scraper">
+  <setting default="false" id="aniworld" label="AniWorld" type="bool"/>
+  <setting default="true" id="einschalten" label="Einschalten" type="bool"/>
+  <setting default="true" id="filmpalast" label="FilmPalast" type="bool"/>
+  <setting default="true" id="hdfilme" label="HD Filme" type="bool"/>
+  <setting default="false" id="internetarchive" label="Internet Archive" type="bool"/>
+  <setting default="true" id="kinoger" label="KinoGer" type="bool"/>
+  <setting default="true" id="kkiste" label="KKiste" type="bool"/>
+  <setting default="true" id="megakino" label="Megakino" type="bool"/>
+  <setting default="true" id="netzkino" label="NetzKino" type="bool"/>
+  <setting default="true" id="serienstream" label="SerienStream" type="bool"/>
+  <setting default="true" id="streamcloud" label="Streamcloud" type="bool"/>
+  <setting default="true" id="topstreamfilm" label="Topstreamfilm" type="bool"/>
+  <setting default="false" id="animetoast" label="AnimeToast" type="bool"/>
+  <setting default="true" id="api_sites" label="API Seite" type="bool"/>
+  <setting default="false" id="burningseries" label="BurningSeries" type="bool"/>
+  <setting default="true" id="fhdfilme" label="FHD Filme" type="bool"/>
+  <setting default="true" id="moflix-stream" label="Moflix-Stream" type="bool"/>
+ </category>
+</settings>

@@ -1,0 +1,17 @@
+2026.08.17
+- Fehlgeschlagene Stalker-Portalaufrufe werden einmalig mit einem Chrome-User-Agent wiederholt.
+- Nach erfolgreichem Fallback wird der Chrome-User-Agent für weitere Portalaufrufe beibehalten.
+
+2026.08.15.1
+- Stalker-TV berücksichtigt use_http_tmp_link und use_load_balancing.
+- Direkte Portal-URLs werden nicht mehr unnötig in kurzlebige Links umgewandelt.
+- Einmaligen Stalker-Watchdog-Aufruf nach der Profilinitialisierung ergänzt.
+
+2026.07.25
+- Film- und Serienkatalog auf die neue MediaHubMX-Katalog-API umgestellt.
+- „Beliebt“ und „Angesagt“ für Filme und Serien an die neuen Katalog-IDs und Sortierungen angepasst.
+- Genre-Auswahl auf den neuen filter.genre-Parameter umgestellt.
+- Genre-Namen mit Sonderzeichen wie „Action & Adventure“ werden korrekt übertragen.
+- Pagination für Katalog, Genre-Auswahl und Suche an nextCursor angepasst.
+- TMDB-IDs aus der neuen API-Antwort werden für Filme und Serien normalisiert.
+- Alten CCAPI-Listen- und Cachepfad entfernt.

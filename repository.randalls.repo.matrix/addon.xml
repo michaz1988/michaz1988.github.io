@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="repository.randalls.repo.matrix" name="Randall's Repo (Matrix)" version="1.0.1" provider-name="Randall">
+    <extension point="xbmc.addon.repository" name="Example Repository">
+        <dir>
+            <info compressed="true">https://raw.githubusercontent.com/randallspicher/randalls-repo/Matrix/addons.xml.gz</info>
+            <checksum>https://raw.githubusercontent.com/randallspicher/randalls-repo/Matrix/addons.xml.gz.md5</checksum>
+            <datadir zip="true">https://raw.githubusercontent.com/randallspicher/randalls-repo/Matrix/</datadir>
+        </dir>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <summary>Randall's Repo (Matrix)</summary>
+        <description>This is where to get my plugins</description>
+        <disclaimer>This is a hobby.  Use at your own risk.</disclaimer>
+        <platform>all</platform>
+        <assets>
+            <icon>icon.png</icon>
+            <fanart>fanart.jpg</fanart>
+        </assets>
+    </extension>
+</addon>

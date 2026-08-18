@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<window>
+    <defaultcontrol always="true">301</defaultcontrol>
+    <controls>
+        <control type="group">
+            <animation type="WindowOpen" reversible="false">
+                <effect type="slide" start="-960,0" end="0,0" time="300" />
+                <effect type="fade" start="0" end="100" time="300" />
+            </animation>
+            <animation type="WindowClose" reversible="false">
+                <effect type="slide" start="0,0" end="960,0" time="300" />
+                <effect type="fade" start="100" end="0" time="300" />
+            </animation>
+            <left>0</left>
+            <top>0</top>
+            <width>100%</width>
+            <height>100%</height>
+            <control type="image">
+                <left>0</left>
+                <top>0</top>
+                <right>0</right>
+                <bottom>0</bottom>
+                <width>100%</width>
+                <height>100%</height>
+                <texture>black.png</texture>
+            </control>
+            <control type="label">
+                <top>330</top>
+                <left>260</left>
+                <width>1400</width>
+                <height>100</height>
+                <font>font_MainMenu</font>
+                <label>$LOCALIZE[39514]</label>
+                <align>center</align>
+            </control>
+            <control type="label">
+                <visible>String.IsEqual(Window.Property(Started),)</visible>
+                <top>435</top>
+                <left>260</left>
+                <width>1400</width>
+                <height>100</height>
+                <label>$LOCALIZE[39515]</label>
+                <align>center</align>
+            </control>
+            <control type="group">
+                <!--<visible>String.IsEqual(Window.Property(Started),true)</visible>-->
+                <control type="label">
+                    <top>435</top>
+                    <left>260</left>
+                    <width>1400</width>
+                    <height>100</height>
+                    <label>FTP SERVER gestartet, Adresse:</label>
+                    <align>center</align>
+                </control>
+                <control type="label" id="100">
+                    <top>540</top>
+                    <left>460</left>
+                    <width>1000</width>
+                    <height>100</height>
+                    <label>[B]$INFO[Window.Property(LocalIP0)]:$INFO[Window.Property(Port)][/B]</label>
+                    <font>font_MainMenu</font>
+                    <align>center</align>
+                    <onup>300</onup>
+                    <ondown>300</ondown>
+                </control>
+            </control>
+            <control type="group">
+                <top>700</top>
+                <height>100</height>
+                <control type="button" id="301">
+                    <left>590</left>
+                    <width>340</width>
+                    <align>center</align>
+                    <label>BEENDEN</label>
+                    <onup>100</onup>
+                    <ondown>100</ondown>
+                    <onleft>302</onleft>
+                    <onright>302</onright>
+                </control>
+                <control type="button" id="302">
+                    <left>990</left>
+                    <width>340</width>
+                    <align>center</align>
+                    <label>RUN IN BACKGROUND</label>
+                    <onup>100</onup>
+                    <ondown>100</ondown>
+                    <onleft>301</onleft>
+                    <onright>301</onright>
+                </control>
+            </control>
+        </control>
+    </controls>
+</window>

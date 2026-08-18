@@ -1,0 +1,50 @@
+<settings>
+    <category label="32130"> <!-- Provider Settings -->
+        <setting label="32131" type="lsep"/> <!-- Provider Selection -->
+        <setting label="32140" type="lsep"/> <!-- Magenta (DE) -->
+        <setting id="enable_grabber_magentaDE" type="bool" label="32141" default="false" /><!-- Enable Magenta (DE)-->
+        <setting id="select_channels_magentaDE" type="action" label="32136" action="RunScript(service.takealug.epg-grabber, select_channels_magentaDE)" option="close" visible="!eq(-1,false)"/>
+        <setting id="magentaDE_channel_format" type="select" label="32133" default="provider" values="rytec|provider" visible="!eq(-2,false)" /> <!-- Channel Format -->
+        <setting id="magentaDE_genre_format" type="select" label="32134" default="provider" values="eit|provider" visible="!eq(-3,false)" /> <!-- Genre Format -->
+        <setting label="32162" type="lsep"/> <!-- TV Spielfilm (DE) -->
+        <setting id="enable_grabber_tvsDE" type="bool" label="32163" default="false" /> <!-- Enable TV Spielfilm (DE)-->
+        <setting id="select_channels_tvsDE" type="action" label="32136" action="RunScript(service.takealug.epg-grabber, select_channels_tvsDE)" option="close" visible="!eq(-1,false)"/>
+        <setting id="tvsDE_channel_format" type="select" label="32133" default="provider" values="rytec|provider" visible="!eq(-2,false)" />  <!-- Channel Format -->
+        <setting id="tvsDE_genre_format" type="select" label="32134" default="provider" values="eit|provider" visible="!eq(-3,false)" />  <!-- Genre Format -->
+        <setting label="32142" type="lsep"/> <!-- Klack (DE) -->
+        <setting id="enable_grabber_klackDE" type="bool" label="32143" default="false" /><!-- Enable Klack (DE) -->
+        <setting id="select_channels_klackDE" type="action" label="32136" action="RunScript(service.takealug.epg-grabber, select_channels_klackDE)" option="close" visible="!eq(-1,false)"/>
+        <setting label="32144" type="lsep"/> <!-- simpliTV (AT) -->
+        <setting id="enable_grabber_simpliAT" type="bool" label="32145" default="false" /><!-- Enable simpliTV (AT) -->
+        <setting id="select_channels_simpliAT" type="action" label="32136" action="RunScript(service.takealug.epg-grabber, select_channels_simpliAT)" option="close" visible="!eq(-1,false)"/>
+        <setting label="32146" type="lsep"/> <!-- simpliTV (AT) -->
+        <setting id="enable_grabber_tvdDE" type="bool" label="32147" default="false" /><!-- Enable TV Digital (DE) -->
+        <setting id="select_channels_tvdDE" type="action" label="32136" action="RunScript(service.takealug.epg-grabber, select_channels_tvdDE)" option="close" visible="!eq(-1,false)"/>
+        <setting label="32164" type="lsep"/> <!-- Swisscom (CH) -->
+        <setting id="enable_grabber_swcCH" type="bool" label="32165" default="false" /><!-- Enable Swisscom (CH) -->
+        <setting id="select_channels_swcCH" type="action" label="32136" action="RunScript(service.takealug.epg-grabber, select_channels_swcCH)" option="close" visible="!eq(-1,false)"/>
+        <setting id="swcCH_channel_format" type="select" label="32133" default="provider" values="rytec|provider" visible="!eq(-2,false)" /> <!-- Channel Format -->
+        <setting id="swcCH_genre_format" type="select" label="32134" default="provider" values="eit|provider" visible="!eq(-3,false)" /> <!-- Genre Format -->
+    </category>
+
+    <category label="32110"> <!-- Global Settings -->
+        <setting id="auto_download" type="bool" label="32112" default="false" />
+        <setting id="timeswitch_1" type="enum" label="32113" default="0" values="$HOURS" enable="eq(-1,true)" /> <!-- Grab EPG Daily at 1-->
+        <setting id="timeswitch_2" type="enum" label="32113" default="0" values="$HOURS" enable="eq(-2,true)" /> <!-- Grab EPG Daily at 2-->
+        <setting id="timeswitch_3" type="enum" label="32113" default="0" values="$HOURS" enable="eq(-3,true)" /> <!-- Grab EPG Daily at 3-->
+        <setting id="storage_path" type="folder" label="32116" default="choose" />
+        <setting id="enable_rating_mapper" type="bool" label="32118" default="true" /><!-- Rating Mapper -->
+        <setting id="episode_format" type="select" label="32132" default="onscreen" values="xmltv_ns|onscreen"/> <!-- Episode Format -->
+        <setting id="days_to_grab" type="select" label="32135" default="3" values="1|2|3|4|5|6|7|8|9|10|11|12|13|14"/> <!-- Days to Grab -->
+        <setting label="32119" type="lsep" /> <!-- Tvheadend -->
+        <setting id="use_local_sock" type="bool" label="32120" default="false" /><!-- Tvheadend Sock -->
+        <setting id="tvh_local_sock" type="file" label="32121" default="" visible="eq(-1,true)"/>
+    </category>
+
+    <category label="32100"> <!-- Misc Settings -->
+        <setting label="32101" type="lsep"/> <!-- Manual Download -->
+        <setting id="manual_download" type="action" label="32102" action="RunScript(service.takealug.epg-grabber, manual_download)" option="close" />
+        <setting id="write_to_sock" type="action" label="32103" action="RunScript(service.takealug.epg-grabber, write_to_sock)" option="close"/>
+    </category>
+
+</settings>
