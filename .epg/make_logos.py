@@ -38,9 +38,7 @@ def main():
     marker = output_dir / "tvsp.md5"
     destination = output_dir / "tvs-logos"
     channels = fetch_channels()
-    digest = hashlib.md5(
-        json.dumps(channels, sort_keys=True).encode("utf-8")
-    ).hexdigest()
+    digest = hashlib.md5(json.dumps(channels).encode("utf-8")).hexdigest()
     previous = marker.read_text(encoding="ascii").strip() if marker.exists() else ""
     if previous == digest and destination.is_dir():
         print("TV-Spielfilm logos unchanged")
