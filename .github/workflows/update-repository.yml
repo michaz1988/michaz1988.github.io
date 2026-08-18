@@ -14,18 +14,28 @@ concurrency:
 
 jobs:
   update:
+    name: Kodi-Repository erzeugen und veröffentlichen
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Add-on-Quellen auschecken
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Python einrichten
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.13"
 
       - name: Bestehende Repository-Webseite auschecken
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           repository: michaz1988/michaz1988.github.io
           ssh-key: ${{ secrets.PAGES_DEPLOY_KEY }}
           path: .site
           fetch-depth: 0
+
+      - name: Generator testen
+        run: python3 -m unittest discover -s tests -v
 
       - name: Kodi-Repository erzeugen
         run: python3 scripts/update_repository.py --addons . --site .site
@@ -41,4 +51,5 @@ jobs:
             exit 0
           fi
           git commit -m "Kodi repository update $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+          git pull --rebase
           git push

@@ -25,8 +25,11 @@ IGNORED_NAMES = {
 
 
 def natural_key(value):
-    return [int(part) if part.isdigit() else part.lower()
-            for part in re.split(r'(\d+)', value)]
+    return [
+        (0, int(part)) if part.isdigit() else (1, part.lower())
+        for part in re.split(r'(\d+)', value)
+        if part
+    ]
 
 
 def addon_sources(addons_path):
@@ -81,6 +84,27 @@ def package_files(addon_path):
             yield Path(root) / name
 
 
+def archive_entries(addon_path, addon_id):
+    entries = {}
+    for source in package_files(addon_path):
+        relative = source.relative_to(addon_path).as_posix()
+        entries['%s/%s' % (addon_id, relative)] = source.read_bytes()
+    return entries
+
+
+def archive_matches_source(archive_path, addon_path, addon_id):
+    expected = archive_entries(addon_path, addon_id)
+    try:
+        with zipfile.ZipFile(archive_path) as archive:
+            names = {name for name in archive.namelist() if not name.endswith('/')}
+            if names != set(expected):
+                return False
+            return all(archive.read(name) == content
+                       for name, content in expected.items())
+    except (OSError, zipfile.BadZipFile):
+        return False
+
+
 def create_zip(addon_path, addon_id, destination):
     temporary = destination.with_suffix(destination.suffix + '.tmp')
     if temporary.exists():
@@ -90,21 +114,60 @@ def create_zip(addon_path, addon_id, destination):
             temporary, 'w', zipfile.ZIP_DEFLATED, allowZip64=True
         ) as archive:
             for source in package_files(addon_path):
-                relative = source.relative_to(addon_path)
-                archive.write(source, Path(addon_id) / relative)
+                relative = source.relative_to(addon_path).as_posix()
+                info = zipfile.ZipInfo(
+                    '%s/%s' % (addon_id, relative),
+                    date_time=(1980, 1, 1, 0, 0, 0),
+                )
+                info.compress_type = zipfile.ZIP_DEFLATED
+                info.create_system = 3
+                info.external_attr = 0o100644 << 16
+                archive.writestr(info, source.read_bytes())
         os.replace(temporary, destination)
     finally:
         if temporary.exists():
             temporary.unlink()
 
 
-def keep_latest_zips(directory, addon_id, count=2):
+def keep_latest_zips(directory, addon_id, current_version, count=2):
     archives = sorted(
         directory.glob('%s-*.zip' % addon_id),
-        key=lambda path: natural_key(path.name),
+        key=lambda path: natural_key(
+            path.name[len(addon_id) + 1:-len('.zip')]
+        ),
     )
+    current = directory / ('%s-%s.zip' % (addon_id, current_version))
+    if archives and archives[-1] != current:
+        raise RuntimeError(
+            '%s %s ist älter als die bereits veröffentlichte Version %s' % (
+                addon_id,
+                current_version,
+                archives[-1].name[len(addon_id) + 1:-len('.zip')],
+            )
+        )
     for archive in archives[:-count]:
         archive.unlink()
+
+
+def prune_addon_directory(directory, retained_files):
+    retained = {Path(value) for value in retained_files}
+    for path in sorted(directory.rglob('*'), reverse=True):
+        if path.is_file() and path.relative_to(directory) not in retained:
+            path.unlink()
+    for path in sorted(
+        (item for item in directory.rglob('*') if item.is_dir()),
+        key=lambda item: len(item.parts),
+        reverse=True,
+    ):
+        if not any(path.iterdir()):
+            path.rmdir()
+
+
+def prune_removed_addons(repository_path, addon_ids):
+    for directory in repository_path.iterdir():
+        if directory.is_dir() and directory.name not in addon_ids:
+            print('Entferne veraltetes Add-on %s' % directory.name)
+            shutil.rmtree(directory)
 
 
 def manifest_without_declaration(path):
@@ -116,22 +179,36 @@ def manifest_without_declaration(path):
 
 def build_addon(addon_path, manifest_path, repository_path):
     root, addon_id, version = read_manifest(manifest_path)
+    if addon_path.name != addon_id:
+        raise ValueError(
+            '%s: Verzeichnisname und Add-on-ID stimmen nicht überein' % addon_path
+        )
     destination = repository_path / addon_id
     destination.mkdir(parents=True, exist_ok=True)
 
+    retained = set()
     for value in asset_paths(root):
         relative = safe_relative_path(value)
         source = addon_path / relative
         if source.is_file():
             copy_if_changed(source, destination / relative)
+            retained.add(relative)
 
     archive = destination / ('%s-%s.zip' % (addon_id, version))
     if not archive.exists():
         print('Erstelle %s' % archive.name)
         create_zip(addon_path, addon_id, archive)
     else:
+        if not archive_matches_source(archive, addon_path, addon_id):
+            raise RuntimeError(
+                '%s wurde bei unveränderter Version %s geändert; '
+                'bitte die Versionsnummer erhöhen.' % (addon_id, version)
+            )
         print('Vorhanden %s' % archive.name)
-    keep_latest_zips(destination, addon_id)
+    keep_latest_zips(destination, addon_id, version)
+    retained.update(path.relative_to(destination)
+                    for path in destination.glob('%s-*.zip' % addon_id))
+    prune_addon_directory(destination, retained)
     return addon_id, version, manifest_without_declaration(manifest_path)
 
 
@@ -140,9 +217,13 @@ def write_addons_xml(repository_path, manifests):
         '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n'
         '<addons>\n%s\n</addons>\n' % '\n\n'.join(manifests)
     ).encode('utf-8')
-    (repository_path / 'addons.xml').write_bytes(content)
+    destination = repository_path / 'addons.xml'
+    if not destination.is_file() or destination.read_bytes() != content:
+        destination.write_bytes(content)
     digest = hashlib.md5(content).hexdigest()
-    (repository_path / 'addons.xml.md5').write_text(digest, encoding='ascii')
+    checksum = repository_path / 'addons.xml.md5'
+    if not checksum.is_file() or checksum.read_text(encoding='ascii') != digest:
+        checksum.write_text(digest, encoding='ascii')
 
 
 def format_size(size):
@@ -185,7 +266,9 @@ def write_index(directory, title):
 </body>
 </html>
 '''.format(title=html.escape(title), rows='\n'.join(entries))
-    (directory / 'index.html').write_text(document, encoding='utf-8')
+    destination = directory / 'index.html'
+    if not destination.is_file() or destination.read_text(encoding='utf-8') != document:
+        destination.write_text(document, encoding='utf-8')
 
 
 def write_indexes(root):
@@ -223,6 +306,11 @@ def main():
     if not manifests:
         raise RuntimeError('Keine Add-ons mit addon.xml gefunden.')
 
+    addon_ids = {
+        ET.fromstring(manifest).get('id')
+        for manifest in manifests
+    }
+    prune_removed_addons(repository_path, addon_ids)
     write_addons_xml(repository_path, manifests)
     write_indexes(repository_path)
     write_indexes(site_path / 'logos')
