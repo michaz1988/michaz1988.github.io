@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.module.xstreamscraper" name="xStream Scraper" provider-name="michaz1988" version="2026.08.15">
+<addon id="script.module.xstreamscraper" name="xStream Scraper" provider-name="michaz1988" version="2026.08.18">
 	<requires>
+		<import addon="xbmc.python" version="3.0.0"/>
 		<import addon="plugin.video.vavooto"/>
         <import addon="script.module.requests"/>
         <import addon="script.module.six"/>

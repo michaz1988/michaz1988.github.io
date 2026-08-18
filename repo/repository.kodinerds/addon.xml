@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<addon id="repository.kodinerds" name="Kodinerds Addon Repo" version="7.0.1.7" provider-name="Kodinerds">
+<addon id="repository.kodinerds" name="Kodinerds Addon Repo" version="7.0.1.8" provider-name="Kodinerds">
     <requires>
         <import addon="xbmc.addon" version="12.0.0"/>
     </requires>
@@ -32,42 +32,6 @@
             <info compressed="true">https://repo.kodinerds.net/addons/matrix/addons.xml</info>
             <checksum>https://repo.kodinerds.net/addons/matrix/addons.xml.md5</checksum>
             <datadir zip="true">https://repo.kodinerds.net/addons/matrix/zip/</datadir>
-            <hashes>false</hashes>
-        </dir>
-        <dir minversion="18.0.0" maxversion="18.9.0">
-            <info compressed="true">https://repo.kodinerds.net/addons/leia/addons.xml</info>
-            <checksum>https://repo.kodinerds.net/addons/leia/addons.xml.md5</checksum>
-            <datadir zip="true">https://repo.kodinerds.net/addons/leia/zip/</datadir>
-            <hashes>false</hashes>
-        </dir>
-        <dir minversion="17.0.0" maxversion="18.9.0">
-            <info compressed="true">https://repo.kodinerds.net/addons/krypton/addons.xml</info>
-            <checksum>https://repo.kodinerds.net/addons/krypton/addons.xml.md5</checksum>
-            <datadir zip="true">https://repo.kodinerds.net/addons/krypton/zip/</datadir>
-            <hashes>false</hashes>
-        </dir>
-        <dir minversion="16.0.0" maxversion="18.9.0">
-            <info compressed="true">https://repo.kodinerds.net/addons/jarvis/addons.xml</info>
-            <checksum>https://repo.kodinerds.net/addons/jarvis/addons.xml.md5</checksum>
-            <datadir zip="true">https://repo.kodinerds.net/addons/jarvis/zip/</datadir>
-            <hashes>false</hashes>
-        </dir>
-        <dir minversion="15.0.0" maxversion="18.9.0">
-            <info compressed="true">https://repo.kodinerds.net/addons/isengard/addons.xml</info>
-            <checksum>https://repo.kodinerds.net/addons/isengard/addons.xml.md5</checksum>
-            <datadir zip="true">https://repo.kodinerds.net/addons/isengard/zip/</datadir>
-            <hashes>false</hashes>
-        </dir>
-        <dir minversion="14.0.0" maxversion="18.9.0">
-            <info compressed="true">https://repo.kodinerds.net/addons/helix/addons.xml</info>
-            <checksum>https://repo.kodinerds.net/addons/helix/addons.xml.md5</checksum>
-            <datadir zip="true">https://repo.kodinerds.net/addons/helix/zip/</datadir>
-            <hashes>false</hashes>
-        </dir>
-        <dir minversion="13.0.0" maxversion="18.9.0">
-            <info compressed="true">https://repo.kodinerds.net/addons/gotham/addons.xml</info>
-            <checksum>https://repo.kodinerds.net/addons/gotham/addons.xml.md5</checksum>
-            <datadir zip="true">https://repo.kodinerds.net/addons/gotham/zip/</datadir>
             <hashes>false</hashes>
         </dir>
     </extension>
