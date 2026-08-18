@@ -6,6 +6,13 @@ benchmarks.test
 *.pyc
 *.pack
 __pycache__/
+
+# Generated EPG release files
+guide.xml
+guide.xml.gz
+maclist.json
+xtreamlist.json
+*.tmp
 # Jetbrains Goland
 .idea/
 
