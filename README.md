@@ -1,10 +1,12 @@
-# Michaz Kodi Add-ons
+# Michaz Kodi Add-on-Quellen
 
-Dieses Repository enthält die Quellen der Kodi-Add-ons.
+Diese Branch enthält die Quellen der Kodi-Add-ons. Die veröffentlichte
+Repository-Webseite und ihr Workflow liegen in der Branch `main` desselben
+Git-Repositories.
 
-Jeder Push auf den Branch `main` startet automatisch die GitHub Action
-**Kodi-Repository aktualisieren**. Sie aktualisiert das bestehende Repository
-`michaz1988/michaz1988.github.io`.
+Der Workflow **Repository, EPG und Listen aktualisieren** lädt diese Branch,
+erstellt die versionsgebundenen ZIP-Dateien, aktualisiert `addons.xml` und
+`addons.xml.md5` und erzeugt die Verzeichnis-Indizes neu.
 
 Lokale Änderungen können mit dem mitgelieferten Skript commitet und gepusht
 werden:
@@ -19,6 +21,4 @@ Optional kann eine eigene Commit-Nachricht angegeben werden:
 sh push_addons.sh "Add-ons aktualisiert"
 ```
 
-Der Workflow erstellt fehlende versionsgebundene ZIP-Dateien, aktualisiert
-`addons.xml` und `addons.xml.md5`, erzeugt die Verzeichnis-Indizes neu und
-behält pro Add-on die zwei neuesten ZIP-Versionen.
+Pro Add-on bleiben die zwei neuesten ZIP-Versionen erhalten.
