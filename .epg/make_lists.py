@@ -4,6 +4,7 @@
 import argparse
 import csv
 import gzip
+import html
 import json
 import os
 import re
@@ -35,6 +36,36 @@ HEADERS = {
     "user-agent": BROWSER_UA,
     "Accept-Encoding": "gzip, deflate",
 }
+BLOGGER_LIST_INDEX_URL = (
+    "https://ikracccam.blogspot.com/p/stalker-and-iptv-link.html"
+)
+BLOGGER_DRIVE_LINK_PATTERN = re.compile(
+    r'<div\b[^>]*class=["\'][^"\']*titre-content-'
+    r'(?P<kind>iptv|stalker)[^"\']*["\'][^>]*>.*?'
+    r'(?P<url>https://drive\.google\.com/uc\?[^\s<"\']+).*?</div>',
+    re.IGNORECASE | re.DOTALL,
+)
+
+
+def get_blogger_drive_links(page_url=BLOGGER_LIST_INDEX_URL):
+    """Return the IPTV and Stalker Google Drive links from one Blogger page."""
+    response = requests.get(page_url, headers=HEADERS, timeout=20)
+    response.raise_for_status()
+    links = {}
+    for match in BLOGGER_DRIVE_LINK_PATTERN.finditer(response.text):
+        kind = match.group("kind").lower()
+        url = html.unescape(match.group("url"))
+        if kind in links and links[kind] != url:
+            raise RuntimeError("Multiple %s Google Drive links found" % kind)
+        links[kind] = url
+
+    missing = {"iptv", "stalker"} - set(links)
+    if missing:
+        raise RuntimeError(
+            "Could not obtain Blogger Google Drive link(s): %s"
+            % ", ".join(sorted(missing))
+        )
+    return links
 
 
 def get_blogger_hidden_link(page_url):
@@ -159,11 +190,12 @@ def get_public_stbemu_rows():
     return list(csv.reader(content))
 
 
-def add_blogger_stalker_list(mac_list, weekstamp):
-    link = get_blogger_hidden_link(
-        "https://ikracccam.blogspot.com/p/link-stalcker-google-drive.html"
-    )
-    response = requests.get(link, timeout=30)
+def add_blogger_stalker_list(mac_list, weekstamp, link=None):
+    if link is None:
+        link = get_blogger_hidden_link(
+            "https://ikracccam.blogspot.com/p/link-stalcker-google-drive.html"
+        )
+    response = requests.get(link, headers=HEADERS, timeout=30)
     response.raise_for_status()
     pattern = re.compile(
         r"URL:\s*(?P<url>\S+)\s*.*?"
@@ -215,15 +247,16 @@ def add_optional_stalker_page(mac_list, now, weekstamp):
         print("optional stalker page error: %s" % exc)
 
 
-def collect_xtream_list(weekstamp):
+def collect_xtream_list(weekstamp, link=None):
     entries = []
-    link = get_blogger_hidden_link(
-        "https://ikracccam.blogspot.com/p/link-stalker-ikra.html"
-    )
-    response = requests.get(link, timeout=30)
+    if link is None:
+        link = get_blogger_hidden_link(
+            "https://ikracccam.blogspot.com/p/link-stalker-ikra.html"
+        )
+    response = requests.get(link, headers=HEADERS, timeout=30)
     response.raise_for_status()
     pattern = re.compile(
-        r"^(https?://[^:/]+:\d+)/get\.php\?"
+        r"^(https?://[^/\s?#]+)/+get\.php\?"
         r"(username=[^&]+&password=[^&]+)(?:&type=m3u)?$"
     )
     for url in response.text.strip().splitlines():
@@ -322,9 +355,10 @@ def main():
     output_dir.mkdir(parents=True, exist_ok=True)
     now = datetime.now()
     weekstamp = datetime.timestamp(now + timedelta(days=7))
+    blogger_links = get_blogger_drive_links()
 
     mac_list = {url: list(macs) for url, macs in mac_seed.items()}
-    add_blogger_stalker_list(mac_list, weekstamp)
+    add_blogger_stalker_list(mac_list, weekstamp, blogger_links["stalker"])
     try:
         add_stbemu_rows(mac_list, get_public_stbemu_rows(), weekstamp)
     except Exception as exc:
@@ -336,7 +370,7 @@ def main():
         reverse=True,
     ))
 
-    xtream_list = collect_xtream_list(weekstamp)
+    xtream_list = collect_xtream_list(weekstamp, blogger_links["iptv"])
     write_json_atomic(output_dir / "xtreamlist.json", xtream_list)
     print("New xtream list created")
     write_json_atomic(output_dir / "maclist.json", sorted_mac_list)
