@@ -405,9 +405,9 @@ def restore_backup():
 def index():
 	_clean_previous_userdata(translatePath('special://profile'))
 	add(plugin.handle, plugin.url_for(bundle),ListItem("Build installieren"))
+	add(plugin.handle, plugin.url_for(make_build), ListItem("Build erstellen"))
 	add(plugin.handle, plugin.url_for(make_backup), ListItem("Backup erstellen"))
 	add(plugin.handle, plugin.url_for(restore_backup), ListItem("Backup wiederherstellen"))
-	add(plugin.handle, plugin.url_for(make_build), ListItem("Build erstellen"))
 	add(plugin.handle, plugin.url_for(set_settings),ListItem("Kodi-Einstellugen setzen"))
 	add(plugin.handle, plugin.url_for(ftp),ListItem("FTP SERVER"))
 	add(plugin.handle, plugin.url_for(speedtest), ListItem("Speedtest"))
@@ -429,8 +429,16 @@ def setmenu():
 			settings_file = os.path.join(base_path, addonid, 'resources', 'settings.xml')
 			if os.path.isfile(settings_file):
 				addonids.add(addonid)
-	for addonid in sorted(addonids):
-		label = '%s-EINSTELLUNGEN' % addonid.lower()
+	addons = []
+	for addonid in addonids:
+		try:
+			addon_name = xbmcaddon.Addon(addonid).getAddonInfo('name') or addonid
+		except Exception as error:
+			xbmc.log('Addon-Name für %s konnte nicht gelesen werden: %s' % (addonid, error), xbmc.LOGDEBUG)
+			addon_name = addonid
+		addons.append((addon_name, addonid))
+	for addon_name, addonid in sorted(addons, key=lambda item: item[0].casefold()):
+		label = '%s - Einstellungen' % addon_name
 		add(plugin.handle, plugin.url_for(settings, id=addonid), ListItem(label))
 	end(plugin.handle)
 	
@@ -440,7 +448,7 @@ def settings(id):
 
 @plugin.route('/speedtest')
 def speedtest():
-	from resources.lib import speedtest as speedtest_module
+	from resources.lib import speedtest_kodi as speedtest_module
 	speedtest_module.main()
 	
 @plugin.route('/repotest')
@@ -463,7 +471,9 @@ def ftp():
     
 @plugin.route('/beenden')
 def beenden():
-	os._exit(1)
+	from resources.lib import thumbnail_cleanup
+	thumbnail_cleanup.cleanup_before_exit()
+	_shutdown_kodi()
 	
 @plugin.route('/showIp')
 def showIp():
