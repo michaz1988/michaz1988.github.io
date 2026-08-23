@@ -18,6 +18,18 @@ Dieses Repository stellt Kodi-Add-ons, EPG-Daten und ergänzende Dateien bereit.
 
 Die EPG-Dateien werden täglich automatisch aktualisiert.
 
+## Eigenen Fork verwenden
+
+Die Add-on-Quellen liegen in der Branch `addons`. Beim Forken muss die
+GitHub-Option **Copy the DEFAULT branch only** deaktiviert werden, damit diese
+Branch ebenfalls in den Fork übernommen wird.
+
+Der Workflow **Repository, EPG und Listen aktualisieren** in der Branch `main`
+lädt die Quellen aus `addons`, erstellt die ZIP-Dateien und aktualisiert
+`repo/addons.xml`, `repo/addons.xml.md5` sowie die Verzeichnis-Indizes. Da kein
+fester Repository-Name verwendet wird, arbeitet der Workflow in einem Fork mit
+den Branches des jeweiligen Forks.
+
 ## Weitere Downloads
 
 - [Players für TMDB Helper](https://michaz1988.github.io/players.zip)
