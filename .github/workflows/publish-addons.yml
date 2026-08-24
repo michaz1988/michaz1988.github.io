@@ -7,6 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
+  actions: write
   contents: write
 
 concurrency:
@@ -57,3 +58,16 @@ jobs:
             git pull --rebase origin main
             git push origin HEAD:main
           fi
+
+      - name: Alte Workflow-Läufe aufräumen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api --paginate \
+            "repos/$GITHUB_REPOSITORY/actions/runs?status=completed&per_page=100" \
+            --jq '.workflow_runs[] | [.workflow_id, .id] | @tsv' |
+          awk '!latest[$1]++ { next } { print $2 }' |
+          while IFS= read -r run_id; do
+            gh api --method DELETE \
+              "repos/$GITHUB_REPOSITORY/actions/runs/$run_id"
+          done

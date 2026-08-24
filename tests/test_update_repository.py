@@ -79,7 +79,7 @@ class RepositoryGeneratorTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             update_repository.safe_relative_path("../outside.png")
 
-    def test_two_newest_numeric_versions_are_retained(self):
+    def test_only_newest_numeric_version_is_retained(self):
         with tempfile.TemporaryDirectory() as temp:
             directory = Path(temp)
             for version in ("2026.08.18", "2026.08.18.3", "2026.08.18.4"):
@@ -90,7 +90,6 @@ class RepositoryGeneratorTests(unittest.TestCase):
             self.assertEqual(
                 sorted(path.name for path in directory.glob("*.zip")),
                 [
-                    "plugin.video.test-2026.08.18.3.zip",
                     "plugin.video.test-2026.08.18.4.zip",
                 ],
             )
