@@ -1,6 +1,6 @@
 # Michaz Kodi Add-on-Quellen
 
-Diese Branch enthält die Quellen der Kodi-Add-ons. Die veröffentlichte
+Dieser Branch enthält die Quellen der Kodi-Add-ons. Die veröffentlichte
 Repository-Webseite liegt in der Branch `main` desselben Git-Repositories.
 
 Ein Push auf `addons` startet den Workflow **Add-ons nach main
