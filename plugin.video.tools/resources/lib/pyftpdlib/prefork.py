@@ -4,16 +4,18 @@
 
 """Process utils."""
 
-import errno
 import os
 import sys
 import time
 from binascii import hexlify
+
+
 try:
     import multiprocessing
 except ImportError:
     multiprocessing = None
 
+from ._compat import InterruptedError
 from ._compat import long
 from .log import logger
 
@@ -40,9 +42,10 @@ def _reseed_random():
     if 'random' not in sys.modules:
         return
     import random
+
     # If os.urandom is available, this method does the same thing as
-    # random.seed (at least as of python 2.6).  If os.urandom is not
-    # available, we mix in the pid in addition to a timestamp.
+    # random.seed.  If os.urandom is not available, we mix in the pid in
+    # addition to a timestamp.
     try:
         seed = long(hexlify(os.urandom(16)), 16)
     except NotImplementedError:
@@ -95,20 +98,25 @@ def fork_processes(number, max_restarts=100):
     while children:
         try:
             pid, status = os.wait()
-        except OSError as e:
-            if e.errno == errno.EINTR:
-                continue
-            raise
+        except InterruptedError:
+            continue
         if pid not in children:
             continue
         id = children.pop(pid)
         if os.WIFSIGNALED(status):
-            logger.warning("child %d (pid %d) killed by signal %d, restarting",
-                           id, pid, os.WTERMSIG(status))
+            logger.warning(
+                "child %d (pid %d) killed by signal %d, restarting",
+                id,
+                pid,
+                os.WTERMSIG(status),
+            )
         elif os.WEXITSTATUS(status) != 0:
             logger.warning(
                 "child %d (pid %d) exited with status %d, restarting",
-                id, pid, os.WEXITSTATUS(status))
+                id,
+                pid,
+                os.WEXITSTATUS(status),
+            )
         else:
             logger.info("child %d (pid %d) exited normally", id, pid)
             continue

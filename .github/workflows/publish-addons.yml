@@ -40,10 +40,10 @@ jobs:
 
       - name: Add-on-Generator testen
         working-directory: addons
-        run: python -m unittest discover -s tests -v
+        run: bash .github/workflows/update_repository.sh --test
 
       - name: Kodi-Repository erzeugen
-        run: python addons/scripts/update_repository.py --addons addons --site site
+        run: bash addons/.github/workflows/update_repository.sh --addons addons --site site
 
       - name: Kodi-Repository nach main pushen
         working-directory: site

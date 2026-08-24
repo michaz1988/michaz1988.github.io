@@ -56,8 +56,6 @@ server = Server('localhost', 8021)
 IOLoop.instance().loop()
 """
 
-import asynchat
-import asyncore
 import errno
 import heapq
 import os
@@ -66,6 +64,11 @@ import socket
 import sys
 import time
 import traceback
+
+from ._compat import PY3
+from ._compat import InterruptedError
+
+
 try:
     import threading
 except ImportError:
@@ -78,14 +81,30 @@ from .log import is_logging_configured
 from .log import logger
 
 
+if PY3:
+    from . import _asynchat as asynchat
+    from . import _asyncore as asyncore
+else:
+    import asynchat
+    import asyncore
+
+
 timer = getattr(time, 'monotonic', time.time)
 _read = asyncore.read
 _write = asyncore.write
 
 # These errnos indicate that a connection has been abruptly terminated.
-_ERRNOS_DISCONNECTED = set((
-    errno.ECONNRESET, errno.ENOTCONN, errno.ESHUTDOWN, errno.ECONNABORTED,
-    errno.EPIPE, errno.EBADF, errno.ETIMEDOUT))
+_ERRNOS_DISCONNECTED = set(
+    (
+        errno.ECONNRESET,
+        errno.ENOTCONN,
+        errno.ESHUTDOWN,
+        errno.ECONNABORTED,
+        errno.EPIPE,
+        errno.EBADF,
+        errno.ETIMEDOUT,
+    )
+)
 if hasattr(errno, "WSAECONNRESET"):
     _ERRNOS_DISCONNECTED.add(errno.WSAECONNRESET)
 if hasattr(errno, "WSAECONNABORTED"):
@@ -106,7 +125,8 @@ class RetryError(Exception):
 # --- scheduler
 # ===================================================================
 
-class _Scheduler(object):
+
+class _Scheduler:
     """Run the scheduled functions due to expire soonest (if any)."""
 
     def __init__(self):
@@ -142,8 +162,9 @@ class _Scheduler(object):
         # remove cancelled tasks and re-heapify the queue if the
         # number of cancelled tasks is more than the half of the
         # entire queue
-        if (self._cancellations > 512 and
-                self._cancellations > (len(self._tasks) >> 1)):
+        if self._cancellations > 512 and self._cancellations > (
+            len(self._tasks) >> 1
+        ):
             debug("re-heapifying %s cancelled tasks" % self._cancellations)
             self.reheapify()
 
@@ -169,16 +190,26 @@ class _Scheduler(object):
         heapq.heapify(self._tasks)
 
 
-class _CallLater(object):
+class _CallLater:
     """Container object which instance is returned by ioloop.call_later()."""
 
-    __slots__ = ('_delay', '_target', '_args', '_kwargs', '_errback', '_sched',
-                 '_repush', 'timeout', 'cancelled')
+    __slots__ = (
+        '_delay',
+        '_target',
+        '_args',
+        '_kwargs',
+        '_errback',
+        '_sched',
+        '_repush',
+        'timeout',
+        'cancelled',
+    )
 
     def __init__(self, seconds, target, *args, **kwargs):
         assert callable(target), "%s is not callable" % target
-        assert sys.maxsize >= seconds >= 0, \
+        assert sys.maxsize >= seconds >= 0, (
             "%s is not greater than or equal to 0 seconds" % seconds
+        )
         self._delay = seconds
         self._target = target
         self._args = args
@@ -206,8 +237,11 @@ class _CallLater(object):
         else:
             sig = repr(self._target)
         sig += ' args=%s, kwargs=%s, cancelled=%s, secs=%s' % (
-            self._args or '[]', self._kwargs or '{}', self.cancelled,
-            self._delay)
+            self._args or '[]',
+            self._kwargs or '{}',
+            self.cancelled,
+            self._delay,
+        )
         return '<%s>' % sig
 
     __str__ = __repr__
@@ -257,7 +291,7 @@ class _CallEvery(_CallLater):
                 self._sched.register(self)
 
 
-class _IOLoop(object):
+class _IOLoop:
     """Base class which will later be referred as IOLoop."""
 
     READ = 1
@@ -278,8 +312,10 @@ class _IOLoop(object):
 
     def __repr__(self):
         status = [self.__class__.__module__ + "." + self.__class__.__name__]
-        status.append("(fds=%s, tasks=%s)" % (
-            len(self.socket_map), len(self.sched._tasks)))
+        status.append(
+            "(fds=%s, tasks=%s)"
+            % (len(self.socket_map), len(self.sched._tasks))
+        )
         return '<%s at %#x>' % (' '.join(status), id(self))
 
     __str__ = __repr__
@@ -292,6 +328,11 @@ class _IOLoop(object):
                 if cls._instance is None:
                     cls._instance = cls()
         return cls._instance
+
+    @classmethod
+    def factory(cls):
+        """Constructs a new IOLoop instance."""
+        return cls()
 
     def register(self, fd, instance, events):
         """Register a fd, handled by instance for the given events."""
@@ -315,13 +356,13 @@ class _IOLoop(object):
     def loop(self, timeout=None, blocking=True):
         """Start the asynchronous IO loop.
 
-         - (float) timeout: the timeout passed to the underlying
-           multiplex syscall (select(), epoll() etc.).
+        - (float) timeout: the timeout passed to the underlying
+          multiplex syscall (select(), epoll() etc.).
 
-         - (bool) blocking: if True poll repeatedly, as long as there
-           are registered handlers and/or scheduled functions.
-           If False poll only once and return the timeout of the next
-           scheduled call (if any, else None).
+        - (bool) blocking: if True poll repeatedly, as long as there
+          are registered handlers and/or scheduled functions.
+          If False poll only once and return the timeout of the next
+          scheduled call (if any, else None).
         """
         if not _IOLoop._started_once:
             _IOLoop._started_once = True
@@ -366,7 +407,7 @@ class _IOLoop(object):
          - kwargs: the keyword arguments to call it with; a special
            '_errback' parameter can be passed: it is a callable
            called in case target function raises an exception.
-       """
+        """
         kwargs['_scheduler'] = self.sched
         return _CallLater(seconds, target, *args, **kwargs)
 
@@ -406,6 +447,7 @@ class _IOLoop(object):
 # --- select() - POSIX / Windows
 # ===================================================================
 
+
 class Select(_IOLoop):
     """select()-based poller."""
 
@@ -427,9 +469,9 @@ class Select(_IOLoop):
             del self.socket_map[fd]
         except KeyError:
             debug("call: unregister(); fd was no longer in socket_map", self)
-        for l in (self._r, self._w):
+        for ls in (self._r, self._w):
             try:
-                l.remove(fd)
+                ls.remove(fd)
             except ValueError:
                 pass
 
@@ -443,11 +485,9 @@ class Select(_IOLoop):
 
     def poll(self, timeout):
         try:
-            r, w, e = select.select(self._r, self._w, [], timeout)
-        except select.error as err:
-            if getattr(err, "errno", None) == errno.EINTR:
-                return
-            raise
+            r, w, _ = select.select(self._r, self._w, [], timeout)
+        except InterruptedError:
+            return
 
         smap_get = self.socket_map.get
         for fd in r:
@@ -465,6 +505,7 @@ class Select(_IOLoop):
 # ===================================================================
 # --- poll() / epoll()
 # ===================================================================
+
 
 class _BasePollEpoll(_IOLoop):
     """This is common to both poll() (UNIX), epoll() (Linux) and
@@ -497,8 +538,11 @@ class _BasePollEpoll(_IOLoop):
                 self._poller.unregister(fd)
             except EnvironmentError as err:
                 if err.errno in (errno.ENOENT, errno.EBADF):
-                    debug("call: unregister(); poller returned %r; "
-                          "ignoring it" % err, self)
+                    debug(
+                        "call: unregister(); poller returned %r; ignoring it"
+                        % err,
+                        self,
+                    )
                 else:
                     raise
 
@@ -515,13 +559,12 @@ class _BasePollEpoll(_IOLoop):
                 raise
 
     def poll(self, timeout):
+        if timeout is None:
+            timeout = -1  # -1 waits indefinitely
         try:
-            events = self._poller.poll(timeout or -1)  # -1 waits indefinitely
-        except (IOError, select.error) as err:
-            # for epoll() and poll() respectively
-            if err.errno == errno.EINTR:
-                return
-            raise
+            events = self._poller.poll(timeout)
+        except InterruptedError:
+            return
         # localize variable access to minimize overhead
         smap_get = self.socket_map.get
         for fd, event in events:
@@ -531,12 +574,10 @@ class _BasePollEpoll(_IOLoop):
             if event & self._ERROR and not event & self.READ:
                 inst.handle_close()
             else:
-                if event & self.READ:
-                    if inst.readable():
-                        _read(inst)
-                if event & self.WRITE:
-                    if inst.writable():
-                        _write(inst)
+                if event & self.READ and inst.readable():
+                    _read(inst)
+                if event & self.WRITE and inst.writable():
+                    _write(inst)
 
 
 # ===================================================================
@@ -581,6 +622,7 @@ if hasattr(select, 'devpoll'):  # pragma: no cover
 
         # introduced in python 3.4
         if hasattr(select.devpoll, 'fileno'):
+
             def fileno(self):
                 """Return devpoll() fd."""
                 return self._poller.fileno()
@@ -598,6 +640,7 @@ if hasattr(select, 'devpoll'):  # pragma: no cover
 
         # introduced in python 3.4
         if hasattr(select.devpoll, 'close'):
+
             def close(self):
                 _IOLoop.close(self)
                 self._poller.close()
@@ -654,8 +697,9 @@ if hasattr(select, 'kqueue'):  # pragma: no cover
                 self._control(fd, events, select.KQ_EV_ADD)
             except EnvironmentError as err:
                 if err.errno == errno.EEXIST:
-                    debug("call: register(); poller raised EEXIST; ignored",
-                          self)
+                    debug(
+                        "call: register(); poller raised EEXIST; ignored", self
+                    )
                 else:
                     raise
             self._active[fd] = events
@@ -671,8 +715,11 @@ if hasattr(select, 'kqueue'):  # pragma: no cover
                     self._control(fd, events, select.KQ_EV_DELETE)
                 except EnvironmentError as err:
                     if err.errno in (errno.ENOENT, errno.EBADF):
-                        debug("call: unregister(); poller returned %r; "
-                              "ignoring it" % err, self)
+                        debug(
+                            "call: unregister(); poller returned %r; "
+                            "ignoring it" % err,
+                            self,
+                        )
                     else:
                         raise
 
@@ -684,12 +731,18 @@ if hasattr(select, 'kqueue'):  # pragma: no cover
         def _control(self, fd, events, flags):
             kevents = []
             if events & self.WRITE:
-                kevents.append(select.kevent(
-                    fd, filter=select.KQ_FILTER_WRITE, flags=flags))
+                kevents.append(
+                    select.kevent(
+                        fd, filter=select.KQ_FILTER_WRITE, flags=flags
+                    )
+                )
             if events & self.READ or not kevents:
                 # always read when there is not a write
-                kevents.append(select.kevent(
-                    fd, filter=select.KQ_FILTER_READ, flags=flags))
+                kevents.append(
+                    select.kevent(
+                        fd, filter=select.KQ_FILTER_READ, flags=flags
+                    )
+                )
             # even though control() takes a list, it seems to return
             # EINVAL on Mac OS X (10.6) when there is more than one
             # event in the list
@@ -697,27 +750,27 @@ if hasattr(select, 'kqueue'):  # pragma: no cover
                 self._kqueue.control([kevent], 0)
 
         # localize variable access to minimize overhead
-        def poll(self,
-                 timeout,
-                 _len=len,
-                 _READ=select.KQ_FILTER_READ,
-                 _WRITE=select.KQ_FILTER_WRITE,
-                 _EOF=select.KQ_EV_EOF,
-                 _ERROR=select.KQ_EV_ERROR):
+        def poll(
+            self,
+            timeout,
+            _len=len,
+            _READ=select.KQ_FILTER_READ,
+            _WRITE=select.KQ_FILTER_WRITE,
+            _EOF=select.KQ_EV_EOF,
+            _ERROR=select.KQ_EV_ERROR,
+        ):
             try:
-                kevents = self._kqueue.control(None, _len(self.socket_map),
-                                               timeout)
-            except OSError as err:
-                if err.errno == errno.EINTR:
-                    return
-                raise
+                kevents = self._kqueue.control(
+                    None, _len(self.socket_map), timeout
+                )
+            except InterruptedError:
+                return
             for kevent in kevents:
                 inst = self.socket_map.get(kevent.ident)
                 if inst is None:
                     continue
-                if kevent.filter == _READ:
-                    if inst.readable():
-                        _read(inst)
+                if kevent.filter == _READ and inst.readable():
+                    _read(inst)
                 if kevent.filter == _WRITE:
                     if kevent.flags & _EOF:
                         # If an asynchronous connection is refused,
@@ -739,15 +792,15 @@ if hasattr(select, 'kqueue'):  # pragma: no cover
 # --- choose the better poller for this platform
 # ===================================================================
 
-if hasattr(select, 'epoll'):      # epoll() - Linux
+if hasattr(select, 'epoll'):  # epoll() - Linux
     IOLoop = Epoll
-elif hasattr(select, 'kqueue'):   # kqueue() - BSD / OSX
+elif hasattr(select, 'kqueue'):  # kqueue() - BSD / OSX
     IOLoop = Kqueue
 elif hasattr(select, 'devpoll'):  # /dev/poll - Solaris
     IOLoop = DevPoll
-elif hasattr(select, 'poll'):     # poll() - POSIX
+elif hasattr(select, 'poll'):  # poll() - POSIX
     IOLoop = Poll
-else:                             # select() - POSIX and Windows
+else:  # select() - POSIX and Windows
     IOLoop = Select
 
 
@@ -794,7 +847,9 @@ class AsyncChat(asynchat.async_chat):
             if self._fileno not in self.ioloop.socket_map:
                 debug(
                     "call: modify_ioloop_events(), fd was no longer in "
-                    "socket_map, had to register() it again", inst=self)
+                    "socket_map, had to register() it again",
+                    inst=self,
+                )
                 self.add_channel(events=events)
             else:
                 if events != self._current_io_events:
@@ -807,14 +862,19 @@ class AsyncChat(asynchat.async_chat):
                             ev = "RW"
                         else:
                             ev = events
-                        debug("call: IOLoop.modify(); setting %r IO events" % (
-                            ev), self)
+                        debug(
+                            "call: IOLoop.modify(); setting %r IO events"
+                            % (ev),
+                            self,
+                        )
                     self.ioloop.modify(self._fileno, events)
             self._current_io_events = events
         else:
             debug(
                 "call: modify_ioloop_events(), handler had already been "
-                "close()d, skipping modify()", inst=self)
+                "close()d, skipping modify()",
+                inst=self,
+            )
 
     # --- utils
 
@@ -841,8 +901,14 @@ class AsyncChat(asynchat.async_chat):
         assert self.socket is None
         host, port = addr
         err = "getaddrinfo() returned an empty list"
-        info = socket.getaddrinfo(host, port, socket.AF_UNSPEC,
-                                  socket.SOCK_STREAM, 0, socket.AI_PASSIVE)
+        info = socket.getaddrinfo(
+            host,
+            port,
+            socket.AF_UNSPEC,
+            socket.SOCK_STREAM,
+            0,
+            socket.AI_PASSIVE,
+        )
         for res in info:
             self.socket = None
             af, socktype, proto, canonname, sa = res
@@ -859,8 +925,10 @@ class AsyncChat(asynchat.async_chat):
                         # http://tools.ietf.org/html/rfc3493.html#section-3.7
                         # We truncate the first bytes to make it look like a
                         # common IPv4 address.
-                        source_address = (source_address[0][7:],
-                                          source_address[1])
+                        source_address = (
+                            source_address[0][7:],
+                            source_address[1],
+                        )
                     self.bind(source_address)
                 self.connect((host, port))
             except socket.error as _:
@@ -926,7 +994,7 @@ class AsyncChat(asynchat.async_chat):
         asynchat.async_chat.initiate_send(self)
         if not self._closed:
             # if there's still data to send we want to be ready
-            # for writing, else we're only intereseted in reading
+            # for writing, else we're only interested in reading
             if not self.producer_fifo:
                 wanted = self.ioloop.READ
             else:
@@ -938,8 +1006,9 @@ class AsyncChat(asynchat.async_chat):
                 self.ioloop.modify(self._fileno, wanted)
                 self._wanted_io_events = wanted
         else:
-            debug("call: initiate_send(); called with no connection",
-                  inst=self)
+            debug(
+                "call: initiate_send(); called with no connection", inst=self
+            )
 
     def close_when_done(self):
         if len(self.producer_fifo) == 0:
@@ -988,15 +1057,21 @@ class Acceptor(AsyncChat):
         """
         assert self.socket is None
         host, port = addr
-        if host == "":
+        if not host:
             # When using bind() "" is a symbolic name meaning all
             # available interfaces. People might not know we're
             # using getaddrinfo() internally, which uses None
             # instead of "", so we'll make the conversion for them.
             host = None
         err = "getaddrinfo() returned an empty list"
-        info = socket.getaddrinfo(host, port, socket.AF_UNSPEC,
-                                  socket.SOCK_STREAM, 0, socket.AI_PASSIVE)
+        info = socket.getaddrinfo(
+            host,
+            port,
+            socket.AF_UNSPEC,
+            socket.SOCK_STREAM,
+            0,
+            socket.AI_PASSIVE,
+        )
         for res in info:
             self.socket = None
             self.del_channel()
@@ -1042,8 +1117,10 @@ class Acceptor(AsyncChat):
             if err.errno != errno.ECONNABORTED:
                 raise
             else:
-                debug("call: handle_accept(); accept() returned ECONNABORTED",
-                      self)
+                debug(
+                    "call: handle_accept(); accept() returned ECONNABORTED",
+                    self,
+                )
         else:
             # sometimes addr == None instead of (ip, port) (see issue 104)
             if addr is not None:
@@ -1055,5 +1132,6 @@ class Acceptor(AsyncChat):
 
     # overridden for convenience; avoid to reuse address on Windows
     if (os.name in ('nt', 'ce')) or (sys.platform == 'cygwin'):
+
         def set_reuse_addr(self):
             pass

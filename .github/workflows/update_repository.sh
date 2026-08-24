@@ -1,4 +1,7 @@
-#!/usr/bin/env python3
+#!/usr/bin/env bash
+set -euo pipefail
+
+python3 - "$@" <<'PYTHON'
 """Build the Kodi repository website from unpacked add-on sources."""
 
 import argparse
@@ -8,6 +11,8 @@ import os
 import re
 import shutil
 import sys
+import tempfile
+import unittest
 import zipfile
 from pathlib import Path
 from urllib.parse import quote
@@ -280,15 +285,120 @@ def write_indexes(root):
         write_index(directory, '/' + directory.relative_to(root.parent).as_posix() + '/')
 
 
-def parse_args():
+def create_test_addon(root, addon_id='plugin.video.test', version='1.0.0'):
+    addon = root / addon_id
+    addon.mkdir(parents=True)
+    (addon / 'addon.xml').write_text(
+        '<?xml version="1.0"?>\n'
+        '<addon id="%s" name="Test" version="%s">'
+        '<extension point="xbmc.addon.metadata">'
+        '<assets><icon>resources/icon.png</icon></assets>'
+        '</extension></addon>\n' % (addon_id, version),
+        encoding='utf-8',
+    )
+    (addon / 'default.py').write_text('VALUE = 1\n', encoding='utf-8')
+    resources = addon / 'resources'
+    resources.mkdir()
+    (resources / 'icon.png').write_bytes(b'icon')
+    return addon
+
+
+class RepositoryGeneratorTests(unittest.TestCase):
+    def test_archives_are_reproducible(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            addon = create_test_addon(root)
+            first = root / 'first.zip'
+            second = root / 'second.zip'
+            create_zip(addon, addon.name, first)
+            create_zip(addon, addon.name, second)
+            self.assertEqual(first.read_bytes(), second.read_bytes())
+
+    def test_same_version_with_changed_content_is_rejected(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            addon = create_test_addon(root / 'sources')
+            repository = root / 'site' / 'repo'
+            repository.mkdir(parents=True)
+            build_addon(addon, addon / 'addon.xml', repository)
+            (addon / 'default.py').write_text('VALUE = 2\n', encoding='utf-8')
+            with self.assertRaisesRegex(RuntimeError, 'Versionsnummer erhöhen'):
+                build_addon(addon, addon / 'addon.xml', repository)
+
+    def test_obsolete_assets_and_addons_are_removed(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            addon = create_test_addon(root / 'sources')
+            repository = root / 'site' / 'repo'
+            destination = repository / addon.name
+            destination.mkdir(parents=True)
+            (destination / 'obsolete.jpg').write_bytes(b'old')
+            stale = repository / 'plugin.video.removed'
+            stale.mkdir()
+            (stale / 'addon.xml').write_text('<addon/>', encoding='utf-8')
+
+            build_addon(addon, addon / 'addon.xml', repository)
+            prune_removed_addons(repository, {addon.name})
+
+            self.assertFalse((destination / 'obsolete.jpg').exists())
+            self.assertFalse(stale.exists())
+            self.assertTrue((destination / 'resources' / 'icon.png').exists())
+
+    def test_unsafe_asset_path_is_rejected(self):
+        with self.assertRaises(ValueError):
+            safe_relative_path('../outside.png')
+
+    def test_two_newest_numeric_versions_are_retained(self):
+        with tempfile.TemporaryDirectory() as temp:
+            directory = Path(temp)
+            for version in ('2026.08.18', '2026.08.18.3', '2026.08.18.4'):
+                (directory / ('plugin.video.test-%s.zip' % version)).touch()
+            keep_latest_zips(
+                directory, 'plugin.video.test', '2026.08.18.4'
+            )
+            self.assertEqual(
+                sorted(path.name for path in directory.glob('*.zip')),
+                [
+                    'plugin.video.test-2026.08.18.3.zip',
+                    'plugin.video.test-2026.08.18.4.zip',
+                ],
+            )
+
+
+def run_tests():
+    suite = unittest.defaultTestLoader.loadTestsFromTestCase(
+        RepositoryGeneratorTests
+    )
+    result = unittest.TextTestRunner(verbosity=2).run(suite)
+    return 0 if result.wasSuccessful() else 1
+
+
+def parse_args(argv=None):
     parser = argparse.ArgumentParser()
-    parser.add_argument('--addons', type=Path, required=True)
-    parser.add_argument('--site', type=Path, required=True)
-    return parser.parse_args()
+    parser.add_argument(
+        '--test', action='store_true', help='integrierte Tests ausführen'
+    )
+    parser.add_argument('--addons', type=Path)
+    parser.add_argument('--site', type=Path)
+    args = parser.parse_args(argv)
+    if not args.test:
+        missing = [
+            option
+            for option, value in (
+                ('--addons', args.addons),
+                ('--site', args.site),
+            )
+            if value is None
+        ]
+        if missing:
+            parser.error('folgende Argumente fehlen: %s' % ', '.join(missing))
+    return args
 
 
 def main():
     args = parse_args()
+    if args.test:
+        return run_tests()
     addons_path = args.addons.resolve()
     site_path = args.site.resolve()
     repository_path = site_path / 'repo'
@@ -315,11 +425,13 @@ def main():
     write_indexes(repository_path)
     write_indexes(site_path / 'logos')
     print('%d Add-ons verarbeitet.' % count)
+    return 0
 
 
 if __name__ == '__main__':
     try:
-        main()
+        sys.exit(main())
     except Exception as error:
         print('Fehler: %s' % error, file=sys.stderr)
         raise
+PYTHON
