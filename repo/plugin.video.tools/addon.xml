@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<<<<<<< Updated upstream
 <addon id="plugin.video.tools" name="Tools" version="2026.08.24.4" provider-name="Michaz">
+=======
+<addon id="plugin.video.tools" name="Tools" version="2026.08.24.1" provider-name="Michaz">
+>>>>>>> Stashed changes
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
         <import addon="script.module.requests"/>
