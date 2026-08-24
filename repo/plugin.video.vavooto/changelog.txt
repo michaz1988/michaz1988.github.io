@@ -1,3 +1,9 @@
+2026.08.24
+- Österreichische, deutsche und Schweizer Stalker-Gruppen werden vorausgewählt; die manuelle Auswahl bleibt möglich.
+- VAVOO-Live-TV auf die aktuelle MediaHubMX-Katalog- und Resolve-API umgestellt.
+- Gruppen werden direkt aus den Katalogfiltern geladen und Sender über nextCursor vollständig paginiert.
+- Nicht mehr benötigten Signaturversuch über cache.vypn.net entfernt.
+
 2026.08.17
 - Fehlgeschlagene Stalker-Portalaufrufe werden einmalig mit einem Chrome-User-Agent wiederholt.
 - Nach erfolgreichem Fallback wird der Chrome-User-Agent für weitere Portalaufrufe beibehalten.
