@@ -56,12 +56,11 @@
     </extension>
 </addon>
 
-<addon id="plugin.video.tools" name="Tools" version="2026.08.24" provider-name="Michaz">
+<addon id="plugin.video.tools" name="Tools" version="2026.08.24.1" provider-name="Michaz">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
         <import addon="script.module.requests"/>
         <import addon="script.module.routing"/>
-        <import addon="script.module.asyn" optional="true" />
     </requires>
     <extension point="xbmc.python.pluginsource" library="main.py">
         <provides>video executable</provides>
@@ -391,38 +390,6 @@
     <assets>
       <icon>icon.png</icon>
       <fanart>fanart.jpg</fanart>
-    </assets>
-  </extension>
-</addon>
-
-<addon id="script.module.asyn" name="asyn" version="1.0" provider-name="michaz">
-  <requires>
-    <import addon="xbmc.python" version="3.0.0" />
-  </requires>
-  <extension point="xbmc.python.module" library="lib" />
-  <extension point="xbmc.addon.metadata">
-    <assets>
-      <icon>resources/icon.png</icon>
-    </assets>
-  </extension>
-</addon>
-
-<addon id="script.module.download-m3u8" name="download-m3u8" version="1.0.0" provider-name="kasi45">
-  <requires>
-    <import addon="xbmc.python" version="3.0.0"/>
-    <!-- for remote debug -->
-    <import addon="script.module.pydevd" optional="true"/>
-  </requires>
-  <extension point="xbmc.python.module" library="lib" />
-  <extension point="xbmc.addon.metadata">
-    <summary lang="en_GB">Python downloader for saving m3u8 videos to local MP4 files.</summary>
-    <description lang="en_GB">Python downloader for saving m3u8 videos to local MP4 files.</description>
-    <license>BSD-3-Clause</license>
-    <platform>all</platform>
-    <website>https://github.com/hwaves/m3u8_To_MP4</website>
-    <source>https://github.com/hwaves/m3u8_To_MP4</source>
-    <assets>
-      <icon>resources/icon.png</icon>
     </assets>
   </extension>
 </addon>
