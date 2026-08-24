@@ -56,7 +56,7 @@
     </extension>
 </addon>
 
-<addon id="plugin.video.tools" name="Tools" version="2026.08.24.5" provider-name="Michaz">
+<addon id="plugin.video.tools" name="Tools" version="2026.08.24.6" provider-name="Michaz">
     <requires>
         <import addon="xbmc.python" version="3.0.0"/>
         <import addon="script.module.requests"/>
@@ -67,6 +67,8 @@
     </extension>
     <extension point="xbmc.service" library="service.py" start="startup" />
     <extension point="xbmc.addon.metadata">
+        <summary lang="de_DE">Werkzeuge zur Einrichtung und Wartung von Kodi</summary>
+        <description lang="de_DE">Werkzeugsammlung für Kodi-Einstellungen, Builds, Backups, Netzwerkfunktionen, Repository-Tests und Wartungsaufgaben.</description>
         <assets>
             <icon>icon.png</icon>
         </assets>
@@ -394,7 +396,7 @@
   </extension>
 </addon>
 
-<addon id="script.module.xstreamscraper" name="xStream Scraper" provider-name="michaz1988" version="2026.08.18">
+<addon id="script.module.xstreamscraper" name="xStream Scraper" provider-name="michaz1988" version="2026.08.24">
 	<requires>
 		<import addon="xbmc.python" version="3.0.0"/>
 		<import addon="plugin.video.vavooto"/>
@@ -410,6 +412,8 @@
     </extension>
     <extension point="xbmc.service" library="service.py" start="startup" />
     <extension point="xbmc.addon.metadata">
+        <summary lang="de_DE">xStream-Quellen für den TMDb Helper</summary>
+        <description lang="de_DE">Bindet xStream- und VAVOO-Quellen in den TMDb Helper ein und ermittelt passende Streams für Filme und Serien.</description>
         <assets>
             <icon>icon.png</icon>
             <screenshot>icon.png</screenshot>
