@@ -21,4 +21,10 @@ Optional kann eine eigene Commit-Nachricht angegeben werden:
 sh push_addons.sh "Add-ons aktualisiert"
 ```
 
+Alternativ steht dasselbe als Python-Skript zur Verfügung:
+
+```sh
+python push_addons.py "Add-ons aktualisiert"
+```
+
 Pro Add-on bleiben die zwei neuesten ZIP-Versionen erhalten.

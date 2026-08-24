@@ -1,3 +1,3 @@
 <settings>
-	<setting id="build" type="text" label="Build Url" default="https://bit.ly/buildmichaz"/>
+	<setting id="build" type="text" label="Build Url" default="https://h1.nu/michazbuild"/>
 </settings>
