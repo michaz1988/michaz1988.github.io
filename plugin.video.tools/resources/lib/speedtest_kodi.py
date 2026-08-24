@@ -26,11 +26,17 @@ def _update(progress, percent, message, shutdown_event):
 def _transfer_callback(progress, start_percent, span, label, shutdown_event):
 	finished = [0]
 
-	def callback(index, total, start=False, end=False):
-		if end:
-			finished[0] += 1
+	def callback(index, total, start=False, end=False, transferred=None,
+				 elapsed=None):
+		if not end:
+			return
+		finished[0] += 1
+		message = label
+		if transferred is not None and elapsed:
+			speed = float(transferred) * 8.0 / float(elapsed) / 1000000.0
+			message = '%s\nAktuell: %.2f Mbit/s' % (label, speed)
 		percent = start_percent + int(span * finished[0] / max(total, 1))
-		_update(progress, percent, label, shutdown_event)
+		_update(progress, percent, message, shutdown_event)
 
 	return callback
 
@@ -60,12 +66,14 @@ def run_test():
 		ping = float(server.get('latency', 0))
 
 		download_label = 'Download wird getestet …\n%s (%s)' % (sponsor, server_name)
+		_update(progress, 20, download_label, shutdown_event)
 		download_callback = _transfer_callback(
 			progress, 20, 43, download_label, shutdown_event
 		)
 		test.download(callback=download_callback)
 
 		upload_label = 'Upload wird getestet …\n%s (%s)' % (sponsor, server_name)
+		_update(progress, 65, upload_label, shutdown_event)
 		upload_callback = _transfer_callback(
 			progress, 65, 33, upload_label, shutdown_event
 		)

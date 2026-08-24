@@ -777,7 +777,7 @@ def print_dots(shutdown_event):
     """Built in callback function used by Thread classes for printing
     status
     """
-    def inner(current, total, start=False, end=False):
+    def inner(current, total, start=False, end=False, **kwargs):
         if event_is_set(shutdown_event):
             return
 
@@ -1508,14 +1508,16 @@ class Speedtest(object):
         if not self.servers:
             self.get_servers()
 
+        candidates = []
         for d in sorted(self.servers.keys()):
-            for s in self.servers[d]:
-                self.closest.append(s)
-                if len(self.closest) == limit:
-                    break
-            else:
-                continue
-            break
+            candidates.extend(self.servers[d])
+
+        forced_servers = [
+            server for server in candidates
+            if str(server.get('force_ping_select', '')).lower()
+            in ('1', 'true')
+        ]
+        self.closest = (forced_servers or candidates)[:limit]
 
         printer('Closest Servers:\n%r' % self.closest, debug=True)
         return self.closest
@@ -1530,6 +1532,14 @@ class Speedtest(object):
                 servers = self.get_closest_servers()
             servers = self.closest
 
+        forced_servers = [
+            server for server in servers
+            if str(server.get('force_ping_select', '')).lower()
+            in ('1', 'true')
+        ]
+        if forced_servers:
+            servers = forced_servers
+
         if self._source_address:
             source_address_tuple = (self._source_address, 0)
         else:
@@ -1540,44 +1550,52 @@ class Speedtest(object):
         results = {}
         for server in servers:
             cum = []
-            url = os.path.dirname(server['url'])
+            urlparts = urlparse(os.path.dirname(server['url']))
             stamp = int(timeit.time.time() * 1000)
-            latency_url = '%s/latency.txt?x=%s' % (url, stamp)
-            for i in range(0, 3):
-                this_latency_url = '%s.%s' % (latency_url, i)
-                printer('%s %s' % ('GET', this_latency_url),
-                        debug=True)
-                urlparts = urlparse(latency_url)
-                try:
-                    if urlparts[0] == 'https':
-                        h = SpeedtestHTTPSConnection(
-                            urlparts[1],
-                            source_address=source_address_tuple
-                        )
-                    else:
-                        h = SpeedtestHTTPConnection(
-                            urlparts[1],
-                            source_address=source_address_tuple
-                        )
-                    headers = {'User-Agent': user_agent}
-                    path = '%s?%s' % (urlparts[2], urlparts[4])
+            latency_path = '%s/latency.txt' % urlparts[2]
+            h = None
+            try:
+                if urlparts[0] == 'https':
+                    h = SpeedtestHTTPSConnection(
+                        urlparts[1], source_address=source_address_tuple,
+                        timeout=self._timeout
+                    )
+                else:
+                    h = SpeedtestHTTPConnection(
+                        urlparts[1], source_address=source_address_tuple,
+                        timeout=self._timeout
+                    )
+                headers = {
+                    'User-Agent': user_agent,
+                    'Connection': 'keep-alive',
+                }
+                # Exclude the initial TCP/TLS setup and measure subsequent
+                # requests on the same connection, like current clients do.
+                for i in range(0, 4):
+                    path = '%s?x=%s.%s' % (latency_path, stamp, i)
+                    printer('%s %s://%s%s' % (
+                        'GET', urlparts[0], urlparts[1], path
+                    ), debug=True)
                     start = timeit.default_timer()
                     h.request("GET", path, headers=headers)
                     r = h.getresponse()
                     total = (timeit.default_timer() - start)
-                except HTTP_ERRORS:
-                    e = get_exception()
-                    printer('ERROR: %r' % e, debug=True)
-                    continue
-
-                text = r.read(9)
-                if int(r.status) == 200 and text == 'test=test'.encode():
-                    cum.append(total)
-                h.close()
+                    text = r.read()
+                    if int(r.status) != 200 or not text.startswith(
+                            'test=test'.encode()):
+                        break
+                    if i:
+                        cum.append(total)
+            except HTTP_ERRORS:
+                e = get_exception()
+                printer('ERROR: %r' % e, debug=True)
+            finally:
+                if h is not None:
+                    h.close()
 
             if not cum:
                 continue
-            avg = round((sum(cum) / (len(cum) * 2)) * 1000.0, 3)
+            avg = round((sum(cum) / len(cum)) * 1000.0, 3)
             results[avg] = server
 
         try:
@@ -1645,7 +1663,13 @@ class Speedtest(object):
                     thread.join(timeout=0.001)
                 in_flight['threads'] -= 1
                 finished.append(sum(thread.result))
-                callback(thread.i, request_count, end=True)
+                callback(
+                    thread.i,
+                    request_count,
+                    end=True,
+                    transferred=sum(finished),
+                    elapsed=max(timeit.default_timer() - start, 0.001)
+                )
 
         q = Queue(max_threads)
         prod_thread = threading.Thread(target=producer,
@@ -1739,7 +1763,13 @@ class Speedtest(object):
                     thread.join(timeout=0.001)
                 in_flight['threads'] -= 1
                 finished.append(thread.result)
-                callback(thread.i, request_count, end=True)
+                callback(
+                    thread.i,
+                    request_count,
+                    end=True,
+                    transferred=sum(finished),
+                    elapsed=max(timeit.default_timer() - start, 0.001)
+                )
 
         q = Queue(threads or self.config['threads']['upload'])
         prod_thread = threading.Thread(target=producer,
