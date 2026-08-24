@@ -129,7 +129,7 @@ def create_zip(addon_path, addon_id, destination):
             temporary.unlink()
 
 
-def keep_latest_zips(directory, addon_id, current_version, count=1):
+def keep_latest_zips(directory, addon_id, current_version, count=2):
     archives = sorted(
         directory.glob('%s-*.zip' % addon_id),
         key=lambda path: natural_key(
