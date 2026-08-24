@@ -63,10 +63,17 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          current_workflow_id=$(gh api \
+            "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
+            --jq '.workflow_id')
           gh api --paginate \
             "repos/$GITHUB_REPOSITORY/actions/runs?status=completed&per_page=100" \
             --jq '.workflow_runs[] | [.workflow_id, .id] | @tsv' |
-          awk '!latest[$1]++ { next } { print $2 }' |
+          awk -v current="$current_workflow_id" '
+            $1 == current { print $2; next }
+            !latest[$1]++ { next }
+            { print $2 }
+          ' |
           while IFS= read -r run_id; do
             gh api --method DELETE \
               "repos/$GITHUB_REPOSITORY/actions/runs/$run_id"
