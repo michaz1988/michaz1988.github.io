@@ -1248,6 +1248,7 @@ class Speedtest(object):
             exclude = []
 
         self.servers.clear()
+        self.closest = []
 
         for server_list in (servers, exclude):
             for i, s in enumerate(server_list):
@@ -1257,6 +1258,88 @@ class Speedtest(object):
                     raise InvalidServerIDType(
                         '%s is an invalid server type, must be int' % s
                     )
+
+        # The legacy XML endpoints no longer reliably return nearby servers.
+        # Prefer the JSON endpoints used by current speedtest.net clients and
+        # retain the XML endpoints below as a fallback.
+        api_urls = [
+            'https://www.speedtest.net/api/js/config-sdk',
+            ('https://www.speedtest.net/api/js/servers?engine=js'
+             '&https_functional=true&limit=20'),
+        ]
+        api_headers = {
+            'Accept': 'application/json, text/plain, */*',
+            'Referer': 'https://www.speedtest.net/',
+        }
+        if gzip:
+            api_headers['Accept-Encoding'] = 'gzip'
+
+        for api_url in api_urls:
+            try:
+                request = build_request(
+                    api_url, headers=api_headers, secure=True
+                )
+                uh, e = catch_request(request, opener=self._opener)
+                if e:
+                    raise ServersRetrievalError(e)
+
+                stream = get_response_stream(uh)
+                try:
+                    payload = stream.read()
+                    if int(uh.code) != 200:
+                        raise ServersRetrievalError()
+                    api_data = json.loads(payload.decode('utf-8'))
+                finally:
+                    stream.close()
+                    uh.close()
+
+                if isinstance(api_data, dict):
+                    api_servers = api_data.get('servers', [])
+                else:
+                    api_servers = api_data
+                if not isinstance(api_servers, list):
+                    raise ServersRetrievalError()
+
+                for server in api_servers:
+                    try:
+                        server_id = int(server.get('id'))
+                        if servers and server_id not in servers:
+                            continue
+                        if (server_id in self.config['ignore_servers']
+                                or server_id in exclude):
+                            continue
+                        if str(server.get('https_functional', '')).lower() \
+                                not in ('1', 'true'):
+                            continue
+
+                        host = server.get('host')
+                        if not host:
+                            continue
+                        d = distance(
+                            self.lat_lon,
+                            (float(server.get('lat')),
+                             float(server.get('lon')))
+                        )
+                    except (AttributeError, TypeError, ValueError):
+                        continue
+
+                    attrib = dict(server)
+                    attrib['url'] = (
+                        'https://%s/speedtest/upload.php' % host
+                    )
+                    attrib['d'] = d
+
+                    try:
+                        self.servers[d].append(attrib)
+                    except KeyError:
+                        self.servers[d] = [attrib]
+
+                if self.servers:
+                    return self.servers
+            except (ServersRetrievalError, AttributeError, TypeError,
+                    ValueError, UnicodeError, OSError, EOFError) as e:
+                printer('Current server API failed: %r' % e, debug=True)
+                self.servers.clear()
 
         urls = [
             '://www.speedtest.net/speedtest-servers-static.php',
@@ -1485,17 +1568,16 @@ class Speedtest(object):
                 except HTTP_ERRORS:
                     e = get_exception()
                     printer('ERROR: %r' % e, debug=True)
-                    cum.append(3600)
                     continue
 
                 text = r.read(9)
                 if int(r.status) == 200 and text == 'test=test'.encode():
                     cum.append(total)
-                else:
-                    cum.append(3600)
                 h.close()
 
-            avg = round((sum(cum) / 6) * 1000.0, 3)
+            if not cum:
+                continue
+            avg = round((sum(cum) / (len(cum) * 2)) * 1000.0, 3)
             results[avg] = server
 
         try:
