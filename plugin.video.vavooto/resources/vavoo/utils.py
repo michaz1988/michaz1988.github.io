@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import xbmcgui, xbmcaddon, sys, xbmc, os, time, json, xbmcplugin, requests, re
+import xbmcgui, xbmcaddon, sys, xbmc, os, time, json, xbmcplugin, requests, re, uuid
 import urllib3, resolveurl, base64, random, string, xbmcvfs
 import tempfile
 from datetime import datetime
@@ -42,10 +42,6 @@ openSettings = addon.openSettings
 execute = xbmc.executebuiltin
 getCondV = xbmc.getCondVisibility
 
-PING_URLS   = [
-    "https://www.vypn.net/api/app/ping",
-    "https://cache.vypn.net/api/app/ping",
-]
 BROWSER_UA  = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                "AppleWebKit/537.36 (KHTML, like Gecko) "
                "Chrome/124.0.0.0 Safari/537.36")
@@ -129,14 +125,13 @@ clear(auto=True)
 
 def getAuthSignature():
 	i = 0
-	for url in PING_URLS:
-		while i < 5:
-			i+=1
-			try:
-				req = request_json("POST", url, json=_build_payload(), headers=_headers, timeout=15, retries=3, verify=False)
-				return req.get("sig") or req.get("addonSig") or req.get("signature") or req.get("mediahubmxSignature") or req.get("mediahubmx-signature") or req.get("token") or ""
-			except Exception:
-				continue
+	while i < 5:
+		i += 1
+		try:
+			req = request_json("POST", "https://www.vypn.net/api/app/ping", json=_build_payload(), headers=_headers, timeout=15, retries=3, verify=False)
+			return req.get("sig") or req.get("addonSig") or req.get("signature") or req.get("mediahubmxSignature") or req.get("mediahubmx-signature")
+		except Exception:
+			continue
 
 def append_headers(headers):
 	return '|%s' % '&'.join(['%s=%s' % (key, quote_plus(headers[key])) for key in headers])

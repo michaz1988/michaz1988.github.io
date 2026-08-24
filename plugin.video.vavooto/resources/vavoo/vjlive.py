@@ -16,8 +16,8 @@ def resolve_link(link):
 			log(format_exc())
 		return None, None
 	else:
-		_headers = {"user-agent": "MediaHubMX/2", "accept": "application/json", "content-type": "application/json; charset=utf-8", "content-length": "115", "accept-encoding": "gzip", "mediahubmx-signature": getAuthSignature()}
-		_data = {"language": "de", "region": "AT", "url": link, "clientVersion": "3.0.2"}
+		_headers = {"user-agent": "MediaHubMX/2", "content-type": "application/json; charset=utf-8", "accept-encoding": "gzip", "mediahubmx-signature": getAuthSignature()}
+		_data = {"language": "de", "region": "AT", "url": link, "clientVersion": "3.1.0"}
 		url = "https://vavoo.to/mediahubmx-resolve.json"
 		try:
 			streamurl = request_json("POST", url, json=_data, headers=_headers, timeout=10, retries=1)[0]["url"]

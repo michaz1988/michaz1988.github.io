@@ -1,8 +1,24 @@
 # -*- coding: utf-8 -*-
+import re
+import unicodedata
+
 from vavoo.utils import *
 
 def _portal_flag(value):
 	return str(value).strip().lower() in ("1", "true", "yes")
+
+def _is_german_language_group(title):
+	raw_title = str(title)
+	if any(flag in raw_title for flag in ("🇦🇹", "🇩🇪", "🇨🇭")):
+		return True
+	normalized_title = unicodedata.normalize("NFKD", raw_title)
+	normalized_title = normalized_title.encode("ascii", "ignore").decode("ascii").casefold()
+	tokens = set(re.findall(r"[a-z0-9]+", normalized_title))
+	return bool(tokens.intersection({
+		"at", "austria", "austrian", "osterreich",
+		"de", "deutsch", "deutschland", "german", "germany",
+		"ch", "schweiz", "swiss", "switzerland", "dach",
+	}))
 
 class Token:
 	def __init__(self, value=None, time=0, mac=None, url=None):
@@ -301,14 +317,21 @@ class StalkerPortal:
 		return cmd.split()[-1], self.headers
 				
 def get_genres():
-	titles, ids, preselect = [], [], []
+	titles, original_titles, ids, preselect = [], [], [], []
 	portal = StalkerPortal(get_cache_or_setting("stalkerurl"), get_cache_or_setting("mac"))
 	gruppen = portal.genres()
 	for title, groupid in  gruppen.items():
+		original_titles.append(title)
 		titles.append(title.encode("utf-8", "ignore").decode("ascii", "ignore"))
 		ids.append(groupid)
 	cacheOk, oldgroups = get_cache("stalker_groups")
-	if cacheOk: preselect = [ids.index(i) for i in oldgroups]
+	if cacheOk:
+		preselect = [ids.index(groupid) for groupid in oldgroups if groupid in ids]
+	if not preselect:
+		preselect = [
+			index for index, title in enumerate(original_titles)
+			if _is_german_language_group(title)
+		]
 	indicies = selectDialog(titles, "Choose Groups", True, preselect)
 	if indicies:
 		group = [ids[i] for i in indicies]

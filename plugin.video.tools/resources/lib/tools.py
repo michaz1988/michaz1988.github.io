@@ -38,7 +38,7 @@ guisettings ={
 	"videoplayer.autoplaynextitem": '"1,2"',
 	"videoplayer.seeksteps": '"-180,-60,-30,-10,10,30,60,180"',
 	"videoplayer.adjustrefreshrate": 2,
-	"videoplayer.usedisplayasclock": "true",
+	"videoplayer.usedisplayasclock": "false",
 	"videoplayer.teletextenabled": "false",
 	"locale.audiolanguage": '"default"',
 	"videoplayer.preferdefaultflag": "false",
