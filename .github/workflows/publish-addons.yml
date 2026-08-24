@@ -1,0 +1,59 @@
+name: Add-ons nach main veröffentlichen
+
+on:
+  push:
+    branches:
+      - addons
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-epg-release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Kodi-Repository erzeugen und veröffentlichen
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Website-Branch auschecken
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: main
+          path: site
+          fetch-depth: 0
+
+      - name: Gepushte Add-on-Quellen auschecken
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.sha }}
+          path: addons
+
+      - name: Python einrichten
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.13"
+
+      - name: Add-on-Generator testen
+        working-directory: addons
+        run: python -m unittest discover -s tests -v
+
+      - name: Kodi-Repository erzeugen
+        run: python addons/scripts/update_repository.py --addons addons --site site
+
+      - name: Kodi-Repository nach main pushen
+        working-directory: site
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add --all repo logos
+          if git diff --cached --quiet; then
+            echo "Keine Kodi-Repository-Änderungen vorhanden."
+          else
+            git commit -m "Kodi-Repository aus addons aktualisieren"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
