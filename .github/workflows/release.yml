@@ -38,10 +38,10 @@ jobs:
           cache-dependency-path: .epg/requirements.txt
 
       - name: Add-on-Generator testen
-        run: python -m unittest discover -s .addons/tests -v
+        run: bash .addons/.github/workflows/update_repository.sh --test
 
       - name: Kodi-Repository erzeugen
-        run: python .addons/scripts/update_repository.py --addons .addons --site .
+        run: bash .addons/.github/workflows/update_repository.sh --addons .addons --site .
 
       - name: Kodi-Repository veröffentlichen
         env:
