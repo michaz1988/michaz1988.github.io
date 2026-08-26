@@ -320,6 +320,9 @@ def get_genres():
 	titles, original_titles, ids, preselect = [], [], [], []
 	portal = StalkerPortal(get_cache_or_setting("stalkerurl"), get_cache_or_setting("mac"))
 	gruppen = portal.genres()
+	if not gruppen:
+		log("Keine Stalker-Gruppen vom Portal erhalten")
+		return []
 	for title, groupid in  gruppen.items():
 		original_titles.append(title)
 		titles.append(title.encode("utf-8", "ignore").decode("ascii", "ignore"))

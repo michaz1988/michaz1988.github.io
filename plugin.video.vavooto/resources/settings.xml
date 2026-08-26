@@ -20,8 +20,8 @@
     <setting label="STALKER Kanalgruppen Auswahl" type="action" visible="eq(-3,true)" action="RunPlugin(plugin://plugin.video.vavooto/?action=get_genres)"/>
     <setting label="STALKER Portal Check Retries" type="number" id="stalker_retry" default="10" visible="eq(-4,true)"/>
     <setting default="5" id="stalk_cache" label="STALKER TV Cache in Std" type="number" option="int" visible="eq(-5,true)" />
-    <setting label="STALKER Portal" type="text" id="stalkerurl" default="http://tvip.zeroonemac.xyz:8080/c" visible="eq(-6,true)"/>
-    <setting label="STALKER Mac" type="text" id="mac" default="00:1a:79:7c:6c:d2" visible="eq(-7,true)"/>
+    <setting label="STALKER Portal" type="text" id="stalkerurl" default="http://a01.live:8080/c/" visible="eq(-6,true)"/>
+    <setting label="STALKER Mac" type="text" id="mac" default="00:2a:01:93:ed:80" visible="eq(-7,true)"/>
     <setting label="STALKER Portal Check" type="text" id="portal_ok" default="" visible="eq(-8,true)" enable="false"/>
     <setting label="Account Info" type="text" id="account_info" default="" visible="eq(-9,true)" enable="false"/>
   </category>

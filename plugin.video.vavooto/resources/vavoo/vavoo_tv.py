@@ -38,12 +38,23 @@ def _catalog_request(signature, group=None, cursor=None):
 	)
 
 def _groups_from_catalog(catalog):
-	for feature in catalog.get("features", {}).get("filter", []):
-		if feature.get("id") == "group":
-			return sorted(set(feature.get("values", [])), key=str.casefold)
+	features = catalog.get("features", {})
+	filters = features.get("filter", []) if isinstance(features, dict) else []
+	if isinstance(filters, dict):
+		filters = filters.values()
+	for feature in filters:
+		if not isinstance(feature, dict) or feature.get("id") != "group":
+			continue
+		values = feature.get("values", [])
+		if isinstance(values, dict):
+			values = values.keys()
+		groups = {value.get("name") if isinstance(value, dict) else value for value in values}
+		groups = {group for group in groups if group}
+		if groups:
+			return sorted(groups, key=str.casefold)
 	return sorted({
 		item.get("group") for item in catalog.get("items", [])
-		if item.get("group")
+		if isinstance(item, dict) and item.get("group")
 	}, key=str.casefold)
 
 def vavoo_groups(signature=None):
@@ -51,6 +62,14 @@ def vavoo_groups(signature=None):
 	signature = signature or getAuthSignature()
 	catalog = _catalog_request(signature)
 	groups = _groups_from_catalog(catalog)
+	# Some responses expose groups only on later catalog pages.
+	seen_cursors = set()
+	cursor = catalog.get("nextCursor")
+	while not groups and cursor is not None and cursor not in seen_cursors:
+		seen_cursors.add(cursor)
+		page = _catalog_request(signature, cursor=cursor)
+		groups = _groups_from_catalog(page)
+		cursor = page.get("nextCursor")
 	catalog_hash = md5(json.dumps(
 		catalog,
 		ensure_ascii=False,
@@ -69,10 +88,12 @@ def choose(signature=None):
 			groups.index(group) for group in selected_groups
 			if group in groups
 		]
-	indicies = selectDialog(groups, "Choose VAVOO Groups", True, preselect)
-	if not indicies:
-		return []
-	selected_groups = [groups[index] for index in indicies]
+	indices = selectDialog(groups, "Choose VAVOO Groups", True, preselect)
+	# Kodi returns None when the dialog is cancelled, but [] when the
+	# dialog is confirmed without any selected group.
+	if indices is None:
+		return selected_groups if cacheOk else []
+	selected_groups = [groups[index] for index in indices if 0 <= index < len(groups)]
 	set_cache("groups", selected_groups)
 	return selected_groups
 
