@@ -34,7 +34,7 @@ den Branches des jeweiligen Forks.
 
 - [Players für TMDB Helper](https://michaz1988.github.io/players.zip)
 - [M3U-Liste für IPTV Simple](https://michaz1988.github.io/tv.m3u)
-- [Michaz Build](https://www.dropbox.com/scl/fi/rlq2xm6ef1lp6j933h6s0/build.zip?rlkey=5147hwwxx7w7s6eblk8bggbgx&st=o3g5vkp4&dl=1)
+- [Michaz Build](https://h1.nu/michazbuild)
 
 ## Probleme melden
 
