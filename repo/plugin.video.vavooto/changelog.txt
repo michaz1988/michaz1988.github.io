@@ -1,3 +1,11 @@
+2026.08.29
+- Nach dem Kanalfilter leere Namen und Namen, die nur aus ] oder ) bestehen, werden aussortiert.
+
+2026.08.28
+- VAVOO-Gruppen werden wieder über den live2-Index ermittelt.
+- Alle VAVOO-Gruppen werden parallel und vollständig paginiert mit einer gemeinsamen Signatur geladen.
+- MediaHubMX-Signaturen werden auf app.ok und validUntil geprüft und bis kurz vor Ablauf wiederverwendet.
+
 2026.08.24
 - Österreichische, deutsche und Schweizer Stalker-Gruppen werden vorausgewählt; die manuelle Auswahl bleibt möglich.
 - VAVOO-Live-TV auf die aktuelle MediaHubMX-Katalog- und Resolve-API umgestellt.
