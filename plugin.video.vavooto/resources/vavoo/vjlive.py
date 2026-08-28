@@ -59,8 +59,8 @@ def get_stalker_channels(genres=False):
 		if item["tv_genre_id"] not in genres: continue
 		name = item["name"].upper()
 		if any(ele in name for ele in ["***", "###", "---"]): continue
-		name = filterout(name)
-		if not name: continue
+		name = filterout(name).strip()
+		if not name or not name.strip("])"): continue
 		if name not in sta_channels: sta_channels[name] = []
 		channel = {
 			"cmd": item["cmd"],

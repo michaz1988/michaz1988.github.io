@@ -123,15 +123,65 @@ def clear(auto=False):
 		
 clear(auto=True)
 
+_AUTH_SIGNATURE_PROPERTY = "%s.auth_signature" % addonID
+_AUTH_SIGNATURE_SAFETY_MS = 30000
+
+def _decode_auth_signature(signature):
+	if not isinstance(signature, str) or not signature:
+		return None
+	try:
+		encoded = signature.encode("ascii")
+		encoded += b"=" * (-len(encoded) % 4)
+		envelope = json.loads(base64.urlsafe_b64decode(encoded).decode("utf-8"))
+		if not isinstance(envelope, dict) or not envelope.get("signature"):
+			return None
+		payload = envelope.get("data")
+		if isinstance(payload, str):
+			payload = json.loads(payload)
+		return payload if isinstance(payload, dict) else None
+	except Exception:
+		return None
+
+def _auth_signature_valid_until(signature):
+	payload = _decode_auth_signature(signature)
+	if not payload or not isinstance(payload.get("app"), dict) or payload["app"].get("ok") is not True:
+		return None
+	try:
+		valid_until = int(payload.get("validUntil"))
+	except (TypeError, ValueError):
+		return None
+	# Aktuelle Signaturen verwenden Millisekunden; Sekunden werden ebenfalls
+	# akzeptiert, falls der Dienst das Format einmal umstellt.
+	if valid_until < 100000000000:
+		valid_until *= 1000
+	if valid_until <= int(time.time() * 1000) + _AUTH_SIGNATURE_SAFETY_MS:
+		return None
+	return valid_until
+
 def getAuthSignature():
+	cached_signature = home.getProperty(_AUTH_SIGNATURE_PROPERTY)
+	valid_until = _auth_signature_valid_until(cached_signature)
+	if valid_until:
+		log("Using valid MediaHubMX signature from memory, valid for %s seconds" % int((valid_until - time.time() * 1000) / 1000))
+		return cached_signature
+	if cached_signature:
+		home.clearProperty(_AUTH_SIGNATURE_PROPERTY)
 	i = 0
 	while i < 5:
 		i += 1
 		try:
 			req = request_json("POST", "https://www.vypn.net/api/app/ping", json=_build_payload(), headers=_headers, timeout=15, retries=3, verify=False)
-			return req.get("sig") or req.get("addonSig") or req.get("signature") or req.get("mediahubmxSignature") or req.get("mediahubmx-signature")
+			signature = req.get("sig") or req.get("addonSig") or req.get("signature") or req.get("mediahubmxSignature") or req.get("mediahubmx-signature")
+			valid_until = _auth_signature_valid_until(signature)
+			if not valid_until:
+				log("Rejected invalid or expired MediaHubMX signature")
+				continue
+			home.setProperty(_AUTH_SIGNATURE_PROPERTY, signature)
+			log("Received valid MediaHubMX signature, valid for %s seconds" % int((valid_until - time.time() * 1000) / 1000))
+			return signature
 		except Exception:
 			continue
+	return None
 
 def append_headers(headers):
 	return '|%s' % '&'.join(['%s=%s' % (key, quote_plus(headers[key])) for key in headers])
