@@ -46,6 +46,13 @@ BROWSER_UA  = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                "AppleWebKit/537.36 (KHTML, like Gecko) "
                "Chrome/124.0.0.0 Safari/537.36")
 _headers = {"accept": "*/*", "user-agent": BROWSER_UA, "Accept-Encoding": "gzip, deflate", "Connection": "close"}
+_backup_headers = {
+    "user-agent": "okhttp/4.11.0",
+    "accept": "application/json",
+    "content-type": "application/json; charset=utf-8",
+    "content-length": "1106",
+    "accept-encoding": "gzip",
+}
 
 def _build_payload():
     uid = str(uuid.uuid4())
@@ -66,6 +73,45 @@ def _build_payload():
         "adblockEnabled": True,
         "proxy": {"supported": ["ss"], "engine": "Mu",
                   "enabled": False, "autoServer": True},
+        "iap": {"supported": False},
+    }
+
+def _build_backup_payload():
+    uid = str(uuid.uuid4())
+    return {
+        "reason": "boot", "locale": "de", "theme": "dark",
+        "metadata": {
+            "device": {
+                "type": "Handset", "brand": "Xiaomi", "model": "2506BPN68G",
+                "name": "Xiaomi 15T Pro", "uniqueId": uid,
+            },
+            "os": {
+                "name": "android", "version": "17",
+                "abis": ["arm64-v8a"], "host": "android",
+            },
+            "app": {
+                "platform": "android", "version": "1.6.1", "buildId": "103230000",
+                "engine": "hbc85",
+                "signatures": ["400c20d15a1de7e28a70cfae3e104b5097d5913b9cf30fca6cecff3818930c51"],
+                "installer": "com.android.vending",
+            },
+            "version": {"package": "net.vypn.app", "binary": "1.6.1", "js": "1.6.1"},
+            "platform": {
+                "isAndroid": True, "isIOS": False, "isTV": False,
+                "isWeb": False, "isMobile": True, "isWebTV": False,
+                "isElectron": False, "isDesktop": False,
+            },
+        },
+        "appFocusTime": 341, "playerActive": False, "playDuration": 0,
+        "devMode": False, "hasAddon": False, "castConnected": False,
+        "package": "net.vypn.app", "version": "1.6.1", "process": "app",
+        "firstAppStart": 0, "lastAppStart": 0, "ipLocation": None,
+        "adblockEnabled": True, "migrationApplied": False,
+        "migrationTargetInstalled": False,
+        "proxy": {
+            "supported": ["ss", "openvpn"], "engine": "ShadowsocksEngine",
+            "ssVersion": 1, "enabled": False, "autoServer": True, "id": None,
+        },
         "iap": {"supported": False},
     }
 
@@ -158,6 +204,29 @@ def _auth_signature_valid_until(signature):
 		return None
 	return valid_until
 
+def _request_auth_signature(payload_builder, headers, source):
+	for attempt in range(1, 6):
+		try:
+			req = request_json(
+				"POST",
+				"https://www.vypn.net/api/app/ping",
+				json=payload_builder(),
+				headers=headers,
+				timeout=15,
+				retries=3,
+				verify=False,
+			)
+			signature = req.get("sig") or req.get("addonSig") or req.get("signature") or req.get("mediahubmxSignature") or req.get("mediahubmx-signature")
+			valid_until = _auth_signature_valid_until(signature)
+			if valid_until:
+				log("Received valid MediaHubMX signature from %s, valid for %s seconds" % (source, int((valid_until - time.time() * 1000) / 1000)))
+				return signature, valid_until
+			log("Rejected invalid or expired MediaHubMX signature from %s (attempt %s/5)" % (source, attempt))
+		except Exception:
+			if attempt == 5:
+				log("MediaHubMX signature source %s failed:\n%s" % (source, format_exc()))
+	return None, None
+
 def getAuthSignature():
 	cached_signature = home.getProperty(_AUTH_SIGNATURE_PROPERTY)
 	valid_until = _auth_signature_valid_until(cached_signature)
@@ -166,21 +235,14 @@ def getAuthSignature():
 		return cached_signature
 	if cached_signature:
 		home.clearProperty(_AUTH_SIGNATURE_PROPERTY)
-	i = 0
-	while i < 5:
-		i += 1
-		try:
-			req = request_json("POST", "https://www.vypn.net/api/app/ping", json=_build_payload(), headers=_headers, timeout=15, retries=3, verify=False)
-			signature = req.get("sig") or req.get("addonSig") or req.get("signature") or req.get("mediahubmxSignature") or req.get("mediahubmx-signature")
-			valid_until = _auth_signature_valid_until(signature)
-			if not valid_until:
-				log("Rejected invalid or expired MediaHubMX signature")
-				continue
+	for payload_builder, headers, source in (
+		(_build_payload, _headers, "desktop profile"),
+		(_build_backup_payload, _backup_headers, "Android backup profile"),
+	):
+		signature, valid_until = _request_auth_signature(payload_builder, headers, source)
+		if signature:
 			home.setProperty(_AUTH_SIGNATURE_PROPERTY, signature)
-			log("Received valid MediaHubMX signature, valid for %s seconds" % int((valid_until - time.time() * 1000) / 1000))
 			return signature
-		except Exception:
-			continue
 	return None
 
 def append_headers(headers):

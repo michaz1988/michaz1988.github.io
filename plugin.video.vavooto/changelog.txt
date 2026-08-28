@@ -1,3 +1,6 @@
+2026.08.29.1
+- Ein Android-App-Profil dient als Signatur-Backup, wenn das Desktop-Profil keine gültige Signatur liefert.
+
 2026.08.29
 - Nach dem Kanalfilter leere Namen und Namen, die nur aus ] oder ) bestehen, werden aussortiert.
 
