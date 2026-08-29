@@ -8,7 +8,7 @@ from dateutil.parser import parse
 from traceback import format_exc
 from zlib import compress, decompress
 from xbmcgui import ListItem, Dialog, DialogProgress, Window
-from urllib.parse import urlencode, urlparse, parse_qsl, quote_plus, urlsplit, quote
+from urllib.parse import urlencode, urlparse, parse_qsl, quote_plus, urlsplit, quote, urljoin
 from concurrent.futures import ThreadPoolExecutor, as_completed
 try:
 	from infotagger.listitem import ListItemInfoTag
