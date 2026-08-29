@@ -1,3 +1,6 @@
+2026.08.29.12
+- Fehler beim Laden der Kanalliste behoben (Absicherung der Stalker/VAVOO/LiteTV Rückgabewerte).
+
 2026.08.29.11
 - Integrierter lokaler HLS Proxy für VAVOO Live-Streams zur Stabilisierung von Transport und Segment-Pufferung.
 
