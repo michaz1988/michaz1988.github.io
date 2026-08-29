@@ -1,3 +1,7 @@
+2026.08.29.9
+- Integrierter nativer HTTP/2 Proxy & FooBarX Decoder für Nydus Live-HD-Streams (VOX, RTL, SAT.1, ProSieben etc.).
+- Vollständige Autonomie ohne externe System-Tools (reine Python HTTP/2-Engine).
+
 2026.08.29.8
 - Vollständige Bereinigung und lokale Validierung der LiteTV-Sender & Streams.
 - Korrigierte M3U8-Segment-Validierung bei verschachtelten Master-Playlists.

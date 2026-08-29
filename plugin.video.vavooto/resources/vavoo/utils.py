@@ -25,6 +25,10 @@ def exists(*args):
 addon = xbmcaddon.Addon("plugin.video.vavooto")
 addonInfo = addon.getAddonInfo
 addonID = "plugin.video.vavooto"
+addonpath = translatePath(addonInfo('path'))
+lib_path = os.path.join(addonpath, "resources", "lib")
+if os.path.exists(lib_path) and lib_path not in sys.path:
+	sys.path.insert(0, lib_path)
 addonprofile = translatePath(addonInfo('profile'))
 addonpath = translatePath(addonInfo('path'))
 cachepath = os.path.join(addonprofile, "cache")
