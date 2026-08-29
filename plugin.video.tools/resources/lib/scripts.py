@@ -11,7 +11,7 @@ from xbmcvfs import translatePath
 addon = xbmcaddon.Addon()
 addonInfo = addon.getAddonInfo
 addonPath = addonInfo('path')
-ftppath = "/sdcard" if xbmc.getCondVisibility("system.platform.android") else os.path.expanduser("~")
+ftppath = translatePath('special://home')
 dialog = xbmcgui.Dialog()
 monitor = xbmc.Monitor()
 WINDOW_HOME = xbmcgui.Window(10000)
