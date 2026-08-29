@@ -1,3 +1,7 @@
+2026.08.29.2
+- Live-TV-Sender werden nach einem erkannten Streamabbruch einmal neu aufgelöst und gestartet.
+- Die Wartezeit bis zur Neuverbindung ist in den TV-Einstellungen konfigurierbar (Standard: 10 Sekunden).
+
 2026.08.29.1
 - Ein Android-App-Profil dient als Signatur-Backup, wenn das Desktop-Profil keine gültige Signatur liefert.
 
