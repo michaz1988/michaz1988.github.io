@@ -49,15 +49,26 @@ def group_tv(params):
 		gruppen = portal.genres()
 		for title, groupid in  gruppen.items():
 			addDir2(title.encode().decode("ascii", errors="ignore"), "DefaultAddonPVRClient", "channels", type="stalker", group=groupid)
+	elif params.get("type")=="lite":
+		from vavoo.linear_lite import CATEGORIES
+		for cat in CATEGORIES:
+			addDir2(cat["label"], "DefaultAddonPVRClient", "channels", type="lite", group=cat["slug"])
 	else:
-		if getSetting("vavoo") == "true" and getSetting("stalker") == "true":
-			addDir2("VAVOO - GRUPPEN", "DefaultAddonPVRClient", "group_tv", type="vavoo")
-			addDir2("STALKER - GRUPPEN", "DefaultAddonPVRClient", "group_tv", type="stalker")
-		elif getSetting("vavoo") == "true":
-			group_tv({"type":"vavoo"})
-		elif getSetting("stalker") == "true":
-			group_tv({"type":"stalker"})
-		else: return
+		active_sources = []
+		if getSetting("vavoo") == "true":
+			active_sources.append(("VAVOO - GRUPPEN", "vavoo"))
+		if getSetting("stalker") == "true":
+			active_sources.append(("STALKER - GRUPPEN", "stalker"))
+		if getSetting("lite") == "true":
+			active_sources.append(("LITETV - GRUPPEN", "lite"))
+
+		if len(active_sources) > 1:
+			for title, stype in active_sources:
+				addDir2(title, "DefaultAddonPVRClient", "group_tv", type=stype)
+		elif len(active_sources) == 1:
+			group_tv({"type": active_sources[0][1]})
+		else:
+			return
 	end()
 
 def a_z_tv(params):

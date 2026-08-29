@@ -45,7 +45,28 @@ def test_m3u8(url, headers=None, verify=True):
 			response.close()
 
 def resolve_link(link):
-	if isinstance(link, dict) or not "vavoo" in link:
+	if isinstance(link, dict):
+		if link.get("source") == "lite":
+			from vavoo.linear_lite import resolve_lite_stream
+			try:
+				stream_url, headers = resolve_lite_stream(link)
+				if stream_url and test_m3u8(stream_url, headers=dict(parse_qsl(headers)) if headers else None):
+					log("function resolve_link (lite) Status: OK")
+					return stream_url, headers
+			except Exception:
+				log(format_exc())
+			return None, None
+		else:
+			from vavoo.stalker import StalkerPortal
+			try:
+				link, headers = StalkerPortal(get_cache_or_setting("stalkerurl"), get_cache_or_setting("mac")).get_tv_stream_url(link)
+				if test_m3u8(link, headers):
+					log("function resolve_link Status: OK")
+					return link, "&".join([f"{k}={v}" for k, v in headers.items()])
+			except Exception:
+				log(format_exc())
+			return None, None
+	elif not "vavoo" in str(link):
 		from vavoo.stalker import StalkerPortal
 		try:
 			link, headers = StalkerPortal(get_cache_or_setting("stalkerurl"), get_cache_or_setting("mac")).get_tv_stream_url(link)
@@ -109,19 +130,53 @@ def get_stalker_channels(genres=False):
 		}
 		if channel not in sta_channels[name]:
 			sta_channels[name].append(channel)
-	return sta_channels
-
 def getchannels(type=None, group=None):
-	if getSetting("stalker") == "true" and not type == "vavoo":
-		allchannels = get_stalker_channels() if type == None else get_stalker_channels([group])
-	else: allchannels = {}
-	if getSetting("vavoo") == "true" and not type == "stalker":
+	use_stalker = getSetting("stalker") == "true" and (type is None or type == "stalker")
+	use_vavoo = getSetting("vavoo") == "true" and (type is None or type == "vavoo")
+	use_lite = getSetting("lite") == "true" and (type is None or type == "lite")
+
+	sta_channels = {}
+	if use_stalker:
+		sta_channels = get_stalker_channels() if group is None else get_stalker_channels([group])
+
+	vav_channels = {}
+	if use_vavoo:
 		from vavoo.vavoo_tv import get_vav_channels
-		vav_channels = get_vav_channels() if type == None else get_vav_channels([group])
-	else: vav_channels = {}
-	for k, v in vav_channels.items():
-		if k not in allchannels: allchannels[k] = []
-		for n in v: allchannels[k].append(n)
+		vav_channels = get_vav_channels() if group is None else get_vav_channels([group])
+
+	lite_channels = {}
+	if use_lite:
+		from vavoo.linear_lite import get_lite_channels
+		lite_channels = get_lite_channels() if group is None else get_lite_channels([group])
+
+	priority_setting = getSetting("live_priority") or "0"
+	priority_order = {
+		"0": ["vavoo", "stalker", "lite"],
+		"1": ["lite", "vavoo", "stalker"],
+		"2": ["stalker", "vavoo", "lite"],
+		"3": ["lite", "stalker", "vavoo"],
+		"4": ["vavoo", "lite", "stalker"],
+	}.get(priority_setting, ["vavoo", "stalker", "lite"])
+
+	source_map = {
+		"vavoo": vav_channels,
+		"stalker": sta_channels,
+		"lite": lite_channels,
+	}
+
+	all_names = set(sta_channels.keys()) | set(vav_channels.keys()) | set(lite_channels.keys())
+	allchannels = {}
+	for name in sorted(all_names):
+		streams = []
+		for src in priority_order:
+			ch_dict = source_map.get(src, {})
+			if name in ch_dict:
+				for item in ch_dict[name]:
+					if item not in streams:
+						streams.append(item)
+		if streams:
+			allchannels[name] = streams
+
 	return allchannels
 
 def handle_wait(kanal):

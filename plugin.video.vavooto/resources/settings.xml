@@ -1,5 +1,6 @@
 <settings> 
   <category label="TV">
+    <setting default="0" id="live_priority" label="Quellen-Vorrang (Priorität)" type="enum" values="VAVOO > Stalker > LiteTV|LiteTV > VAVOO > Stalker|Stalker > VAVOO > LiteTV|LiteTV > Stalker > VAVOO|VAVOO > LiteTV > Stalker" />
     <setting default="0" id="auto" label="IPTV Autoplay" type="enum" values="Auto|Countdown|Manuell" />
     <setting default="5" id="count" label="Countdown Zeit" type="number" option="int" visible="eq(-1,1)" />
     <setting default="false" id="stream_count" type="bool" label="Anzahl Streams in Title anzeigen"/>
@@ -12,6 +13,11 @@
     <setting default="true" id="filter" type="bool" label="Kanalfilter verwenden"/>
     <setting label="m3u erstellen" type="action" action="RunPlugin(plugin://plugin.video.vavooto/?action=makem3u)"/>
     <setting label="Alle Favoriten entfernen" type="action" action="RunPlugin(plugin://plugin.video.vavooto/?action=delallTvFavorit)"/>
+  </category>
+  <category label="LITETV">
+    <setting default="true" id="lite" type="bool" label="LiteTV (2ix2 / Nydus) verwenden"/>
+    <setting label="LiteTV Ländergruppen Auswahl" type="action" visible="eq(-1,true)" action="RunPlugin(plugin://plugin.video.vavooto/?action=choose_lite)"/>
+    <setting label="LiteTV Cache leeren" type="action" visible="eq(-2,true)" action="RunPlugin(plugin://plugin.video.vavooto/?action=clear_lite_cache)"/>
   </category>
   <category label="VAVOO">
     <setting default="true" id="vavoo" type="bool" label="VAVOO TV verwenden"/>
