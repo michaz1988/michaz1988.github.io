@@ -1,3 +1,9 @@
+2026.08.29.5
+- LiteTV (2ix2 und Nydus) als zusätzliche Live-TV-Quelle für DE, AT und CH integriert.
+- Eigener Menüpunkt „LITETV - GRUPPEN“ in Live-Gruppen und Integration in Live-Alle.
+- Einstellbare Quellen-Priorität (Vorrang zwischen VAVOO, Stalker und LiteTV) in den TV-Settings hinzugefügt.
+- Eigene Einstellungen für LiteTV mit Ein-/Ausschalten, Ländergruppen-Auswahl und Cache-Verwaltung.
+
 2026.08.29.4
 - M3U8-Streams werden vor der Wiedergabe inklusive Unter-Playlist und Mediensegment geprüft.
 - Bei einem erkannten Streamstillstand wird beim nächsten Versuch die nächste Quelle verwendet.
