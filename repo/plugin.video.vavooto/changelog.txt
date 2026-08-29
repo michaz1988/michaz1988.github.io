@@ -1,3 +1,7 @@
+2026.08.29.6
+- Integrierter Nydus HD Stream-Proxy & FooBarX TS-Decoder für verschlüsselte Live-HD-Streams (VOX, RTL, SAT.1, SRF etc.).
+- Robustes Segment-Handling und direkter Playback-Support in Kodi.
+
 2026.08.29.5
 - LiteTV (2ix2 und Nydus) als zusätzliche Live-TV-Quelle für DE, AT und CH integriert.
 - Eigener Menüpunkt „LITETV - GRUPPEN“ in Live-Gruppen und Integration in Live-Alle.
