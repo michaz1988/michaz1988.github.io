@@ -14,7 +14,7 @@ def test_m3u8(url, headers=None, verify=True):
 			return True
 
 		playlist_url = url
-		for level in range(2):
+		for level in range(3):
 			text = response.text
 			response.close()
 			response = None
@@ -24,7 +24,7 @@ def test_m3u8(url, headers=None, verify=True):
 			if not entries:
 				raise ValueError("M3U8 enthält keine Medien-URL")
 			target = urljoin(playlist_url, entries[0])
-			if "#EXT-X-STREAM-INF" in text and level == 0:
+			if ("#EXT-X-STREAM-INF" in text or ".m3u8" in target.lower()) and level < 2:
 				playlist_url = target
 				response = request("GET", target, headers=headers, timeout=10, stream=True, retries=0, verify=verify)
 				response.raise_for_status()
