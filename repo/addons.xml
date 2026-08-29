@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version='1.0' encoding='utf-8'?>
 <addons>
 <addon id="plugin.program.autocompletion" name="AutoCompletion for virtual keyboard" version="2.1.3" provider-name="Philipp Temminghoff (phil65), sualfred, xulek, finkleandeinhorn">
     <requires>
         <import addon="xbmc.python" version="3.0.0" />
-        <import addon="script.module.autocompletion" version="2.0.5"/>
+        <import addon="script.module.autocompletion" version="2.0.5" />
     </requires>
     <extension point="xbmc.python.script" library="default.py">
         <provides>executable</provides>
@@ -27,21 +27,18 @@
     </extension>
 </addon>
 
-<addon id="plugin.program.simple.favourites"
-       version="0.1.18"
-       name="Simple Favourites"
-       provider-name="primaeval">
+<addon id="plugin.program.simple.favourites" version="0.1.18" name="Simple Favourites" provider-name="primaeval">
     <requires>
-        <import addon="xbmc.python" version="3.0.0"/>
-        <import addon="script.module.xbmcswift2"/>
-        <import addon="script.module.requests"/>
+        <import addon="xbmc.python" version="3.0.0" />
+        <import addon="script.module.xbmcswift2" />
+        <import addon="script.module.requests" />
     </requires>
     <extension point="xbmc.python.pluginsource" library="main.py">
         <provides>executable</provides>
     </extension>
     <extension point="xbmc.addon.metadata">
         <summary lang="en">Simple Favourites</summary>
-        <description lang="en"/>
+        <description lang="en" />
         <disclaimer lang="en">.</disclaimer>
     </extension>
     <extension point="kodi.context.item">
@@ -58,9 +55,9 @@
 
 <addon id="plugin.video.tools" name="Tools" version="2026.08.29.1" provider-name="Michaz">
     <requires>
-        <import addon="xbmc.python" version="3.0.0"/>
-        <import addon="script.module.requests"/>
-        <import addon="script.module.routing"/>
+        <import addon="xbmc.python" version="3.0.0" />
+        <import addon="script.module.requests" />
+        <import addon="script.module.routing" />
     </requires>
     <extension point="xbmc.python.pluginsource" library="main.py">
         <provides>video executable</provides>
@@ -75,15 +72,15 @@
     </extension>
 </addon>
 
-<addon id="plugin.video.vavooto" name="VAVOO.TO" version="2026.08.29.7" provider-name="kasi,michaz">
+<addon id="plugin.video.vavooto" name="VAVOO.TO" version="2026.08.29.8" provider-name="kasi,michaz">
 	<requires>
-		<import addon="xbmc.python" version="3.0.1"/>
-		<import addon="script.module.requests"/>
-		<import addon="script.module.resolveurl"/>
-		<import addon="script.module.dateutil"/>
-		<import addon="inputstream.adaptive"/> 
-		<import addon="inputstream.ffmpegdirect"/> 
-		<import addon="script.module.infotagger"/>
+		<import addon="xbmc.python" version="3.0.1" />
+		<import addon="script.module.requests" />
+		<import addon="script.module.resolveurl" />
+		<import addon="script.module.dateutil" />
+		<import addon="inputstream.adaptive" /> 
+		<import addon="inputstream.ffmpegdirect" /> 
+		<import addon="script.module.infotagger" />
 	</requires>
 	<extension point="xbmc.python.pluginsource" library="resources/main.py">
 		<provides>video</provides>
@@ -162,7 +159,7 @@
     <extension point="xbmc.addon.metadata">
         <summary>jurialmunkey Alpha Repository</summary>
         <description>A repository for alpha releases of jurialmunkey's skins.</description>
-        <disclaimer></disclaimer>
+        <disclaimer />
         <platform>all</platform>
         <assets>
             <icon>icon.png</icon>
@@ -191,7 +188,7 @@
 
 <addon id="repository.kodinerds" name="Kodinerds Addon Repo" version="7.0.1.8" provider-name="Kodinerds">
     <requires>
-        <import addon="xbmc.addon" version="12.0.0"/>
+        <import addon="xbmc.addon" version="12.0.0" />
     </requires>
     <extension point="xbmc.addon.repository" name="Kodinerds Addon Repo">
         <dir>
@@ -230,7 +227,7 @@
         <description lang="en">The 'Nerdsrepo' is the Repository of the german Kodi Community 'Kodinerds' (www.kodinerds.net). Most of the hosted Addons here are active developed and supported by the members of the Community. Nerdsrepo is an unofficial Repository of the Kodi Media Center Software</description>
         <summary lang="de">Addon Repository der Kodinerds Community</summary>
         <description lang="de">Das 'Nerdsrepo' ist das Addon Repository der deutschen Kodi-Community 'Kodinerds' (www.kodinerds.net). Die meisten der hier im Nerdsrepo gehosteten Addons werden von den Mitgliedern der Community aktiv entwickelt und unterstützt. Das Nerdsrepo ist ein unoffizielles Repository der Kodi Media Center Software.</description>
-        <disclaimer/>
+        <disclaimer />
         <platform>all</platform>
         <assets>
             <icon>icon.png</icon>
@@ -257,12 +254,12 @@
 		<disclaimer lang="de_DE">[COLORred]Dies ist ein Drittanbieter-Repository und steht nicht in Zusammenhang mit dem offiziellen Team Kodi.[/COLOR]</disclaimer>
 		<language>de</language>
 		<platform>all</platform>
-		<license></license>
-		<forum></forum>
-		<website></website>
-		<email></email>
-		<source></source>
-		<news></news>
+		<license />
+		<forum />
+		<website />
+		<email />
+		<source />
+		<news />
         <assets>
             <icon>resources/icon.png</icon>
 			<fanart>resources/fanart.jpg</fanart>
@@ -310,7 +307,7 @@
 
 <addon id="repository.sandmann79.plugins" name="Sandmann79s Repository" version="2.0.1" provider-name="Sandmann79">
 	<requires>
-		<import addon="xbmc.addon" version="12.0.0"/>
+		<import addon="xbmc.addon" version="12.0.0" />
 	</requires>
 	<extension point="xbmc.addon.repository" name="Sandmann79s Repository">
 		<dir minversion="18.9.9">
@@ -385,10 +382,10 @@
   <extension point="xbmc.addon.metadata">
     <platform>all</platform>
     <description lang="en">Addons by SlyGuy (slyguy.uk)</description>
-    <license></license>
-    <language></language>
-    <website></website>
-    <news></news>
+    <license />
+    <language />
+    <website />
+    <news />
     <assets>
       <icon>icon.png</icon>
       <fanart>fanart.jpg</fanart>
@@ -398,14 +395,14 @@
 
 <addon id="script.module.xstreamscraper" name="xStream Scraper" provider-name="michaz1988" version="2026.08.24">
 	<requires>
-		<import addon="xbmc.python" version="3.0.0"/>
-		<import addon="plugin.video.vavooto"/>
-        <import addon="script.module.requests"/>
-        <import addon="script.module.six"/>
-        <import addon="script.module.resolveurl"/>
-        <import addon="plugin.video.xstream"/>
-        <import addon="script.module.pyaes"/>
-        <import addon="script.module.pydevd" optional="true"/>
+		<import addon="xbmc.python" version="3.0.0" />
+		<import addon="plugin.video.vavooto" />
+        <import addon="script.module.requests" />
+        <import addon="script.module.six" />
+        <import addon="script.module.resolveurl" />
+        <import addon="plugin.video.xstream" />
+        <import addon="script.module.pyaes" />
+        <import addon="script.module.pydevd" optional="true" />
     </requires>
     <extension point="xbmc.python.pluginsource" library="main.py">
         <provides>video</provides>
@@ -423,8 +420,8 @@
 
 <addon id="service.takealug.epg-grabber" name="Takealug EPG Grabber" version="2.1.3" provider-name="DeBaschdi">
     <requires>
-        <import addon="xbmc.python" version="3.0.0"/>
-        <import addon="script.module.requests"/>
+        <import addon="xbmc.python" version="3.0.0" />
+        <import addon="script.module.requests" />
     </requires>
     <extension point="xbmc.service" library="service.py" start="startup" />
     <extension point="xbmc.addon.metadata">
