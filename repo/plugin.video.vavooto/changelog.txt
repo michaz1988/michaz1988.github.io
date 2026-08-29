@@ -1,3 +1,7 @@
+2026.08.29.7
+- Priorisierung der Nydus HD-Streams (1024x576/720p) vor den SD-Hopslan-Streams für optimale Bildqualität.
+- Automatisches Leeren veralteter LiteTV-Cacheeinträge.
+
 2026.08.29.6
 - Integrierter Nydus HD Stream-Proxy & FooBarX TS-Decoder für verschlüsselte Live-HD-Streams (VOX, RTL, SAT.1, SRF etc.).
 - Robustes Segment-Handling und direkter Playback-Support in Kodi.
