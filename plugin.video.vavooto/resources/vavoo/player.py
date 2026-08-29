@@ -65,3 +65,58 @@ class cPlayer:
                 xbmcPlayer.playedTime = xbmcPlayer.getTime()
             monitor.waitForAbort(10)
         return xbmcPlayer.streamSuccess
+
+
+class LivePlayer(player):
+    """Watch live playback and distinguish user stops from stream failures."""
+
+    def __init__(self):
+        player.__init__(self)
+        self.ended = False
+        self.stopped = False
+
+    def onPlayBackEnded(self):
+        self.ended = True
+
+    def onPlayBackStopped(self):
+        self.stopped = True
+
+    def _speed(self):
+        try:
+            query = json.dumps({
+                "jsonrpc": "2.0",
+                "method": "Player.GetProperties",
+                "params": {"playerid": 1, "properties": ["speed"]},
+                "id": 1,
+            })
+            result = json.loads(xbmc.executeJSONRPC(query))
+            return result.get("result", {}).get("speed", 1)
+        except Exception:
+            return 1
+
+    def wait_for_failure(self, stall_seconds=10):
+        started = time.time()
+        last_progress = started
+        last_time = None
+
+        while not monitor.abortRequested():
+            if self.ended:
+                return "ended"
+            if self.stopped:
+                return "stopped"
+
+            if self.isPlayingVideo():
+                try:
+                    current = self.getTime()
+                    if last_time is None or abs(current - last_time) > 0.25:
+                        last_time = current
+                        last_progress = time.time()
+                    elif self._speed() != 0 and time.time() - last_progress >= stall_seconds:
+                        return "stalled"
+                except Exception:
+                    log(format_exc())
+            elif time.time() - started >= 30:
+                return "startup_failed"
+
+            monitor.waitForAbort(2)
+        return "abort"

@@ -23,7 +23,7 @@ if __name__ == "__main__":
 	if tv:
 		if action == "addTvFavorit": vjlive.change_favorit(tv)
 		elif action == "delTvFavorit": vjlive.change_favorit(tv, True)
-		else: vjlive.livePlay(tv, params.get('type'), params.get('group'))
+		else: vjlive.livePlay(tv, params.get('type'), params.get('group'), params.get('retry', '0'))
 	elif action is None:
 		vjackson.menu(params)
 	elif action == "delallTvFavorit":

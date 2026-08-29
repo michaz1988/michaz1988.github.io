@@ -97,7 +97,7 @@ def handle_wait(kanal):
 	progress.close()
 	return True
 
-def livePlay(name, type=None, group=None):
+def livePlay(name, type=None, group=None, retry='0'):
 	m = getchannels(type, group).get(name)
 	if not m:
 		showFailedNotification()
@@ -133,6 +133,10 @@ def livePlay(name, type=None, group=None):
 			if i >= len(m): i = 0
 	set_cache("last", {"idn": name, "num": i}, 2)
 	title = title if title else name
+	live_player = None
+	if getSetting("live_auto_retry") == "true" and retry == '0':
+		from vavoo.player import LivePlayer
+		live_player = LivePlayer()
 	infoLabels = {"title": title, "plot": "[B]%s[/B] - Stream %s von %s" % (name, i + 1, len(m))}
 	o = ListItem(name)
 	log("Spiele %s" % url)
@@ -165,6 +169,23 @@ def livePlay(name, type=None, group=None):
 	info_tag.set_info(infoLabels)
 	set_resolved(o)
 	end()
+	if live_player:
+		try:
+			retry_delay = max(1, int(getSetting("live_retry_delay")))
+		except (TypeError, ValueError):
+			retry_delay = 10
+		result = live_player.wait_for_failure(retry_delay)
+		if result in ("ended", "stalled"):
+			log("Live-TV-Stream %s; resolve Sender erneut" % result)
+			dialog.notification("VAVOO.TO", "Stream unterbrochen - verbinde erneut", xbmcgui.NOTIFICATION_INFO, 3000)
+			if result == "stalled" and live_player.isPlaying():
+				live_player.stop()
+			params = {"name": name, "retry": "1"}
+			if type: params["type"] = type
+			if group: params["group"] = group
+			live_player.play(url_for(params))
+		else:
+			log("Live-TV Auto-Retry nicht gestartet: %s" % result)
 
 def makem3u():
 	m3u = ["#EXTM3U\n"]
