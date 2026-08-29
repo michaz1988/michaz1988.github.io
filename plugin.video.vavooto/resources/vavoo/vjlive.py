@@ -84,6 +84,9 @@ def resolve_link(link):
 			streamurl = request_json("POST", url, json=_data, headers=_headers, timeout=10, retries=1)[0]["url"]
 			if test_m3u8(streamurl, verify=False):
 				log("function resolve_link Status: OK")
+				if getSetting("vavoo_hls_proxy") == "true":
+					from vavoo.live_proxy import get_vavoo_proxy_url
+					return get_vavoo_proxy_url(streamurl), None
 				return streamurl, None
 		except Exception:
 			log(format_exc())

@@ -20,7 +20,8 @@
   </category>
   <category label="VAVOO">
     <setting default="true" id="vavoo" type="bool" label="VAVOO TV verwenden"/>
-    <setting label="VAVOO Kanalgruppen Auswahl" type="action" visible="eq(-1,true)" action="RunPlugin(plugin://plugin.video.vavooto/?action=choose)"/>
+    <setting default="true" id="vavoo_hls_proxy" type="bool" label="VAVOO HLS Proxy verwenden (Stabilere Wiedergabe)" visible="eq(-1,true)"/>
+    <setting label="VAVOO Kanalgruppen Auswahl" type="action" visible="eq(-2,true)" action="RunPlugin(plugin://plugin.video.vavooto/?action=choose)"/>
   </category>
   <category label="STALKER">
     <setting default="true" id="stalker" type="bool" label="Stalkerportal verwenden"/>
