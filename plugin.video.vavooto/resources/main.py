@@ -13,7 +13,6 @@ if __name__ == "__main__":
 		"get_genres": lambda: stalker.get_genres(),
 		"choose_portal": lambda: stalker.choose_portal(),
 		"new_mac": lambda: stalker.new_mac(),
-		"choose_lite": lambda: linear_lite.choose_lite_groups(),
 		"clear_lite_cache": lambda: (del_cache("lite_channels"), dialog.notification("VAVOO.TO", "LiteTV Cache gelöscht", xbmcgui.NOTIFICATION_INFO, 2000)),
 		"clear": lambda: clear(),
 		"delete_search": lambda: delete_search(params),

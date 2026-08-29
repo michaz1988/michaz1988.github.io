@@ -149,35 +149,6 @@ def _ensure_nydus_proxy():
         return 19888
 
 
-def lite_groups():
-    return [c["label"] for c in CATEGORIES]
-
-
-def choose_lite_groups():
-    all_slugs = [c["slug"] for c in CATEGORIES]
-    all_labels = [c["label"] for c in CATEGORIES]
-    cache_ok, current = get_cache("lite_groups")
-    if not cache_ok or not isinstance(current, list):
-        current = all_slugs[:]
-
-    preselect = [all_slugs.index(slug) for slug in current if slug in all_slugs]
-    indices = selectDialog(all_labels, "LiteTV Gruppen auswählen", multiselect=True, preselect=preselect)
-    if indices is None:
-        return current
-
-    selected_slugs = [all_slugs[i] for i in indices]
-    set_cache("lite_groups", selected_slugs)
-    del_cache("lite_channels")
-    return selected_slugs
-
-
-def _selected_categories():
-    cache_ok, current = get_cache("lite_groups")
-    if not cache_ok or not isinstance(current, list):
-        current = [c["slug"] for c in CATEGORIES]
-    return [c for c in CATEGORIES if c["slug"] in current]
-
-
 def _extract_stream_url(content):
     text = html.unescape(content or "").replace(r"\/", "/")
     patterns = (
@@ -435,23 +406,8 @@ def get_lite_channels(groups=False):
         all_channels = channels
         set_cache("lite_channels", all_channels, 6)
 
-    if groups is False or groups is None:
-        selected_cats = _selected_categories()
-        allowed_slugs = {c["slug"] for c in selected_cats}
-        allowed_labels = {c["label"] for c in selected_cats}
-    else:
-        allowed_slugs = set()
-        allowed_labels = set()
-        for g in groups:
-            for c in CATEGORIES:
-                if g in (c["slug"], c["label"]):
-                    allowed_slugs.add(c["slug"])
-                    allowed_labels.add(c["label"])
-
     result = {}
     for ch in all_channels:
-        if ch.get("group_slug") not in allowed_slugs and ch.get("group") not in allowed_labels:
-            continue
         name = ch.get("name")
         if not name:
             continue

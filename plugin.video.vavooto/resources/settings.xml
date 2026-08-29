@@ -16,8 +16,7 @@
   </category>
   <category label="LITETV">
     <setting default="true" id="lite" type="bool" label="LiteTV (2ix2 / Nydus) verwenden"/>
-    <setting label="LiteTV Ländergruppen Auswahl" type="action" visible="eq(-1,true)" action="RunPlugin(plugin://plugin.video.vavooto/?action=choose_lite)"/>
-    <setting label="LiteTV Cache leeren" type="action" visible="eq(-2,true)" action="RunPlugin(plugin://plugin.video.vavooto/?action=clear_lite_cache)"/>
+    <setting label="LiteTV Cache leeren" type="action" visible="eq(-1,true)" action="RunPlugin(plugin://plugin.video.vavooto/?action=clear_lite_cache)"/>
   </category>
   <category label="VAVOO">
     <setting default="true" id="vavoo" type="bool" label="VAVOO TV verwenden"/>
