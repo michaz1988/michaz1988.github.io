@@ -1,3 +1,7 @@
+2026.08.29.4
+- M3U8-Streams werden vor der Wiedergabe inklusive Unter-Playlist und Mediensegment geprüft.
+- Bei einem erkannten Streamstillstand wird beim nächsten Versuch die nächste Quelle verwendet.
+
 2026.08.29.3
 - Automatische Neuverbindung verwendet beim Resolven weiterhin denselben Stream.
 - Die Anzahl der Neuverbindungsversuche ist in den TV-Einstellungen konfigurierbar.
