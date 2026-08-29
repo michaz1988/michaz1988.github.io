@@ -133,6 +133,7 @@ def get_stalker_channels(genres=False):
 		}
 		if channel not in sta_channels[name]:
 			sta_channels[name].append(channel)
+	return sta_channels
 def getchannels(type=None, group=None):
 	use_stalker = getSetting("stalker") == "true" and (type is None or type == "stalker")
 	use_vavoo = getSetting("vavoo") == "true" and (type is None or type == "vavoo")
@@ -151,6 +152,10 @@ def getchannels(type=None, group=None):
 	if use_lite:
 		from vavoo.linear_lite import get_lite_channels
 		lite_channels = get_lite_channels() if group is None else get_lite_channels([group])
+
+	sta_channels = sta_channels if isinstance(sta_channels, dict) else {}
+	vav_channels = vav_channels if isinstance(vav_channels, dict) else {}
+	lite_channels = lite_channels if isinstance(lite_channels, dict) else {}
 
 	priority_setting = getSetting("live_priority") or "0"
 	priority_order = {
