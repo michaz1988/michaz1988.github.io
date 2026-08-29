@@ -1,3 +1,6 @@
+2026.08.29.11
+- Integrierter lokaler HLS Proxy für VAVOO Live-Streams zur Stabilisierung von Transport und Segment-Pufferung.
+
 2026.08.29.10
 - LiteTV Ländergruppen-Menü und Auswahl entfernt; alle LiteTV-Sender (inkl. SRF und Servus TV) werden nahtlos in einer Liste bereitgestellt.
 
