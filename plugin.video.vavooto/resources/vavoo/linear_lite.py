@@ -444,15 +444,15 @@ def get_lite_channels(groups=False):
     if cache_ok and isinstance(cached, list) and cached:
         all_channels = cached
     else:
-        log("Loading LiteTV channels from 2ix2 and Nydus")
+        log("Loading LiteTV channels from Nydus and 2ix2")
         channels = []
-        with ThreadPoolExecutor(max_workers=3) as executor:
-            for cat in CATEGORIES:
-                channels += _load_2ix2_category(cat)
-
         nydus_channels = _load_nydus_channels()
         if nydus_channels:
             channels += nydus_channels
+
+        with ThreadPoolExecutor(max_workers=3) as executor:
+            for cat in CATEGORIES:
+                channels += _load_2ix2_category(cat)
 
         all_channels = channels
         set_cache("lite_channels", all_channels, 6)
