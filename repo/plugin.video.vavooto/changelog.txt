@@ -1,3 +1,7 @@
+2026.08.29.8
+- Vollständige Bereinigung und lokale Validierung der LiteTV-Sender & Streams.
+- Korrigierte M3U8-Segment-Validierung bei verschachtelten Master-Playlists.
+
 2026.08.29.7
 - Priorisierung der Nydus HD-Streams (1024x576/720p) vor den SD-Hopslan-Streams für optimale Bildqualität.
 - Automatisches Leeren veralteter LiteTV-Cacheeinträge.
