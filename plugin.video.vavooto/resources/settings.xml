@@ -4,8 +4,9 @@
     <setting default="5" id="count" label="Countdown Zeit" type="number" option="int" visible="eq(-1,1)" />
     <setting default="false" id="stream_count" type="bool" label="Anzahl Streams in Title anzeigen"/>
     <setting default="0" id="hlsinputstream" label="HLS Inputstream Addon" type="enum" visible="System.HasAddon(inputstream.ffmpegdirect)" values="ffmpeg|adaptive" />
-    <setting default="true" id="live_auto_retry" type="bool" label="Live-TV bei Streamabbruch einmal neu verbinden"/>
+    <setting default="true" id="live_auto_retry" type="bool" label="Live-TV bei Streamabbruch automatisch neu verbinden"/>
     <setting default="10" id="live_retry_delay" type="number" option="int" label="Wartezeit bis zur Neuverbindung in Sekunden" visible="eq(-1,true)"/>
+    <setting default="1" id="live_retry_count" type="number" option="int" label="Anzahl der Neuverbindungsversuche" visible="eq(-2,true)"/>
     <!--<setting default="0" id="openmode" label="ffmpeg Open Mode" type="enum" visible="System.HasAddon(inputstream.ffmpegdirect)" values="default|ffmpeg|curl" />-->
     <setting default="true" id="filter" type="bool" label="Kanalfilter verwenden"/>
     <setting label="m3u erstellen" type="action" action="RunPlugin(plugin://plugin.video.vavooto/?action=makem3u)"/>

@@ -1,3 +1,7 @@
+2026.08.29.3
+- Automatische Neuverbindung verwendet beim Resolven weiterhin denselben Stream.
+- Die Anzahl der Neuverbindungsversuche ist in den TV-Einstellungen konfigurierbar.
+
 2026.08.29.2
 - Live-TV-Sender werden nach einem erkannten Streamabbruch einmal neu aufgelöst und gestartet.
 - Die Wartezeit bis zur Neuverbindung ist in den TV-Einstellungen konfigurierbar (Standard: 10 Sekunden).

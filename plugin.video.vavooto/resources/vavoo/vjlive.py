@@ -98,6 +98,14 @@ def handle_wait(kanal):
 	return True
 
 def livePlay(name, type=None, group=None, retry='0'):
+	try:
+		retry = max(0, int(retry))
+	except (TypeError, ValueError):
+		retry = 0
+	try:
+		max_retries = max(0, int(getSetting("live_retry_count")))
+	except (TypeError, ValueError):
+		max_retries = 1
 	m = getchannels(type, group).get(name)
 	if not m:
 		showFailedNotification()
@@ -106,7 +114,10 @@ def livePlay(name, type=None, group=None, retry='0'):
 	if len(m) > 1:
 		if getSetting("auto") == "0":
 			cacheOk, last = get_cache("last")
-			if cacheOk and last.get("idn") == name: i = last.get("num") + 1
+			if cacheOk and last.get("idn") == name:
+				i = last.get("num")
+				if retry == 0:
+					i += 1
 			if i >= len(m): i = 0
 			title = "%s (%s/%s)" % (name, i + 1, len(m))  # wird verwendet für infoLabels
 		elif getSetting("auto") == "1":
@@ -134,7 +145,7 @@ def livePlay(name, type=None, group=None, retry='0'):
 	set_cache("last", {"idn": name, "num": i}, 2)
 	title = title if title else name
 	live_player = None
-	if getSetting("live_auto_retry") == "true" and retry == '0':
+	if getSetting("live_auto_retry") == "true" and retry < max_retries:
 		from vavoo.player import LivePlayer
 		live_player = LivePlayer()
 	infoLabels = {"title": title, "plot": "[B]%s[/B] - Stream %s von %s" % (name, i + 1, len(m))}
@@ -180,7 +191,7 @@ def livePlay(name, type=None, group=None, retry='0'):
 			dialog.notification("VAVOO.TO", "Stream unterbrochen - verbinde erneut", xbmcgui.NOTIFICATION_INFO, 3000)
 			if result == "stalled" and live_player.isPlaying():
 				live_player.stop()
-			params = {"name": name, "retry": "1"}
+			params = {"name": name, "retry": str(retry + 1)}
 			if type: params["type"] = type
 			if group: params["group"] = group
 			live_player.play(url_for(params))
