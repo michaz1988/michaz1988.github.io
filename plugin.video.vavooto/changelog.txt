@@ -1,3 +1,51 @@
+2026.08.30.9
+- Stalker end-to-end getestet (echte Portale): MAC-Prefilter -> check() -> Genres -> 12122 Sender -> 5/5 Streams abspielbar, 0 MACs faelschlich blacklistet.
+- check() gibt neu "No Stream" zurueck, wenn Login+Senderliste+Gruppen ok sind aber kein Test-Stream laeuft (Geo-/CDN-Sperre) - die MAC wird NICHT verbrannt, Volltest stoppt sofort.
+- check() prueft bis zu 5 zufaellige Sender statt nur einen (kein Fehlurteil durch einen toten Kanal).
+- check() prueft Konto/Ablauf VOR der teuren Senderliste; Reihenfolge account -> channels -> genres -> stream.
+- Abgelaufene MACs werden im Volltest nicht mehr durchprobiert (Ablauf-Puffer 5 Tage -> 12 h).
+- Prefilter schonender: max. 2 parallele Handshakes, Batch <= 24 (vorher bis 40 -> IP-Ban-Risiko).
+
+2026.08.30.8
+- Anzeige-Bug: Titel "(x/n)" und Plot "Stream x von n" widersprachen sich, wenn die erste Quelle beim Aufloesen uebersprungen wurde. Beide werden jetzt nach der Aufloesung gesetzt und zeigen dieselbe (tatsaechlich verwendete) Quelle.
+
+2026.08.30.7
+- Proxy-Playlist blockiert den Request-Pfad nicht mehr: ffmpeg bekommt die Playlist immer sofort aus dem Cache, der Hintergrund-Thread erledigt Refresh/Re-Resolve. (Vorher konnte ffmpeg im synchronen Re-Resolve haengen -> I/O-Timeout -> Endlosschleife auf dasselbe Segment.)
+- Proxy erkennt eingefrorene Playlists (MEDIA-SEQUENCE steht > 3x Segmentlaenge trotz HTTP 200 = still gestorbener Token) und loest dieselbe Quelle neu auf.
+- Re-Resolve auf 1x pro 12s gedrosselt (kein Dauer-Hammern bei toter Quelle).
+- Session-Start primt Playlist sofort (erste ffmpeg-Anfrage wartet nicht).
+
+2026.08.30.6
+- Proxy: Test mit den exakt in Kodi haengenden Quellen zeigt - Segmente kommen byte-identisch und TS-sauber an, Quellen leben. Ursache war der ffmpeg-I/O-Timeout bei langsamem Erst-/Miss-Segment.
+- Prefetch laedt jetzt das GANZE sichtbare Playlist-Fenster vor (nicht nur die letzten 4) - das Segment das ffmpeg zuerst anfordert ist damit schon da. RAM-Budget 24 -> 48 MB.
+- Cache-Miss wird waehrend des Downloads an ffmpeg durchgestreamt (kein ~9s-Blackout mehr) und parallel gecacht.
+- httpx read-Timeout 10s -> 20s, ffmpeg I/O-Timeout 10s -> 30s (grosse 10-MB/20s-Segmente).
+
+2026.08.30.5
+- Failover bei haengendem Stream gefixt: wenn der Player abbricht OHNE je ein Bild geliefert zu haben (haeufig bei Pay-TV wie 13TH STREET), wird das jetzt als Fehlstart gewertet und die naechste Quelle genommen - vorher wurde das als "vom Nutzer gestoppt" interpretiert und blieb stehen.
+- Fehlstart-Erkennung von 30s auf 12s verkuerzt, Stillstand weiter 8s; Monitor-Takt 2s -> 1s (schnellerer Wechsel).
+
+2026.08.30.4
+- HLS-Proxy: robust gegen Netzausfälle - keine seitenlangen Tracebacks mehr, kein Absturz; HTTP-Client-Timeouts verkürzt (5s connect / 10s read), Prefetch-Loop mit Backoff bei Upstream-Ausfall.
+- Proxy: send_error/BrokenPipe beim Client-Abbruch abgefangen, socketserver-Fehler (Connection reset) werden geschluckt.
+- Live-TV: getchannels()-Aufruf in livePlay abgesichert - ein Netz-Blip während eines Auto-Retry crasht das Plugin nicht mehr.
+- Stalker MAC-Test komplett überarbeitet: paralleler Handshake-Schnelltest (statt sequentiell), Netzwerkfehler markieren eine MAC NICHT mehr als defekt, faultymac-Blacklist mit 12h-TTL, konsistenter Cache-Key.
+- VAVOO-Kanalliste: Frische-Prüfung (vavoo_groups) abgesichert - bei Netzfehler wird der vorhandene Cache weiterverwendet statt zu scheitern.
+
+2026.08.30.3
+- VAVOO Proxy mit Vorauslade-Puffer: ein Hintergrund-Thread lädt die kommenden Segmente vorab in einen RAM-Cache (Budget 40 MB), kurze Upstream-Aussetzer führen nicht mehr zum Stottern. Abschaltbar über neue Einstellung "Segmente vorausladen".
+- Proxy spricht jetzt HTTP/1.1 mit Keep-Alive, beantwortet HEAD- und Range-Anfragen und streamt Segmente durch statt sie komplett zu puffern.
+- Live-TV nutzt fest inputstream.ffmpegdirect; die Auswahl "HLS Inputstream Addon" (ffmpeg/adaptive) wurde entfernt.
+- Einstellung "Wartezeit bis zur Neuverbindung" entfernt; Stillstandserkennung fest auf 8 s (der Proxy-Puffer überbrückt kurze Aussetzer).
+- Funktion "m3u erstellen" samt Kontextmenü-Eintrag und Einstellung entfernt.
+
+2026.08.30.2
+- Live-TV Auto-Failover: bei Streamabbruch wird ohne Dialog automatisch die nächste Quelle gewählt (auch im Countdown-/Manuell-Modus).
+- Lokaler HLS-Proxy bleibt jetzt für die gesamte Wiedergabe aktiv, nicht nur beim ersten Versuch (Proxy starb bisher beim Umschalten).
+- Failover greift jetzt auch bei fehlgeschlagenem Wiedergabestart (startup_failed) und bei stillem Wegbrechen der Wiedergabe.
+- Neuverbindungsversuche standardmäßig auf 3 erhöht bzw. mindestens Anzahl der verfügbaren Quellen.
+- VAVOO-Proxy löst abgelaufene/tote Stream-URLs im Hintergrund neu auf und bedient dieselbe lokale URL weiter.
+
 2026.08.30.1
 - Certifi und IDNA durch offizielle Kodi-Modulabhängigkeiten ersetzt.
 

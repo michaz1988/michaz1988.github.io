@@ -7,6 +7,16 @@ from vavoo.utils import *
 def _portal_flag(value):
 	return str(value).strip().lower() in ("1", "true", "yes")
 
+def _stalker_net_error(exc):
+	"""True bei Transport-/DNS-/Timeout-Fehlern - dann liegt es NICHT an der MAC."""
+	s = ("%r %s" % (exc, exc)).lower()
+	return any(k in s for k in (
+		"timeout", "timed out", "connectionerror", "connection aborted", "connection reset",
+		"connection refused", "nameresolution", "failed to resolve", "no address associated",
+		"maxretryerror", "unreachable", "temporary failure", "[errno 7]", "[errno 111]",
+		"[errno 104]", "[errno 110]", "[errno 101]", "remotedisconnected", "read timed out",
+	))
+
 def _is_german_language_group(title):
 	raw_title = str(title)
 	if any(flag in raw_title for flag in ("🇦🇹", "🇩🇪", "🇨🇭")):
@@ -28,10 +38,11 @@ class Token:
 		self.url = url
 
 class StalkerPortal:
-	def __init__(self, portal_url, mac):
+	def __init__(self, portal_url, mac, persist=True):
 		self.url = portal_url
 		self.portal_url = portal_url.rstrip("/").replace('/c', '/server/load.php')
 		self.mac = mac.strip()
+		self.persist = persist          # False = Probe-Instanz, Token nicht global speichern
 		self.__token = Token()
 		self.__load_cache()
 		self.headers = self.generate_headers()
@@ -45,10 +56,13 @@ class StalkerPortal:
 			log('No token in cache')
 
 	def __save_cache(self):
-		log('Saving token to cache')
+		# In-Memory-Zustand immer aktuell halten (verhindert unnötigen Doppel-Handshake)
 		self.__token.time = time.time()
 		self.__token.mac = self.mac
 		self.__token.url = self.portal_url
+		if not self.persist:
+			return
+		log('Saving token to cache')
 		home.setProperty("token", json.dumps(self.__token.__dict__))
 
 	def generate_headers(self, include_auth=True, include_token=True, custom_headers=None):
@@ -79,8 +93,10 @@ class StalkerPortal:
 	def make_request_with_retries(self, params, retries=0, timeout=5):
 		if not params.get("action") in ["handshake", "get_profile"]: self.ensure_token()
 		params["JsHttpRequest"] = "1-xml"
+		self._net_error = False
 		for attempt in range(1, retries + 2):
 			try:
+				neterr = False
 				try:
 					log("Attempt %s: GET %s with params=%s" % (attempt, self.portal_url, params))
 					response = request("GET", self.portal_url, params=params, headers=self.headers, timeout=timeout, retries=0)
@@ -88,35 +104,47 @@ class StalkerPortal:
 					a = response.text
 					blocked = response.status_code == 403 or "IP adresiniz engellenmistir." in a
 					failed = response.status_code >= 400 or blocked or "js" not in a
-				except Exception:
-					log("Erster Portalversuch fehlgeschlagen:\n%s" % format_exc())
+				except Exception as e:
+					log("Erster Portalversuch fehlgeschlagen: %s" % repr(e)[:150])
 					a = ""
 					blocked = False
 					failed = True
+					neterr = _stalker_net_error(e)
 				if failed and self.headers.get("User-Agent") != BROWSER_UA:
 					log("Zweiter Versuch mit Chrome User-Agent")
 					chrome_headers = dict(self.headers)
 					chrome_headers["User-Agent"] = BROWSER_UA
-					response = request("GET", self.portal_url, params=params, headers=chrome_headers, timeout=timeout, retries=0)
-					log("Chrome-Versuch, Antwort: %s" % response.status_code)
-					a = response.text
-					blocked = response.status_code == 403 or "IP adresiniz engellenmistir." in a
-					failed = response.status_code >= 400 or blocked or "js" not in a
-					if not failed:
-						self.headers = chrome_headers
+					try:
+						response = request("GET", self.portal_url, params=params, headers=chrome_headers, timeout=timeout, retries=0)
+						a = response.text
+						blocked = response.status_code == 403 or "IP adresiniz engellenmistir." in a
+						failed = response.status_code >= 400 or blocked or "js" not in a
+						if not failed:
+							self.headers = chrome_headers
+							neterr = False
+					except Exception as e:
+						log("Chrome-Versuch fehlgeschlagen: %s" % repr(e)[:150])
+						a = ""
+						failed = True
+						neterr = neterr or _stalker_net_error(e)
 				if blocked:
-					log("Abbruch: Portal auch mit Chrome User-Agent blockiert")
+					log("Abbruch: Portal blockiert")
 					return "IP BLOCKED"
-				if "js" in a: return json.loads(a)["js"]
-				else:
-					cacheOk, faultymac = get_cache("faultymac")
-					if not cacheOk: faultymac = {}
-					if not self.portal_url in faultymac:
-						faultymac[self.portal_url] = []
-					if self.mac not in faultymac[self.portal_url]:
-						faultymac[self.portal_url].append(self.mac)
-					set_cache("faultymac", faultymac)
+				if "js" in a:
+					return json.loads(a)["js"]
+				if neterr:
+					# Netz-/Portalproblem -> MAC NICHT als defekt markieren
+					self._net_error = True
 					continue
+				# Portal hat geantwortet, aber ohne gueltige js-Daten -> MAC defekt
+				cacheOk, faultymac = get_cache("faultymac")
+				if not cacheOk: faultymac = {}
+				if not self.url in faultymac:
+					faultymac[self.url] = []
+				if self.mac not in faultymac[self.url]:
+					faultymac[self.url].append(self.mac)
+				set_cache("faultymac", faultymac, 12)
+				continue
 			except Exception:
 				log(format_exc())
 			if attempt < retries:
@@ -186,7 +214,43 @@ class StalkerPortal:
 			self.__save_cache()
 			self.headers["Authorization"] = "Bearer %s" % self.__token.value
 			log("function get_profile Updatet headers: %s" % self.headers)
-			self.watchdog()
+			if self.persist:
+				self.watchdog()
+
+	def probe(self):
+		"""Schnelltest einer MAC: Handshake + Profil + Account-Info, keine Senderliste.
+		Rueckgabe: OK | EXPIRED | INVALID | BLOCKED | NETWORK"""
+		self._net_error = False
+		try:
+			r = self.make_request_with_retries({"type": "stb", "action": "handshake"})
+		except Exception as exc:
+			return "NETWORK" if _stalker_net_error(exc) else "INVALID"
+		if r == "IP BLOCKED":
+			return "BLOCKED"
+		if not isinstance(r, dict) or not r.get("token"):
+			return "NETWORK" if self._net_error else "INVALID"
+		self.__token.value = r["token"]
+		self.__token.mac = self.mac
+		self.__token.url = self.portal_url
+		self.__token.time = time.time()
+		self.headers["Authorization"] = "Bearer %s" % r["token"]
+		try:
+			self.get_profile()
+			info = self.get_account_info()
+		except Exception as exc:
+			return "NETWORK" if _stalker_net_error(exc) else "OK"
+		if info == "IP BLOCKED":
+			return "BLOCKED"
+		if not isinstance(info, dict):
+			return "NETWORK" if self._net_error else "OK"
+		phone = info.get("phone")
+		if phone:
+			try:
+				if time.time() + 43200 > datetime.timestamp(parse(phone)):
+					return "EXPIRED"
+			except Exception:
+				pass
+		return "OK"
 
 	def watchdog(self):
 		return self.make_request_with_retries({
@@ -215,69 +279,93 @@ class StalkerPortal:
 				categories[i.get("title")] = i.get("id")
 		return dict(sorted(list(categories.items())))
 
+	def _blacklist(self):
+		cacheOk, fm = get_cache("faultymac")
+		if not cacheOk or not isinstance(fm, dict):
+			fm = {}
+		fm.setdefault(self.url, [])
+		if self.mac not in fm[self.url]:
+			fm[self.url].append(self.mac)
+		set_cache("faultymac", fm, 12)
+
+	def _blocked(self):
+		setSetting("account_info", "IP BLOCKED")
+		setSetting("portal_ok", "IP BLOCKED")
+		setSetting("stalker", "false")
+
 	def check(self):
+		"""Prueft eine MAC am Portal. Rueckgabe:
+		True | 'IP BLOCKED' | 'NETWORK' | 'No Channels' | 'ACCOUNT Infos Empty'
+		| 'ACCOUNT Expired' | 'No Genres' | 'No Stream'"""
 		try:
-			try:
-				chans = self.channels()
-				if chans == "IP BLOCKED":
-					setSetting("account_info", "IP BLOCKED")
-					setSetting("portal_ok", "IP BLOCKED")
-					setSetting("stalker", "false")
-					return "IP BLOCKED"
-				set_cache("sta_channels", chans,  int(getSetting("stalk_cache")))
-				cmd = random.choice(chans)
-				if not _portal_flag(cmd.get("use_http_tmp_link")) and not _portal_flag(cmd.get("use_load_balancing")):
-					streamurl = cmd['cmd'].split()[-1]
-				else:
-					streamurl, headers = self.get_tv_stream_url(cmd)
-				res = request("GET", streamurl, headers=self.headers, timeout=10, stream=True, retries=0)
-				res.raise_for_status()
-			except Exception:
-				cacheOk, faultymac = get_cache("faultymac")
-				if not cacheOk:
-					faultymac = {}
-				if not self.portal_url in faultymac:
-					faultymac[self.portal_url] = []
-				if self.mac not in faultymac[self.portal_url]:
-					faultymac[self.portal_url].append(self.mac)
-				set_cache("faultymac", faultymac)
-				return "No Channels"
 			account_info = self.get_account_info()
 			if account_info == "IP BLOCKED":
-				setSetting("account_info", "IP BLOCKED")
-				setSetting("portal_ok", "IP BLOCKED")
-				setSetting("stalker", "false")
-				return "IP BLOCKED"
-			elif not account_info:
-				setSetting("account_info", "")
-				return "ACCOUNT Infos Empty"
-			else:
-				log(account_info)
-				phone = account_info.get("phone")
-				if phone and (time.time() + 432000) > datetime.timestamp(parse(phone)):
-					cacheOk, faultymac = get_cache("faultymac")
-					if not cacheOk: faultymac = {}
-					if not self.portal_url in faultymac:
-						faultymac[self.portal_url] = []
-					if self.mac not in faultymac[self.portal_url]:
-						faultymac[self.portal_url].append(self.mac)
-					set_cache("faultymac", faultymac)
-					setSetting("account_info", "")
-					return "ACCOUNT Expired"
-				account_info_str = ",".join(["%s:%s" % (k, v) for k, v in account_info.items()])
-				setSetting("account_info", account_info_str)
+				self._blocked(); return "IP BLOCKED"
+			if not account_info or not isinstance(account_info, dict):
+				if getattr(self, "_net_error", False):
+					return "NETWORK"
+				setSetting("account_info", ""); return "ACCOUNT Infos Empty"
+			log(account_info)
+			phone = account_info.get("phone")
+			if phone:
+				try:
+					expired = time.time() + 43200 > datetime.timestamp(parse(phone))
+				except Exception:
+					expired = False
+				if expired:
+					self._blacklist(); setSetting("account_info", ""); return "ACCOUNT Expired"
+			setSetting("account_info", ",".join("%s:%s" % (k, v) for k, v in account_info.items()))
+
+			chans = self.channels()
+			if chans == "IP BLOCKED":
+				self._blocked(); return "IP BLOCKED"
+			if not chans or not isinstance(chans, list):
+				if getattr(self, "_net_error", False):
+					return "NETWORK"
+				self._blacklist(); return "No Channels"
+			set_cache("sta_channels", chans, int(getSetting("stalk_cache")))
+
 			g = self.genres()
 			if g == "IP BLOCKED":
-				setSetting("account_info", "IP BLOCKED")
-				setSetting("portal_ok", "IP BLOCKED")
-				setSetting("stalker", "false")
-				return "IP BLOCKED"
-			if not g: return "No Genres"
+				self._blocked(); return "IP BLOCKED"
+			if not g:
+				return "NETWORK" if getattr(self, "_net_error", False) else "No Genres"
+
+			# Stream-Test: bis zu 5 zufaellige Sender - EINER muss echte Daten liefern.
+			# Login + Senderliste + Gruppen sind ok -> die MAC ist gueltig; scheitert nur
+			# der Stream (Geo-/CDN-Sperre auf dieser IP), wird die MAC NICHT verbrannt.
+			stream_ok = False
+			last_err = None
+			for cmd in random.sample(chans, min(5, len(chans))):
+				try:
+					if not _portal_flag(cmd.get("use_http_tmp_link")) and not _portal_flag(cmd.get("use_load_balancing")):
+						surl = cmd["cmd"].split()[-1]
+					else:
+						surl, _h = self.get_tv_stream_url(cmd)
+					if not surl or surl == "IP BLOCKED":
+						continue
+					r = request("GET", surl, headers=self.headers, timeout=10, stream=True, retries=0)
+					code = r.status_code
+					body = next(r.iter_content(1), b"") if code < 400 else b""
+					r.close()
+					if code < 400 and body:
+						stream_ok = True; break
+					last_err = "HTTP %s" % code
+				except Exception as e:
+					last_err = e
+					if _stalker_net_error(e) or getattr(self, "_net_error", False):
+						return "NETWORK"
+			if not stream_ok:
+				log("Stalker check: Portal/Login ok, aber kein Test-Stream abspielbar (%s)" % repr(last_err)[:120])
+				return "No Stream"
+
 			setSetting("portal_ok", "Status OK")
 			return True
 		except Exception as e:
 			log(format_exc())
-			return e
+			if _stalker_net_error(e) or getattr(self, "_net_error", False):
+				return "NETWORK"
+			return "No Channels"
 
 	def channels(self):
 		response = self.make_request_with_retries({"type": "itv", "action": "get_all_channels"}, retries=2, timeout=10)
@@ -369,53 +457,126 @@ def new_mac(silent=False):
 		return False
 	return check_portal(url, maclist, silent)
 	
+def _probe_one(url, mac):
+	try:
+		return mac, StalkerPortal(url, mac, persist=False).probe()
+	except Exception as exc:
+		return mac, ("NETWORK" if _stalker_net_error(exc) else "INVALID")
+
+def prefilter_macs(url, maclist, faultymaclist, limit=12):
+	"""Paralleler Handshake-Schnelltest: trennt gute / abgelaufene / tote MACs in einem Durchlauf."""
+	pool = [m for m in maclist if m not in faultymaclist]
+	random.shuffle(pool)
+	pool = pool[:limit]
+	if not pool:
+		return "EMPTY", [], []
+	try:
+		# schonend: nur 2 gleichzeitig, sonst blockt das Portal die IP
+		with ThreadPoolExecutor(max_workers=min(2, len(pool))) as ex:
+			results = list(ex.map(lambda m: _probe_one(url, m), pool))
+	except Exception:
+		log(format_exc())
+		results = [_probe_one(url, m) for m in pool]
+	good, expired, net, bad = [], [], 0, 0
+	for mac, status in results:
+		if status == "OK":
+			good.append(mac)
+		elif status == "EXPIRED":
+			expired.append(mac)
+		elif status == "BLOCKED":
+			return "BLOCKED", [], []
+		elif status == "NETWORK":
+			net += 1
+		else:
+			bad += 1
+			if mac not in faultymaclist:
+				faultymaclist.append(mac)
+	log("prefilter_macs: %s gut, %s abgelaufen, %s Netzfehler, %s defekt (von %s)" % (len(good), len(expired), net, bad, len(pool)))
+	if not good and not expired and net and bad == 0:
+		return "NETWORK", [], []
+	return "OK", good, expired
+
 def check_portal(url, maclist, silent=False):
 	cacheOk, faultymac = get_cache("faultymac")
 	if not cacheOk: faultymac = {}
-	faultymaclist = faultymac.get(url, [])
+	faultymaclist = list(faultymac.get(url, []))
 	cacheOk, vav = get_cache("stalkerurl")
 	if cacheOk and vav != url: del_cache("stalker_groups")
 	set_cache("stalkerurl", url)
 	setSetting("stalkerurl", url)
 	del_cache("sta_channels")
-	if silent == False: progress.create("TESTE STALKER MAC ADRESSEN", "Verfügbare Mac Adressen %s" % len(maclist))
-	retry = int(getSetting("stalker_retry"))
-	i = 0
-	while not monitor.abortRequested() and i <= retry:
-		i += 1
-		if silent == False and i >= 1: monitor.waitForAbort(1)
+	if silent == False:
+		progress.create("TESTE STALKER MAC ADRESSEN", "Pruefe %s Mac Adressen parallel ..." % len(maclist))
+	setSetting("portal_ok", "Teste Mac Adressen ...")
+	try:
+		batch = min(24, max(10, int(getSetting("stalker_retry"))))
+	except (TypeError, ValueError):
+		batch = 20
+	status, good, expired = prefilter_macs(url, maclist, faultymaclist, batch)
+	faultymac[url] = faultymaclist
+	set_cache("faultymac", faultymac, 12)
+
+	if status == "BLOCKED":
+		if silent == False: progress.close()
+		dialog.notification("VAVOO.TO", "IP BLOCKED - anderes Portal waehlen, Stalker deaktiviert", xbmcgui.NOTIFICATION_ERROR, 3000)
+		setSetting("stalker", "false")
+		setSetting("account_info", "IP BLOCKED")
+		setSetting("portal_ok", "IP BLOCKED")
+		return False
+	if status == "NETWORK":
 		if silent == False:
-			if progress.iscanceled():
-				progress.close()
-				break
-		log("Versuch :%s" % i)
-		setSetting("portal_ok", "Teste Mac Adressen, Versuch :%s/%s" % (i, retry))
-		if silent == False: progress.update(int(i / retry * 100), "Teste Mac Adressen, Versuch :%s/%s" % (i, retry))
-		available_macs = [mac for mac in maclist if mac not in faultymaclist]
-		if not available_macs:
-			if silent == False: progress.close()
-			setSetting("portal_ok", "Keine gültige Mac")
+			progress.close()
+			dialog.notification("VAVOO.TO", "Stalker-Portal nicht erreichbar - Netzwerk pruefen", xbmcgui.NOTIFICATION_WARNING, 3000)
+		setSetting("portal_ok", "Portal nicht erreichbar")
+		return False
+	if status == "EMPTY" or (not good and not expired):
+		if silent == False: progress.close()
+		setSetting("portal_ok", "Keine gueltige Mac")
+		return False
+
+	candidates = list(good)   # abgelaufene MACs werden nicht getestet
+	total = len(candidates)
+	for idx, mac in enumerate(candidates, 1):
+		if monitor.abortRequested():
+			break
+		if silent == False and progress.iscanceled():
+			progress.close()
 			return False
-		mac = random.choice(available_macs)
+		if silent == False:
+			progress.update(int(idx / max(total, 1) * 100), "Vollstaendiger Test  %s/%s\n%s" % (idx, total, mac))
+		setSetting("portal_ok", "Vollstaendiger Test %s/%s" % (idx, total))
 		setSetting("mac", mac)
 		set_cache("mac", mac)
-		portal = StalkerPortal(url, mac)
-		check = portal.check()
-		if check == True:
+		chk = StalkerPortal(url, mac).check()
+		if chk == True:
 			if silent == False: progress.close()
 			execute("Container.Refresh")
-			return
-		elif check == "IP BLOCKED":
-			if silent == False:
-				progress.update(int(i / retry * 100), "Teste Mac Adressen, Versuch :%s/%s\nFehler %s" % (i, retry, check))
-				progress.close()
-			dialog.notification('VAVOO.TO', f'{check} – anderes Portal auswählen, deaktiviere Stalker', xbmcgui.NOTIFICATION_ERROR, 2000)
+			return True
+		if chk == "IP BLOCKED":
+			if silent == False: progress.close()
+			dialog.notification("VAVOO.TO", "IP BLOCKED - anderes Portal waehlen, Stalker deaktiviert", xbmcgui.NOTIFICATION_ERROR, 3000)
 			setSetting("stalker", "false")
 			return False
-		else:
-			if silent == False: progress.update(int(i / retry * 100), "Teste Mac Adressen, Versuch :%s/%s\nFehler %s" % (i, retry, check))
+		if chk == "NETWORK":
+			if silent == False:
+				progress.close()
+				dialog.notification("VAVOO.TO", "Stalker-Portal nicht erreichbar", xbmcgui.NOTIFICATION_WARNING, 3000)
+			setSetting("portal_ok", "Portal nicht erreichbar")
+			return False
+		if chk == "No Stream":
+			# Login/Senderliste/Gruppen ok, nur Streams gesperrt -> weitere MACs bringen nichts
+			if silent == False: progress.close()
+			setSetting("portal_ok", "Portal ok - Streams gesperrt (Geo/IP?)")
+			execute("Container.Refresh")
+			return False
+		if mac not in faultymaclist:
+			faultymaclist.append(mac)
+	faultymac[url] = faultymaclist
+	set_cache("faultymac", faultymac, 12)
+
 	if silent == False: progress.close()
 	execute("Container.Refresh")
-	log("Keine funktionierende Mac")
-	setSetting("portal_ok", "Keine gültige Mac")
+	setSetting("portal_ok", "Nur abgelaufene Mac Adressen" if expired and not good else "Keine gueltige Mac")
+	log("check_portal: keine funktionierende Mac (gut=%s abgelaufen=%s)" % (len(good), len(expired)))
 	return False
+

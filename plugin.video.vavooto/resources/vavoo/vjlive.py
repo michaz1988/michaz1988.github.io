@@ -86,7 +86,7 @@ def resolve_link(link):
 				log("function resolve_link Status: OK")
 				if getSetting("vavoo_hls_proxy") == "true":
 					from vavoo.live_proxy import get_vavoo_proxy_url
-					return get_vavoo_proxy_url(streamurl), None
+					return get_vavoo_proxy_url(streamurl, link), None
 				return streamurl, None
 		except Exception:
 			log(format_exc())
@@ -200,111 +200,133 @@ def handle_wait(kanal):
 	progress.close()
 	return True
 
-def livePlay(name, type=None, group=None, retry='0'):
+def livePlay(name, type=None, group=None, retry='0', idx=None):
 	try:
 		retry = max(0, int(retry))
 	except (TypeError, ValueError):
 		retry = 0
+	is_retry = retry > 0
 	try:
-		max_retries = max(0, int(getSetting("live_retry_count")))
-	except (TypeError, ValueError):
-		max_retries = 1
-	m = getchannels(type, group).get(name)
+		m = getchannels(type, group).get(name)
+	except Exception:
+		log("livePlay: Kanalliste nicht abrufbar\n%s" % format_exc())
+		m = None
 	if not m:
-		showFailedNotification()
+		# waehrend eines Auto-Retry keinen Dialog aufpoppen lassen
+		if not is_retry:
+			showFailedNotification()
 		return
-	i, title = 0, None
-	if len(m) > 1:
-		if getSetting("auto") == "0":
+	n = len(m)
+	try:
+		retry_setting = max(0, int(getSetting("live_retry_count")))
+	except (TypeError, ValueError):
+		retry_setting = 3
+	# mindestens jede Quelle einmal durchprobieren
+	max_retries = max(retry_setting, n)
+
+	# Startindex: bei Auto-Retry explizit uebergeben, sonst 0
+	i = 0
+	if idx is not None:
+		try:
+			i = int(idx) % n
+		except (TypeError, ValueError):
+			i = 0
+
+	# Quellenauswahl-UI nur beim ersten Versuch, nie waehrend eines Auto-Retry
+	if n > 1 and not is_retry:
+		mode = getSetting("auto")
+		if mode == "0":
 			cacheOk, last = get_cache("last")
-			if cacheOk and last.get("idn") == name: i = last.get("num") + 1
-			if i >= len(m): i = 0
-			title = "%s (%s/%s)" % (name, i + 1, len(m))  # wird verwendet für infoLabels
-		elif getSetting("auto") == "1":
+			if cacheOk and isinstance(last, dict) and last.get("idn") == name:
+				i = (last.get("num", -1) + 1) % n
+		elif mode == "1":
 			if not handle_wait(name):  # Dialog aufrufen
-				cap = []
-				for i, n in enumerate(m, 1): cap.append("STREAM %s" % i)
-				i = selectDialog(cap)
-				if i < 0: return
-			title = "%s (%s/%s)" % (name, i + 1, len(m))  # wird verwendet für infoLabels
+				sel = selectDialog(["STREAM %s" % x for x in range(1, n + 1)])
+				if sel < 0: return
+				i = sel
 		else:
-			cap = []
-			for i, n in enumerate(m, 1): cap.append("STREAM %s" % i)
-			i = selectDialog(cap)
-			if i < 0: return
-			title = "%s (%s/%s)" % (name, i + 1, len(m))  # wird verwendet für infoLabels
-	k = 0
-	while True:
-		k += 1
-		if k > len(m): return
+			sel = selectDialog(["STREAM %s" % x for x in range(1, n + 1)])
+			if sel < 0: return
+			i = sel
+
+	# Quelle(n) aufloesen, bei Fehlschlag zur naechsten wandern
+	url = headers = None
+	for _ in range(n):
 		url, headers = resolve_link(m[i])
 		if url: break
-		else:
-			i += 1
-			if i >= len(m): i = 0
-	set_cache("last", {"idn": name, "num": i}, 2)
-	title = title if title else name
+		i = (i + 1) % n
+	if not url:
+		showFailedNotification("Keine funktionierende Quelle")
+		return
+
+	# nur bei nutzer-initiiertem Start merken, nicht bei jedem Failover-Hop
+	if not is_retry:
+		set_cache("last", {"idn": name, "num": i}, 2)
+	# Titel/Plot NACH der Aufloesung -> zeigt die tatsaechlich verwendete Quelle
+	title = "%s (%s/%s)" % (name, i + 1, n) if n > 1 else name
+
+	url_is_proxy = "127.0.0.1" in url
+	want_retry = getSetting("live_auto_retry") == "true"
+
 	live_player = None
-	if getSetting("live_auto_retry") == "true" and retry < max_retries:
+	# Monitor-Schleife haelt zusaetzlich den Plugin-Prozess (und damit den lokalen
+	# HLS-Proxy-Thread) am Leben, solange die Wiedergabe laeuft.
+	if want_retry or url_is_proxy:
 		from vavoo.player import LivePlayer
 		live_player = LivePlayer()
-	infoLabels = {"title": title, "plot": "[B]%s[/B] - Stream %s von %s" % (name, i + 1, len(m))}
+	infoLabels = {"title": title, "plot": "[B]%s[/B] - Stream %s von %s" % (name, i + 1, n)}
 	o = ListItem(name)
 	log("Spiele %s" % url)
-	if "hls" in url or "m3u8" in url: inputstream = "inputstream.ffmpegdirect" if getSetting("hlsinputstream") == "0" else "inputstream.adaptive"
-	else: inputstream = "inputstream.ffmpegdirect"
-	o.setProperty("inputstream", inputstream)
-	if inputstream == "inputstream.ffmpegdirect":
-		o.setProperty('inputstream', 'inputstream.ffmpegdirect')
-		o.setProperty('inputstream.ffmpegdirect.is_realtime_stream', 'true')
-		o.setProperty('inputstream.ffmpegdirect.stream_mode', 'timeshift')
-		o.setProperty('inputstream.ffmpegdirect.open_mode', 'ffmpeg')
-		o.setProperty('inputstream.ffmpegdirect.manifest_type', 'hls')
-		o.setProperty('inputstream.ffmpegdirect.protocol_whitelist','http,https,tcp,tls,crypto')
-		stream_opts = ':'.join(['http_persistent=1','multiple_requests=1','reconnect=1','reconnect_streamed=1','reconnect_delay_max=2','timeout=10000000'])
-		o.setProperty('inputstream.ffmpegdirect.stream_opts',stream_opts)
-		o.setProperty('inputstream.ffmpegdirect.user_agent', 'libmpv')
-		#if getSetting("openmode") != "0": o.setProperty("inputstream.ffmpegdirect.open_mode", "ffmpeg" if getSetting("openmode") == "1" else "curl")
-	else:
-		o.setProperty('inputstream.adaptive.manifest_type', 'hls')
-		o.setProperty('inputstream.adaptive.stream_selection_type', 'adaptive')
-		o.setProperty('inputstream.adaptive.config', '{"ssl_verify_peer":false}')
+	# Live-TV laeuft ausschliesslich ueber inputstream.ffmpegdirect (ffmpeg-Backend);
+	# der lokale HLS-Proxy ist darauf ausgelegt.
+	o.setProperty('inputstream', 'inputstream.ffmpegdirect')
+	o.setProperty('inputstream.ffmpegdirect.is_realtime_stream', 'true')
+	o.setProperty('inputstream.ffmpegdirect.stream_mode', 'timeshift')
+	o.setProperty('inputstream.ffmpegdirect.open_mode', 'ffmpeg')
+	o.setProperty('inputstream.ffmpegdirect.manifest_type', 'hls')
+	o.setProperty('inputstream.ffmpegdirect.protocol_whitelist','http,https,tcp,tls,crypto')
+	stream_opts = ':'.join(['http_persistent=1','multiple_requests=1','reconnect=1','reconnect_streamed=1','reconnect_delay_max=2','timeout=30000000'])
+	o.setProperty('inputstream.ffmpegdirect.stream_opts',stream_opts)
+	o.setProperty('inputstream.ffmpegdirect.user_agent', 'libmpv')
 	if headers:
-		if inputstream == "inputstream.adaptive":
-			o.setProperty(f'{inputstream}.common_headers', headers)
-			o.setProperty(f'{inputstream}.stream_headers', headers)
-		else: url += f"|{headers}"
+		url += f"|{headers}"
 	o.setPath(url)
 	o.setProperty("IsPlayable", "true")
 	info_tag = ListItemInfoTag(o, 'video')
 	info_tag.set_info(infoLabels)
 	set_resolved(o)
 	end()
-	if live_player:
-		try:
-			retry_delay = max(1, int(getSetting("live_retry_delay")))
-		except (TypeError, ValueError):
-			retry_delay = 10
-		result = live_player.wait_for_failure(retry_delay)
-		if result in ("ended", "stalled"):
-			log("Live-TV-Stream %s; resolve Sender erneut" % result)
-			dialog.notification("VAVOO.TO", "Stream unterbrochen - verbinde erneut", xbmcgui.NOTIFICATION_INFO, 3000)
-			if result == "stalled" and live_player.isPlaying():
-				live_player.stop()
-			params = {"name": name, "retry": str(retry + 1)}
-			if type: params["type"] = type
-			if group: params["group"] = group
-			live_player.play(url_for(params))
-		else:
-			log("Live-TV Auto-Retry nicht gestartet: %s" % result)
+	if not live_player:
+		return
 
-def makem3u():
-	m3u = ["#EXTM3U\n"]
-	for name in getchannels(): m3u.append('#EXTINF:-1 group-title="Standart",%s\nplugin://plugin.video.vavooto/?name=%s\n' % (name.strip(), name.replace("&", "%26").replace("+", "%2b").strip()))
-	m3uPath = os.path.join(addonprofile, "vavoo.m3u")
-	with open(m3uPath, "w") as a:
-		a.writelines(m3u)
-	ok = dialog.ok('VAVOO.TO', 'm3u erstellt in %s' % m3uPath)
+	# Stillstand 8s / kein Bild nach 12s -> Abriss, naechste Quelle.
+	# "stopped"/"ended" ohne je gelaufenes Bild wird ebenfalls als Fehlstart gewertet.
+	result = live_player.wait_for_failure()
+	if result not in ("ended", "stalled", "startup_failed"):
+		# "stopped" / "abort" -> Nutzer hat beendet, kein Retry
+		log("Live-TV kein Retry noetig: %s" % result)
+		return
+
+	if not (want_retry and retry < max_retries):
+		log("Live-TV Retry erschoepft/deaktiviert (%s)" % result)
+		if want_retry and n > 1:
+			dialog.notification("VAVOO.TO", "Alle Quellen fehlgeschlagen", xbmcgui.NOTIFICATION_WARNING, 3000)
+		return
+
+	next_i = (i + 1) % n
+	log("Live-TV-Stream %s -> naechste Quelle %s/%s (Versuch %s/%s)" % (result, next_i + 1, n, retry + 1, max_retries))
+	if n > 1:
+		dialog.notification("VAVOO.TO", "Wechsle zu Stream %s/%s" % (next_i + 1, n), xbmcgui.NOTIFICATION_INFO, 2000)
+	try:
+		if live_player.isPlaying():
+			live_player.stop()
+			monitor.waitForAbort(1)
+	except Exception:
+		log(format_exc())
+	params = {"name": name, "retry": str(retry + 1), "idx": str(next_i)}
+	if type: params["type"] = type
+	if group: params["group"] = group
+	live_player.play(url_for(params))
 
 # edit kasi
 def channels(items=None, type=None, group=None):
@@ -328,7 +350,6 @@ def channels(items=None, type=None, group=None):
 			plot = "[COLOR gold]TV Favorit[/COLOR]"
 			cm.append(("von TV Favoriten entfernen", "RunPlugin(%s?action=delTvFavorit&name=%s)" % (sys.argv[0], name.replace("&", "%26").replace("+", "%2b"))))
 		cm.append(("Einstellungen", "RunPlugin(%s?action=settings)" % sys.argv[0]))
-		cm.append(("m3u erstellen", "RunPlugin(%s?action=makem3u)" % sys.argv[0]))
 		o.addContextMenuItems(cm)
 		infoLabels = {"title": title, "plot": plot}
 		info_tag = ListItemInfoTag(o, 'video')

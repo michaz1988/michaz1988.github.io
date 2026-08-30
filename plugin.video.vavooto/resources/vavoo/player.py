@@ -94,29 +94,42 @@ class LivePlayer(player):
         except Exception:
             return 1
 
-    def wait_for_failure(self, stall_seconds=10):
+    def wait_for_failure(self, stall_seconds=8, startup_seconds=12):
         started = time.time()
         last_progress = started
         last_time = None
+        progressed = False          # getTime() ist mindestens einmal echt weitergelaufen
 
         while not monitor.abortRequested():
-            if self.ended:
-                return "ended"
-            if self.stopped:
-                return "stopped"
+            if self.stopped or self.ended:
+                # Stop/End OHNE dass je ein Bild lief -> Quelle taugt nicht, naechste probieren.
+                # (Kodi feuert onPlayBackStopped auch, wenn ffmpeg selbst abbricht.)
+                if not progressed:
+                    return "startup_failed"
+                return "ended" if self.ended else "stopped"
 
             if self.isPlayingVideo():
                 try:
                     current = self.getTime()
-                    if last_time is None or abs(current - last_time) > 0.25:
+                    if last_time is None:
+                        last_time = current
+                    elif current - last_time > 0.25:
                         last_time = current
                         last_progress = time.time()
-                    elif self._speed() != 0 and time.time() - last_progress >= stall_seconds:
+                        progressed = True
+                    elif progressed and self._speed() != 0 and time.time() - last_progress >= stall_seconds:
                         return "stalled"
+                    elif not progressed and time.time() - started >= startup_seconds:
+                        return "startup_failed"
                 except Exception:
-                    log(format_exc())
-            elif time.time() - started >= 30:
+                    if time.time() - started >= startup_seconds:
+                        return "startup_failed"
+            elif progressed:
+                # lief schon, Bild jetzt ohne Event weg
+                if time.time() - last_progress >= stall_seconds:
+                    return "stalled"
+            elif time.time() - started >= startup_seconds:
                 return "startup_failed"
 
-            monitor.waitForAbort(2)
+            monitor.waitForAbort(1)
         return "abort"

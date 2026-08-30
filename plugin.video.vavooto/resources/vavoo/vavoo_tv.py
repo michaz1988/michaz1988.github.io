@@ -49,9 +49,14 @@ def get_vav_channels(groups = False):
 	if not groups:
 		return {}
 	cacheOk, chan = get_cache("vav_channels")
-	g, newhash = vavoo_groups()
-	if cacheOk and isinstance(chan, dict) and (chan["hash"] == newhash):
-		channels, oldhash = chan["channels"], chan["hash"] 
+	try:
+		g, newhash = vavoo_groups()
+	except Exception:
+		log("vavoo_groups fehlgeschlagen, nutze vorhandenen Cache\n%s" % format_exc())
+		g, newhash = [], None
+	have_cache = bool(cacheOk and isinstance(chan, dict) and chan.get("channels"))
+	if have_cache and (newhash is None or chan["hash"] == newhash):
+		channels = chan["channels"]
 	else:
 		log("Getting new VAVOO Channels")
 		channels = []
@@ -62,7 +67,8 @@ def get_vav_channels(groups = False):
 		with ThreadPoolExecutor(max_workers=max(len(g), 1)) as executor:
 			for a in executor.map(lambda group: new_vav_channels(group, signature), g):
 				channels += a
-		set_cache("vav_channels", {"channels": channels, "hash":newhash})
+		if newhash is not None:
+			set_cache("vav_channels", {"channels": channels, "hash": newhash})
 	vavchannels = {}
 	for item in channels:
 		if item["group"] not in groups: continue

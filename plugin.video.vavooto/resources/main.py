@@ -18,13 +18,12 @@ if __name__ == "__main__":
 		"delete_search": lambda: delete_search(params),
 		"channels": lambda: vjlive.channels(params.get('items'), params.get('type'), params.get('group')),
 		"settings": lambda: openSettings(sys.argv[1]),
-		"favchannels": lambda: vjlive.favchannels(),
-		"makem3u": lambda: vjlive.makem3u()
+		"favchannels": lambda: vjlive.favchannels()
 	}
 	if tv:
 		if action == "addTvFavorit": vjlive.change_favorit(tv)
 		elif action == "delTvFavorit": vjlive.change_favorit(tv, True)
-		else: vjlive.livePlay(tv, params.get('type'), params.get('group'), params.get('retry', '0'))
+		else: vjlive.livePlay(tv, params.get('type'), params.get('group'), params.get('retry', '0'), params.get('idx'))
 	elif action is None:
 		vjackson.menu(params)
 	elif action == "delallTvFavorit":
