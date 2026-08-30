@@ -322,7 +322,10 @@ class StalkerPortal:
 			if not chans or not isinstance(chans, list):
 				if getattr(self, "_net_error", False):
 					return "NETWORK"
-				self._blacklist(); return "No Channels"
+				# Handshake + Account gingen durch -> MAC/Token ok, leere Senderliste =
+				# Portal gedrosselt/ueberlastet. MAC NICHT verbrennen.
+				log("Stalker check: Account ok, aber Senderliste leer (Portal gedrosselt?)")
+				return "No Channels"
 			set_cache("sta_channels", chans, int(getSetting("stalk_cache")))
 
 			g = self.genres()
@@ -464,12 +467,12 @@ def _probe_one(url, mac):
 		return mac, ("NETWORK" if _stalker_net_error(exc) else "INVALID")
 
 def prefilter_macs(url, maclist, faultymaclist, limit=12):
-	"""Paralleler Handshake-Schnelltest: trennt gute / abgelaufene / tote MACs in einem Durchlauf."""
+	"""Paralleler Handshake-Schnelltest. Rueckgabe: (status, good, expired, probed)."""
 	pool = [m for m in maclist if m not in faultymaclist]
 	random.shuffle(pool)
 	pool = pool[:limit]
 	if not pool:
-		return "EMPTY", [], []
+		return "EMPTY", [], [], []
 	try:
 		# schonend: nur 2 gleichzeitig, sonst blockt das Portal die IP
 		with ThreadPoolExecutor(max_workers=min(2, len(pool))) as ex:
@@ -484,7 +487,7 @@ def prefilter_macs(url, maclist, faultymaclist, limit=12):
 		elif status == "EXPIRED":
 			expired.append(mac)
 		elif status == "BLOCKED":
-			return "BLOCKED", [], []
+			return "BLOCKED", [], [], pool
 		elif status == "NETWORK":
 			net += 1
 		else:
@@ -493,12 +496,12 @@ def prefilter_macs(url, maclist, faultymaclist, limit=12):
 				faultymaclist.append(mac)
 	log("prefilter_macs: %s gut, %s abgelaufen, %s Netzfehler, %s defekt (von %s)" % (len(good), len(expired), net, bad, len(pool)))
 	if not good and not expired and net and bad == 0:
-		return "NETWORK", [], []
-	return "OK", good, expired
+		return "NETWORK", [], [], pool
+	return "OK", good, expired, pool
 
 def check_portal(url, maclist, silent=False):
 	cacheOk, faultymac = get_cache("faultymac")
-	if not cacheOk: faultymac = {}
+	if not cacheOk or not isinstance(faultymac, dict): faultymac = {}
 	faultymaclist = list(faultymac.get(url, []))
 	cacheOk, vav = get_cache("stalkerurl")
 	if cacheOk and vav != url: del_cache("stalker_groups")
@@ -506,77 +509,111 @@ def check_portal(url, maclist, silent=False):
 	setSetting("stalkerurl", url)
 	del_cache("sta_channels")
 	if silent == False:
-		progress.create("TESTE STALKER MAC ADRESSEN", "Pruefe %s Mac Adressen parallel ..." % len(maclist))
+		progress.create("TESTE STALKER MAC ADRESSEN", "Pruefe Mac Adressen ...")
 	setSetting("portal_ok", "Teste Mac Adressen ...")
 	try:
-		batch = min(24, max(10, int(getSetting("stalker_retry"))))
+		budget = max(10, int(getSetting("stalker_retry")))
 	except (TypeError, ValueError):
-		batch = 20
-	status, good, expired = prefilter_macs(url, maclist, faultymaclist, batch)
-	faultymac[url] = faultymaclist
-	set_cache("faultymac", faultymac, 12)
+		budget = 10
+	batch_size = min(24, max(8, budget))
+	# "Login ok, kein Stream" weiter durchprobieren: manuell grosszuegig, im Hintergrund knapp
+	stream_budget = min(len(maclist), budget if silent else max(30, budget * 2))
 
-	if status == "BLOCKED":
-		if silent == False: progress.close()
-		dialog.notification("VAVOO.TO", "IP BLOCKED - anderes Portal waehlen, Stalker deaktiviert", xbmcgui.NOTIFICATION_ERROR, 3000)
-		setSetting("stalker", "false")
-		setSetting("account_info", "IP BLOCKED")
-		setSetting("portal_ok", "IP BLOCKED")
-		return False
-	if status == "NETWORK":
-		if silent == False:
-			progress.close()
-			dialog.notification("VAVOO.TO", "Stalker-Portal nicht erreichbar - Netzwerk pruefen", xbmcgui.NOTIFICATION_WARNING, 3000)
-		setSetting("portal_ok", "Portal nicht erreichbar")
-		return False
-	if status == "EMPTY" or (not good and not expired):
-		if silent == False: progress.close()
-		setSetting("portal_ok", "Keine gueltige Mac")
-		return False
+	tried = set(faultymaclist)
+	checks = 0
+	hard_checks = 0
+	no_stream_macs = []
+	nochan = 0
+	saw_expired = False
 
-	candidates = list(good)   # abgelaufene MACs werden nicht getestet
-	total = len(candidates)
-	for idx, mac in enumerate(candidates, 1):
-		if monitor.abortRequested():
+	for _round in range(6):
+		if hard_checks >= budget or checks >= stream_budget or monitor.abortRequested():
 			break
 		if silent == False and progress.iscanceled():
-			progress.close()
-			return False
-		if silent == False:
-			progress.update(int(idx / max(total, 1) * 100), "Vollstaendiger Test  %s/%s\n%s" % (idx, total, mac))
-		setSetting("portal_ok", "Vollstaendiger Test %s/%s" % (idx, total))
-		setSetting("mac", mac)
-		set_cache("mac", mac)
-		chk = StalkerPortal(url, mac).check()
-		if chk == True:
-			if silent == False: progress.close()
-			execute("Container.Refresh")
-			return True
-		if chk == "IP BLOCKED":
+			progress.close(); return False
+		pool = [m for m in maclist if m not in tried]
+		if not pool:
+			break
+		status, good, expired, probed = prefilter_macs(url, pool, faultymaclist, batch_size)
+		tried.update(probed)
+		tried.update(faultymaclist)
+		faultymac[url] = faultymaclist
+		set_cache("faultymac", faultymac, 12)
+		saw_expired = saw_expired or bool(expired)
+
+		if status == "BLOCKED":
 			if silent == False: progress.close()
 			dialog.notification("VAVOO.TO", "IP BLOCKED - anderes Portal waehlen, Stalker deaktiviert", xbmcgui.NOTIFICATION_ERROR, 3000)
-			setSetting("stalker", "false")
+			setSetting("stalker", "false"); setSetting("account_info", "IP BLOCKED"); setSetting("portal_ok", "IP BLOCKED")
 			return False
-		if chk == "NETWORK":
+		if status == "NETWORK":
 			if silent == False:
 				progress.close()
-				dialog.notification("VAVOO.TO", "Stalker-Portal nicht erreichbar", xbmcgui.NOTIFICATION_WARNING, 3000)
+				dialog.notification("VAVOO.TO", "Stalker-Portal nicht erreichbar - Netzwerk pruefen", xbmcgui.NOTIFICATION_WARNING, 3000)
 			setSetting("portal_ok", "Portal nicht erreichbar")
 			return False
-		if chk == "No Stream":
-			# Login/Senderliste/Gruppen ok, nur Streams gesperrt -> weitere MACs bringen nichts
-			if silent == False: progress.close()
-			setSetting("portal_ok", "Portal ok - Streams gesperrt (Geo/IP?)")
-			execute("Container.Refresh")
-			return False
-		if mac not in faultymaclist:
-			faultymaclist.append(mac)
-	faultymac[url] = faultymaclist
-	set_cache("faultymac", faultymac, 12)
+		if not good:
+			continue
+
+		for mac in good:
+			if hard_checks >= budget or checks >= stream_budget or monitor.abortRequested():
+				break
+			if silent == False and progress.iscanceled():
+				progress.close(); return False
+			checks += 1
+			if silent == False:
+				_lim = stream_budget if no_stream_macs else budget
+				progress.update(min(99, int(checks * 100 / max(_lim, 1))), "Vollstaendiger Test %s/%s\n%s" % (checks, _lim, mac))
+			setSetting("portal_ok", "Vollstaendiger Test %s/%s" % (checks, (stream_budget if no_stream_macs else budget)))
+			setSetting("mac", mac)
+			set_cache("mac", mac)
+			chk = StalkerPortal(url, mac).check()
+			if chk == True:
+				if silent == False: progress.close()
+				execute("Container.Refresh")
+				return True
+			if chk == "IP BLOCKED":
+				if silent == False: progress.close()
+				dialog.notification("VAVOO.TO", "IP BLOCKED - anderes Portal waehlen, Stalker deaktiviert", xbmcgui.NOTIFICATION_ERROR, 3000)
+				setSetting("stalker", "false")
+				return False
+			if chk == "NETWORK":
+				if silent == False:
+					progress.close()
+					dialog.notification("VAVOO.TO", "Stalker-Portal nicht erreichbar", xbmcgui.NOTIFICATION_WARNING, 3000)
+				setSetting("portal_ok", "Portal nicht erreichbar")
+				return False
+			if chk in ("No Stream", "No Channels"):
+				# MAC/Login ok, aber Portal liefert nicht (Stream gesperrt / Senderliste leer)
+				# -> weiter mit der naechsten MAC, MAC NICHT verbrennen
+				no_stream_macs.append(mac)
+				if chk == "No Channels": nochan += 1
+				if silent == False:
+					progress.update(min(99, int(checks * 100 / max(stream_budget, 1))), "Login ok, Stream gesperrt - weiter  %s/%s" % (checks, stream_budget))
+				continue
+			# No Channels / No Genres / ACCOUNT Expired  (check() hat ggf. schon geblacklistet)
+			hard_checks += 1
+			if mac not in faultymaclist:
+				faultymaclist.append(mac)
+			faultymac[url] = faultymaclist
+			set_cache("faultymac", faultymac, 12)
 
 	if silent == False: progress.close()
 	execute("Container.Refresh")
-	setSetting("portal_ok", "Nur abgelaufene Mac Adressen" if expired and not good else "Keine gueltige Mac")
-	log("check_portal: keine funktionierende Mac (gut=%s abgelaufen=%s)" % (len(good), len(expired)))
+	if no_stream_macs:
+		setSetting("mac", no_stream_macs[0])
+		set_cache("mac", no_stream_macs[0])
+		if nochan >= len(no_stream_macs):
+			msg = "Login ok - Portal liefert keine Senderliste (ueberlastet?)"
+		else:
+			msg = "Login ok - kein Stream abspielbar (Geo/IP/Portal)"
+		setSetting("portal_ok", msg)
+		if silent == False:
+			dialog.notification("VAVOO.TO", msg, xbmcgui.NOTIFICATION_WARNING, 4000)
+	elif saw_expired:
+		setSetting("portal_ok", "Nur abgelaufene Mac Adressen")
+	else:
+		setSetting("portal_ok", "Keine gueltige Mac")
+	log("check_portal: keine funktionierende Mac (checks=%s no_stream=%s)" % (checks, len(no_stream_macs)))
 	return False
 

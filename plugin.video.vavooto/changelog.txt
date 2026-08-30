@@ -1,3 +1,10 @@
+2026.08.30.10
+- Stalker: wenn Portal-Login ok aber Streams/Senderliste nicht liefern, wird jetzt WEITER mit der naechsten MAC geprueft (bis 30 bei manueller Portal-Auswahl, 10 im Hintergrund) statt sofort abzubrechen.
+- Keine MAC wird mehr faelschlich blacklistet, wenn Login funktioniert (Stream-456 / leere Senderliste = Portal-/Geo-/IP-Problem, nicht die MAC).
+- check_portal komplett auf Batch-Schleife umgebaut: mehrere Prefilter-Runden bis eine echte MAC gefunden ist oder das Budget erschoepft.
+- Aussagekraeftige Statusmeldung: 'Login ok - kein Stream abspielbar' bzw. 'Portal liefert keine Senderliste (ueberlastet?)'.
+- Abgelaufen-Puffer 5 Tage -> 12h; Prefilter 2 Threads / Batch <=24.
+
 2026.08.30.9
 - Stalker end-to-end getestet (echte Portale): MAC-Prefilter -> check() -> Genres -> 12122 Sender -> 5/5 Streams abspielbar, 0 MACs faelschlich blacklistet.
 - check() gibt neu "No Stream" zurueck, wenn Login+Senderliste+Gruppen ok sind aber kein Test-Stream laeuft (Geo-/CDN-Sperre) - die MAC wird NICHT verbrannt, Volltest stoppt sofort.
