@@ -1,3 +1,6 @@
+2026.08.30
+- Mitgelieferte Python-Bibliotheken um ungenutzte Async-, CLI-, Test- und Typing-Dateien bereinigt.
+
 2026.08.29.12
 - Fehler beim Laden der Kanalliste behoben (Absicherung der Stalker/VAVOO/LiteTV Rückgabewerte).
 
