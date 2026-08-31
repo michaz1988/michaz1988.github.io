@@ -1,3 +1,12 @@
+2026.08.31
+- seasons(): bei nur einer Staffel wird jetzt direkt zu den Episoden gesprungen (return) - vorher doppeltes endOfDirectory + zusaetzlicher "Staffel 1"-Ordner mit veraltetem e=-Parameter.
+- LiteTV 2ix2: die drei Laenderkategorien werden jetzt tatsaechlich parallel geladen (ThreadPoolExecutor wurde bisher angelegt, aber nicht genutzt).
+- Stalker make_request_with_retries: Backoff greift jetzt wirklich (war praktisch unerreichbar); Netzfehler warten vor dem naechsten Versuch statt sofort erneut zu senden; "Portal antwortet ohne js" = MAC defekt bricht sofort ab statt sinnlos zu wiederholen.
+- getAuthSignature: hartes Gesamt-Zeitbudget von 25s ueber alle Versuche/Profile - bei totem Netz kein minutenlanger Haenger mehr.
+- Auto-Cache-Bereinigung laeuft nur noch max. 1x/10min statt bei jedem Plugin-Aufruf (inkl. jedem Failover-Hop).
+- Katalogansicht: max. 10 parallele TMDB-Threads statt einer pro Listeneintrag.
+- log(): grosse Strukturen werden bei ausgeschaltetem Debug nicht mehr serialisiert (json.dumps lief bisher auch fuer reine LOGDEBUG-Zeilen).
+
 2026.08.30.10
 - Stalker: wenn Portal-Login ok aber Streams/Senderliste nicht liefern, wird jetzt WEITER mit der naechsten MAC geprueft (bis 30 bei manueller Portal-Auswahl, 10 im Hintergrund) statt sofort abzubrechen.
 - Keine MAC wird mehr faelschlich blacklistet, wenn Login funktioniert (Stream-456 / leere Senderliste = Portal-/Geo-/IP-Problem, nicht die MAC).
