@@ -164,6 +164,7 @@ def getchannels(type=None, group=None):
 		"2": ["stalker", "vavoo", "lite"],
 		"3": ["lite", "stalker", "vavoo"],
 		"4": ["vavoo", "lite", "stalker"],
+		"5": ["stalker", "lite", "vavoo"],
 	}.get(priority_setting, ["vavoo", "stalker", "lite"])
 
 	source_map = {

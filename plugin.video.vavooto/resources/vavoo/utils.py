@@ -171,10 +171,22 @@ def clear(auto=False):
 			except Exception:
 				pass
 		
-clear(auto=True)
+try:
+	_last_auto_clear = float(home.getProperty("%s.auto_clear_ts" % addonID) or 0)
+except (TypeError, ValueError):
+	_last_auto_clear = 0
+# Nicht bei jedem Plugin-Aufruf den kompletten Cache-Ordner durchgehen
+# (jede Datei oeffnen/dekomprimieren/parsen) - hoechstens alle 10 Minuten.
+if time.time() - _last_auto_clear > 600:
+	home.setProperty("%s.auto_clear_ts" % addonID, str(time.time()))
+	clear(auto=True)
 
 _AUTH_SIGNATURE_PROPERTY = "%s.auth_signature" % addonID
 _AUTH_SIGNATURE_SAFETY_MS = 30000
+# Hartes Gesamt-Zeitbudget ueber ALLE Signatur-Versuche (beide Profile zusammen).
+# Ohne das kann ein totes Netz die Funktion minutenlang blockieren
+# (5 Versuche x request(retries=3) x 15s Timeout x 2 Profile).
+_AUTH_SIGNATURE_TOTAL_BUDGET = 25
 
 def _decode_auth_signature(signature):
 	if not isinstance(signature, str) or not signature:
@@ -208,16 +220,22 @@ def _auth_signature_valid_until(signature):
 		return None
 	return valid_until
 
-def _request_auth_signature(payload_builder, headers, source):
-	for attempt in range(1, 6):
+def _request_auth_signature(payload_builder, headers, source, deadline):
+	attempt = 0
+	while True:
+		remaining = deadline - time.time()
+		if remaining < 3:
+			log("MediaHubMX signature source %s: Zeitbudget erschoepft nach %s Versuchen" % (source, attempt))
+			return None, None
+		attempt += 1
 		try:
 			req = request_json(
 				"POST",
 				"https://www.vypn.net/api/app/ping",
 				json=payload_builder(),
 				headers=headers,
-				timeout=15,
-				retries=3,
+				timeout=min(15, max(4, int(remaining))),
+				retries=1,
 				verify=False,
 			)
 			signature = req.get("sig") or req.get("addonSig") or req.get("signature") or req.get("mediahubmxSignature") or req.get("mediahubmx-signature")
@@ -225,11 +243,9 @@ def _request_auth_signature(payload_builder, headers, source):
 			if valid_until:
 				log("Received valid MediaHubMX signature from %s, valid for %s seconds" % (source, int((valid_until - time.time() * 1000) / 1000)))
 				return signature, valid_until
-			log("Rejected invalid or expired MediaHubMX signature from %s (attempt %s/5)" % (source, attempt))
+			log("Rejected invalid or expired MediaHubMX signature from %s (Versuch %s)" % (source, attempt))
 		except Exception:
-			if attempt == 5:
-				log("MediaHubMX signature source %s failed:\n%s" % (source, format_exc()))
-	return None, None
+			log("MediaHubMX signature source %s Versuch %s fehlgeschlagen: %s" % (source, attempt, repr(sys.exc_info()[1])[:150]))
 
 def getAuthSignature():
 	cached_signature = home.getProperty(_AUTH_SIGNATURE_PROPERTY)
@@ -239,11 +255,14 @@ def getAuthSignature():
 		return cached_signature
 	if cached_signature:
 		home.clearProperty(_AUTH_SIGNATURE_PROPERTY)
+	deadline = time.time() + _AUTH_SIGNATURE_TOTAL_BUDGET
 	for payload_builder, headers, source in (
 		(_build_payload, _headers, "desktop profile"),
 		(_build_backup_payload, _backup_headers, "Android backup profile"),
 	):
-		signature, valid_until = _request_auth_signature(payload_builder, headers, source)
+		if time.time() >= deadline:
+			break
+		signature, valid_until = _request_auth_signature(payload_builder, headers, source, deadline)
 		if signature:
 			home.setProperty(_AUTH_SIGNATURE_PROPERTY, signature)
 			return signature
@@ -645,13 +664,20 @@ def get_meta(param):
 	return {"infos":_meta, "art":_art, "properties":_property, "cast":_cast, "ids":_ids, "seasons":_seasons, "episodes":_episodes}
 
 def log(msg, header=""):
-	try: msg = json.dumps(msg, indent=4)
-	except Exception:
-		pass
-	if header: header+="\n"
-	out = "\n####VAVOOTO####\n%s%s\n########" % (header, msg)
-	mode = xbmc.LOGINFO if addon.getSetting("debug") == "true" else xbmc.LOGDEBUG
-	xbmc.log(out, mode)
+	if addon.getSetting("debug") == "true":
+		try: msg = json.dumps(msg, indent=4)
+		except Exception:
+			pass
+		if header: header += "\n"
+		xbmc.log("\n####VAVOOTO####\n%s%s\n########" % (header, msg), xbmc.LOGINFO)
+		return
+	# Debug aus: grosse Strukturen NICHT serialisieren (json.dumps auf Kanal-/
+	# Kataloglisten kostet auch dann, wenn die Zeile nur als LOGDEBUG rausgeht).
+	if isinstance(msg, str):
+		text = msg if len(msg) <= 1000 else msg[:1000] + "…"
+	else:
+		text = "<%s>" % type(msg).__name__
+	xbmc.log("####VAVOOTO#### %s%s" % ("%s " % header if header else "", text), xbmc.LOGDEBUG)
 
 def showFailedNotification(msg="Keine Streams gefunden"):
 	log(msg)

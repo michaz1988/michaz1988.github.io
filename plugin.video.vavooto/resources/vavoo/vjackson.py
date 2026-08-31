@@ -90,7 +90,7 @@ def show(params):
 	set_content(content)
 	set_category(cat)
 	paramslist = [{"action": "get" if e["id"].startswith("movie") else "seasons" ,"id":e["id"], "n":e["name"]} for e in data]
-	with ThreadPoolExecutor(max_workers=max(len(paramslist), 1)) as executor:
+	with ThreadPoolExecutor(max_workers=min(10, max(len(paramslist), 1))) as executor:
 		future_to_url = {executor.submit(createListItem, urlparams):urlparams for urlparams in paramslist}
 		for future in as_completed(future_to_url):
 			urlparams = future_to_url[future]
@@ -217,7 +217,7 @@ def seasons(params):
 	_seasons = get_meta(params)["seasons"]
 	if len(_seasons) == 1:
 		params["s"] = "1"
-		episodes(params)
+		return episodes(params)
 	params["action"] = "episodes"
 	for season in _seasons:
 		params["s"] = str(season["season_number"])

@@ -270,8 +270,8 @@ def get_lite_channels(groups=False):
             channels += nydus_channels
 
         with ThreadPoolExecutor(max_workers=3) as executor:
-            for cat in CATEGORIES:
-                channels += _load_2ix2_category(cat)
+            for cat_channels in executor.map(_load_2ix2_category, CATEGORIES):
+                channels += cat_channels
 
         all_channels = channels
         set_cache("lite_channels", all_channels, 6)

@@ -90,6 +90,11 @@ class StalkerPortal:
 			cookies["token"] = quote(self.__token.value)
 		return "; ".join(["%s=%s" % (key, value) for key, value in cookies.items()])
 
+	def _retry_wait(self, attempt):
+		sleep_time = self.backoff_factor * (2 ** (attempt - 1))
+		log("Retrying after %s seconds..." % sleep_time)
+		monitor.waitForAbort(sleep_time)
+
 	def make_request_with_retries(self, params, retries=0, timeout=5):
 		if not params.get("action") in ["handshake", "get_profile"]: self.ensure_token()
 		params["JsHttpRequest"] = "1-xml"
@@ -133,25 +138,30 @@ class StalkerPortal:
 				if "js" in a:
 					return json.loads(a)["js"]
 				if neterr:
-					# Netz-/Portalproblem -> MAC NICHT als defekt markieren
+					# Netz-/Portalproblem -> MAC NICHT als defekt markieren, aber vor
+					# dem naechsten Versuch mit Backoff warten (kein Sofort-Hammern).
 					self._net_error = True
-					continue
-				# Portal hat geantwortet, aber ohne gueltige js-Daten -> MAC defekt
+					if attempt <= retries:
+						self._retry_wait(attempt)
+						continue
+					log("All %s attempts failed for URL %s" % (attempt, self.portal_url))
+					return None
+				# Portal hat geantwortet, aber ohne gueltige js-Daten -> MAC defekt.
+				# Ein Retry aendert daran nichts -> sofort abbrechen.
 				cacheOk, faultymac = get_cache("faultymac")
 				if not cacheOk: faultymac = {}
-				if not self.url in faultymac:
-					faultymac[self.url] = []
+				faultymac.setdefault(self.url, [])
 				if self.mac not in faultymac[self.url]:
 					faultymac[self.url].append(self.mac)
 				set_cache("faultymac", faultymac, 12)
-				continue
+				return None
 			except Exception:
 				log(format_exc())
-			if attempt < retries:
-				sleep_time = self.backoff_factor * (2 ** (attempt - 1))
-				log("Retrying after %s seconds..." % sleep_time)
-				monitor.waitForAbort(sleep_time)
-			else: log("All %s attempts failed for URL %s" % (retries, self.portal_url))
+			if attempt <= retries:
+				self._retry_wait(attempt)
+			else:
+				log("All %s attempts failed for URL %s" % (attempt, self.portal_url))
+		return None
 
 	def handshake(self):
 		token = None
