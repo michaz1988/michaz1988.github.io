@@ -1,6 +1,6 @@
 <settings> 
   <category label="TV">
-    <setting default="0" id="live_priority" label="Quellen-Vorrang (Priorität)" type="enum" values="VAVOO > Stalker > LiteTV|LiteTV > VAVOO > Stalker|Stalker > VAVOO > LiteTV|LiteTV > Stalker > VAVOO|VAVOO > LiteTV > Stalker" />
+    <setting default="0" id="live_priority" label="Quellen-Vorrang (Priorität)" type="enum" values="VAVOO > Stalker > LiteTV|LiteTV > VAVOO > Stalker|Stalker > VAVOO > LiteTV|LiteTV > Stalker > VAVOO|VAVOO > LiteTV > Stalker|Stalker > LiteTV > VAVOO" />
     <setting default="0" id="auto" label="IPTV Autoplay" type="enum" values="Auto|Countdown|Manuell" />
     <setting default="5" id="count" label="Countdown Zeit" type="number" option="int" visible="eq(-1,1)" />
     <setting default="false" id="stream_count" type="bool" label="Anzahl Streams in Title anzeigen"/>

@@ -1,3 +1,6 @@
+2026.08.31.1
+- Quellen-Vorrang: sechste Option "Stalker > LiteTV > VAVOO" ergaenzt (die Reihenfolge war im Code schon vorhanden, aber in den Einstellungen nicht auswaehlbar).
+
 2026.08.31
 - seasons(): bei nur einer Staffel wird jetzt direkt zu den Episoden gesprungen (return) - vorher doppeltes endOfDirectory + zusaetzlicher "Staffel 1"-Ordner mit veraltetem e=-Parameter.
 - LiteTV 2ix2: die drei Laenderkategorien werden jetzt tatsaechlich parallel geladen (ThreadPoolExecutor wurde bisher angelegt, aber nicht genutzt).
