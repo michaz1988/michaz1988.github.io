@@ -1,3 +1,6 @@
+2026.09.01.1
+- VAVOO Senderliste: Host von www2.vavoo.to auf vavoo.to umgestellt - www2 lehnt seit dem 01.09. den TLS-Handshake ab (tlsv1 alert internal error), dadurch war die komplette VAVOO-Senderliste tot. Endpoint /live2/index?output=json ist auf vavoo.to identisch.
+
 2026.08.31.1
 - Quellen-Vorrang: sechste Option "Stalker > LiteTV > VAVOO" ergaenzt (die Reihenfolge war im Code schon vorhanden, aber in den Einstellungen nicht auswaehlbar).
 

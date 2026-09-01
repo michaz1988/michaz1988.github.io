@@ -4,7 +4,7 @@ from vavoo.utils import *
 def vavoo_groups():
 	log("Getting VAVOO groups and md5")
 	groups=[]
-	a = request("GET", "https://www2.vavoo.to/live2/index?output=json", timeout=10, retries=1).text
+	a = request("GET", "https://vavoo.to/live2/index?output=json", timeout=10, retries=1).text
 	hash = md5(a.encode()).hexdigest()
 	chans = json.loads(a)
 	for c in chans:
