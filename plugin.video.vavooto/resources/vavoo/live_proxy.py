@@ -3,6 +3,7 @@ from vavoo.utils import *
 import sys
 import urllib.parse
 import base64
+import math
 import time
 import threading
 import socketserver
@@ -21,6 +22,17 @@ SESSION_IDLE_TIMEOUT = 60                # s ohne Zugriff -> Session verwerfen
 
 _vavoo_sessions = {}
 _vavoo_sessions_lock = threading.Lock()
+
+# --- Stalker MPEG-TS -> HLS Sessions ----------------------------------------
+STALKER_SEGMENT_SECONDS = 4.0
+STALKER_PLAYLIST_SEGMENTS = 10
+STALKER_MAX_BYTES = 64 * 1024 * 1024
+STALKER_SESSION_IDLE_TIMEOUT = 90
+STALKER_MAX_SESSIONS = 2
+STALKER_RESUME_TIMEOUT = 20.0
+
+_stalker_sessions = {}
+_stalker_sessions_lock = threading.Lock()
 
 
 def get_httpx():
@@ -354,6 +366,354 @@ def _drop_vavoo_session(sid):
         s.stop.set()
 
 
+def _ts_sync_offset(data):
+    """Findet einen belastbaren 188-Byte-MPEG-TS-Paketanfang."""
+    if not data:
+        return None
+    for offset in range(min(188, len(data))):
+        if data[offset] != 0x47:
+            continue
+        checks = min(3, (len(data) - offset - 1) // 188 + 1)
+        if checks >= 2 and all(data[offset + (n * 188)] == 0x47 for n in range(checks)):
+            return offset
+    if len(data) < 376 and data[0] == 0x47:
+        return 0
+    return None
+
+
+_PTS_WRAP = 1 << 33
+
+
+def _packet_video_pts(packet):
+    if len(packet) != 188 or packet[0] != 0x47 or not (packet[1] & 0x40):
+        return None
+    afc = (packet[3] >> 4) & 3
+    if afc in (0, 2):
+        return None
+    offset = 4
+    if afc == 3:
+        offset += 1 + packet[4]
+    if offset + 14 > 188:
+        return None
+    payload = packet[offset:]
+    if payload[:3] != b"\x00\x00\x01" or not (0xE0 <= payload[3] <= 0xEF):
+        return None
+    if not (payload[7] & 0x80):
+        return None
+    pts = payload[9:14]
+    return ((pts[0] & 0x0E) << 29) | (pts[1] << 22) | ((pts[2] & 0xFE) << 14) | (pts[3] << 7) | ((pts[4] & 0xFE) >> 1)
+
+
+def _pts_after(value, reference):
+    delta = (value - reference) % _PTS_WRAP
+    return 0 < delta < (_PTS_WRAP // 2)
+
+
+def _latest_video_pts(data, reference=None):
+    latest = reference
+    for pos in range(0, len(data) - 187, 188):
+        pts = _packet_video_pts(data[pos:pos + 188])
+        if pts is not None and (latest is None or _pts_after(pts, latest)):
+            latest = pts
+    return latest
+
+
+def _pat_pmt_pid(packet):
+    if len(packet) != 188 or packet[0] != 0x47 or not (packet[1] & 0x40):
+        return None
+    afc = (packet[3] >> 4) & 3
+    if afc in (0, 2):
+        return None
+    offset = 4
+    if afc == 3:
+        offset += 1 + packet[4]
+    if offset >= 188:
+        return None
+    offset += 1 + packet[offset]
+    if offset + 12 > 188 or packet[offset] != 0x00:
+        return None
+    section_length = ((packet[offset + 1] & 0x0F) << 8) | packet[offset + 2]
+    end = min(188, offset + 3 + section_length - 4)
+    pos = offset + 8
+    while pos + 4 <= end:
+        program = (packet[pos] << 8) | packet[pos + 1]
+        if program:
+            return ((packet[pos + 2] & 0x1F) << 8) | packet[pos + 3]
+        pos += 4
+    return None
+
+
+def _trim_reconnect_overlap(buffer, reference_pts, psi):
+    complete = (len(buffer) // 188) * 188
+    for pos in range(0, complete, 188):
+        packet = bytes(buffer[pos:pos + 188])
+        pid = ((packet[1] & 0x1F) << 8) | packet[2]
+        if pid == 0:
+            psi["pat"] = packet
+            pmt_pid = _pat_pmt_pid(packet)
+            if pmt_pid is not None:
+                psi["pmt_pid"] = pmt_pid
+        elif pid == psi.get("pmt_pid"):
+            psi["pmt"] = packet
+        elif pid == 17:
+            psi["sdt"] = packet
+        pts = _packet_video_pts(packet)
+        if pts is not None and _pts_after(pts, reference_pts):
+            prefix = b"".join(psi[key] for key in ("pat", "pmt", "sdt") if psi.get(key))
+            return bytearray(prefix) + buffer[pos:], True
+    if complete:
+        del buffer[:complete]
+    return buffer, False
+
+
+class StalkerTsSession:
+    """Macht aus wiederholt endenden MPEG-TS-Antworten einen lokalen Live-HLS-Stream."""
+
+    def __init__(self, sid, stream_url, headers=None, channel=None):
+        self.sid = sid
+        self.stream_url = stream_url
+        self.headers = self._clean_headers(headers)
+        self.channel = channel
+        self.condition = threading.Condition()
+        self.segments = OrderedDict()
+        self.cache_bytes = 0
+        self.next_sequence = 0
+        self.discontinuity_count = 0
+        self.pending_discontinuity = False
+        self.last_video_pts = None
+        self.target_duration = max(1, int(math.ceil(STALKER_SEGMENT_SECONDS)))
+        self.last_access = time.time()
+        self.stop = threading.Event()
+        self.thread = None
+
+    @staticmethod
+    def _clean_headers(headers):
+        cleaned = {}
+        for key, value in dict(headers or {}).items():
+            if str(key).lower() not in ("connection", "accept-encoding"):
+                cleaned[str(key)] = str(value)
+        cleaned["Accept-Encoding"] = "identity"
+        return cleaned
+
+    def start(self):
+        self.thread = threading.Thread(target=self._run, daemon=True)
+        self.thread.start()
+
+    def touch(self):
+        self.last_access = time.time()
+
+    def _add_segment(self, data, duration, discontinuity):
+        if not data:
+            return
+        self.last_video_pts = _latest_video_pts(data, self.last_video_pts)
+        with self.condition:
+            seq = self.next_sequence
+            self.next_sequence += 1
+            disc_before = self.discontinuity_count
+            if discontinuity:
+                self.discontinuity_count += 1
+            self.target_duration = max(self.target_duration, int(math.ceil(float(duration))))
+            self.segments[seq] = {
+                "seq": seq,
+                "data": data,
+                "duration": max(0.1, float(duration)),
+                "discontinuity": bool(discontinuity),
+                "disc_before": disc_before,
+            }
+            self.cache_bytes += len(data)
+            while (len(self.segments) > STALKER_PLAYLIST_SEGMENTS or
+                   self.cache_bytes > STALKER_MAX_BYTES) and len(self.segments) > 1:
+                _, old = self.segments.popitem(last=False)
+                self.cache_bytes -= len(old["data"])
+            self.condition.notify_all()
+
+    def _reresolve(self):
+        if self.channel is None:
+            return False
+        try:
+            from vavoo.stalker import StalkerPortal
+            fresh_url, fresh_headers = StalkerPortal(
+                get_cache_or_setting("stalkerurl"), get_cache_or_setting("mac")
+            ).get_tv_stream_url(self.channel)
+            if not fresh_url:
+                return False
+            self.stream_url = fresh_url
+            self.headers = self._clean_headers(fresh_headers)
+            log("Stalker TS Proxy: temporaeren Link neu aufgeloest")
+            return True
+        except Exception as exc:
+            _neterr("Stalker TS Proxy Re-Resolve fehlgeschlagen", exc)
+            return False
+
+    def _run(self):
+        failures = 0
+        reconnects = 0
+        while not self.stop.is_set():
+            if time.time() - self.last_access > STALKER_SESSION_IDLE_TIMEOUT:
+                break
+
+            response = None
+            buffer = bytearray()
+            aligned = False
+            received = False
+            segment_started = time.monotonic()
+            resume_pts = self.last_video_pts if self.pending_discontinuity else None
+            resume_started = time.monotonic()
+            resume_psi = {}
+            try:
+                response = request(
+                    "GET", self.stream_url, headers=self.headers, stream=True,
+                    timeout=(8, 15), retries=0
+                )
+                response.raise_for_status()
+                for chunk in response.iter_content(chunk_size=64 * 1024):
+                    if self.stop.is_set():
+                        break
+                    if not chunk:
+                        continue
+                    received = True
+                    buffer.extend(chunk)
+                    if not aligned:
+                        offset = _ts_sync_offset(buffer)
+                        if offset is None:
+                            if len(buffer) > 188 * 5:
+                                del buffer[:-188 * 3]
+                            continue
+                        if offset:
+                            del buffer[:offset]
+                        aligned = True
+                        segment_started = time.monotonic()
+
+                    now = time.monotonic()
+                    if resume_pts is not None:
+                        buffer, resumed = _trim_reconnect_overlap(buffer, resume_pts, resume_psi)
+                        if not resumed and now - resume_started < STALKER_RESUME_TIMEOUT:
+                            continue
+                        if resumed:
+                            log("Stalker TS Proxy: Wiederholung bis zum letzten Video-PTS uebersprungen")
+                        else:
+                            log("Stalker TS Proxy: PTS-Suche nach Timeout fortgesetzt")
+                        resume_pts = None
+                        segment_started = now
+                    complete = (len(buffer) // 188) * 188
+                    if complete and now - segment_started >= STALKER_SEGMENT_SECONDS:
+                        payload = bytes(buffer[:complete])
+                        del buffer[:complete]
+                        self._add_segment(payload, now - segment_started, self.pending_discontinuity)
+                        self.pending_discontinuity = False
+                        segment_started = now
+            except Exception as exc:
+                _neterr("Stalker TS Proxy Upstream", exc)
+            finally:
+                if response is not None:
+                    try:
+                        response.close()
+                    except Exception:
+                        pass
+
+            complete = (len(buffer) // 188) * 188 if aligned else 0
+            if complete and resume_pts is None:
+                now = time.monotonic()
+                self._add_segment(
+                    bytes(buffer[:complete]), now - segment_started,
+                    self.pending_discontinuity
+                )
+                self.pending_discontinuity = False
+
+            if received:
+                failures = 0
+                reconnects += 1
+                self.pending_discontinuity = True
+                # Derselbe temporaere Link kann beim erneuten GET denselben
+                # Ausschnitt wiederholen. Deshalb fuer denselben Sender nach
+                # jedem EOF zuerst einen frischen create_link anfordern.
+                refreshed = self._reresolve()
+                log("Stalker TS Proxy: Upstream-Ende, Reconnect %s (%s)" % (
+                    reconnects, "frischer Link" if refreshed else "bestehender Link"
+                ))
+                delay = 0.2 if refreshed else 1.0
+            else:
+                failures += 1
+                if failures >= 3 and self._reresolve():
+                    failures = 0
+                delay = min(5.0, float(failures or 1))
+            self.stop.wait(delay)
+
+        _drop_stalker_session(self.sid)
+
+    def get_playlist(self, port):
+        self.touch()
+        deadline = time.time() + 8.0
+        with self.condition:
+            while not self.segments and not self.stop.is_set():
+                remaining = deadline - time.time()
+                if remaining <= 0:
+                    break
+                self.condition.wait(min(remaining, 0.5))
+            items = list(self.segments.values())
+        if not items:
+            return ""
+
+        lines = [
+            "#EXTM3U",
+            "#EXT-X-VERSION:3",
+            "#EXT-X-TARGETDURATION:%s" % self.target_duration,
+            "#EXT-X-MEDIA-SEQUENCE:%s" % items[0]["seq"],
+            "#EXT-X-DISCONTINUITY-SEQUENCE:%s" % items[0]["disc_before"],
+        ]
+        for item in items:
+            if item["discontinuity"]:
+                lines.append("#EXT-X-DISCONTINUITY")
+            lines.append("#EXTINF:%.3f," % item["duration"])
+            lines.append(
+                "http://127.0.0.1:%s/stalker_segment.ts?sid=%s&seq=%s"
+                % (port, self.sid, item["seq"])
+            )
+        return "\n".join(lines) + "\n"
+
+    def get_segment(self, seq):
+        self.touch()
+        with self.condition:
+            item = self.segments.get(seq)
+            return item["data"] if item else None
+
+
+def _reap_stalker_sessions_locked():
+    for sid, sess in list(_stalker_sessions.items()):
+        if sess.stop.is_set() or time.time() - sess.last_access > STALKER_SESSION_IDLE_TIMEOUT:
+            sess.stop.set()
+            _stalker_sessions.pop(sid, None)
+
+
+def _register_stalker_session(stream_url, headers=None, channel=None):
+    sid = "s%014x" % (int(time.time() * 1000000) & 0xfffffffffffffff)
+    sess = StalkerTsSession(sid, stream_url, headers, channel)
+    with _stalker_sessions_lock:
+        _reap_stalker_sessions_locked()
+        while len(_stalker_sessions) >= STALKER_MAX_SESSIONS:
+            old_sid, old = next(iter(_stalker_sessions.items()))
+            old.stop.set()
+            _stalker_sessions.pop(old_sid, None)
+        _stalker_sessions[sid] = sess
+    sess.start()
+    return sid
+
+
+def _get_stalker_session(sid):
+    with _stalker_sessions_lock:
+        sess = _stalker_sessions.get(sid)
+    if sess:
+        sess.touch()
+    return sess
+
+
+def _drop_stalker_session(sid):
+    with _stalker_sessions_lock:
+        sess = _stalker_sessions.pop(sid, None)
+    if sess:
+        sess.stop.set()
+
+
 def decode_foobarx(raw_text, ext, offset):
     try:
         if ext == "woff":
@@ -532,6 +892,31 @@ class UnifiedLiveProxyHandler(BaseHTTPRequestHandler):
                 offset = int(params.get("offset", 22))
             except Exception:
                 offset = 22
+
+            if parsed.path == "/stalker_live.m3u8":
+                sess = _get_stalker_session(params.get("sid", ""))
+                if sess is None:
+                    self._fail(404, "Stalker Session nicht gefunden")
+                    return
+                text = sess.get_playlist(self.server.server_address[1])
+                if not text:
+                    self._fail(503, "Noch keine TS-Daten")
+                    return
+                self._respond_text(text, "application/vnd.apple.mpegurl")
+                return
+
+            if parsed.path == "/stalker_segment.ts":
+                sess = _get_stalker_session(params.get("sid", ""))
+                try:
+                    seq = int(params.get("seq", "-1"))
+                except (TypeError, ValueError):
+                    seq = -1
+                data = sess.get_segment(seq) if sess is not None else None
+                if data is None:
+                    self._fail(404, "Segment nicht gefunden")
+                    return
+                self._respond_bytes(data, "video/MP2T")
+                return
 
             client = get_httpx()
             if not client:
@@ -715,6 +1100,19 @@ def get_vavoo_proxy_url(m3u8_url, vavoo_link=""):
     except Exception:
         log("VAVOO Proxy Session-Setup fehlgeschlagen:\n%s" % format_exc())
     return f"http://127.0.0.1:{port}/vavoo_live.m3u8?url={quote_plus(m3u8_url)}{extra}"
+
+
+def get_stalker_proxy_url(stream_url, headers=None, channel=None):
+    """Registriert einen endlichen Stalker-TS-Link als fortlaufende lokale HLS-Quelle."""
+    if not stream_url or not isinstance(stream_url, str):
+        return stream_url
+    port = ensure_proxy()
+    try:
+        sid = _register_stalker_session(stream_url, headers, channel)
+        return f"http://127.0.0.1:{port}/stalker_live.m3u8?sid={sid}"
+    except Exception:
+        log("Stalker TS Proxy Session-Setup fehlgeschlagen:\n%s" % format_exc())
+        return stream_url
 
 
 def get_nydus_proxy_url(m3u8_url, offset=22, origin=""):

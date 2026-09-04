@@ -59,9 +59,13 @@ def resolve_link(link):
 		else:
 			from vavoo.stalker import StalkerPortal
 			try:
-				link, headers = StalkerPortal(get_cache_or_setting("stalkerurl"), get_cache_or_setting("mac")).get_tv_stream_url(link)
+				channel = link
+				link, headers = StalkerPortal(get_cache_or_setting("stalkerurl"), get_cache_or_setting("mac")).get_tv_stream_url(channel)
 				if test_m3u8(link, headers):
 					log("function resolve_link Status: OK")
+					if getSetting("stalker_ts_hls_proxy") != "false" and is_mpeg_ts_url(link):
+						from vavoo.live_proxy import get_stalker_proxy_url
+						return get_stalker_proxy_url(link, headers, channel), None
 					return link, "&".join([f"{k}={v}" for k, v in headers.items()])
 			except Exception:
 				log(format_exc())
@@ -69,9 +73,13 @@ def resolve_link(link):
 	elif not "vavoo" in str(link):
 		from vavoo.stalker import StalkerPortal
 		try:
-			link, headers = StalkerPortal(get_cache_or_setting("stalkerurl"), get_cache_or_setting("mac")).get_tv_stream_url(link)
+			channel = link
+			link, headers = StalkerPortal(get_cache_or_setting("stalkerurl"), get_cache_or_setting("mac")).get_tv_stream_url(channel)
 			if test_m3u8(link, headers):
 				log("function resolve_link Status: OK")
+				if getSetting("stalker_ts_hls_proxy") != "false" and is_mpeg_ts_url(link):
+					from vavoo.live_proxy import get_stalker_proxy_url
+					return get_stalker_proxy_url(link, headers, channel), None
 				return link, "&".join([f"{k}={v}" for k, v in headers.items()])
 		except Exception:
 			log(format_exc())

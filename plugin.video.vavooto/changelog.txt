@@ -1,3 +1,6 @@
+2026.09.04.1
+- Stalker-MPEG-TS wird ueber einen lokalen HLS-Reconnect-Proxy wiedergegeben. Nach einem Upstream-EOF wird der Sender neu aufgeloest, der ueberlappende TS-Bereich anhand der Video-PTS uebersprungen und der Uebergang mit #EXT-X-DISCONTINUITY markiert.
+
 2026.09.04
 - Stalker-/MPEG-TS-Livestreams werden als video/mp2t ohne HLS-Manifest- und Timeshift-Eigenschaften geöffnet; HLS-Quellen behalten die bisherige HLS-/Timeshift-Konfiguration.
 
