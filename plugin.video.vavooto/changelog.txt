@@ -1,3 +1,6 @@
+2026.09.04
+- Stalker-/MPEG-TS-Livestreams werden als video/mp2t ohne HLS-Manifest- und Timeshift-Eigenschaften geöffnet; HLS-Quellen behalten die bisherige HLS-/Timeshift-Konfiguration.
+
 2026.09.01.1
 - VAVOO Senderliste: Host von www2.vavoo.to auf vavoo.to umgestellt - www2 lehnt seit dem 01.09. den TLS-Handshake ab (tlsv1 alert internal error), dadurch war die komplette VAVOO-Senderliste tot. Endpoint /live2/index?output=json ist auf vavoo.to identisch.
 

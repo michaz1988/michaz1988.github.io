@@ -201,6 +201,17 @@ def handle_wait(kanal):
 	progress.close()
 	return True
 
+def is_mpeg_ts_url(url):
+	"""Erkennt explizite MPEG-TS-Links, insbesondere Stalker play/live.php URLs."""
+	try:
+		parsed = urlsplit(str(url).split("|", 1)[0])
+		path = parsed.path.lower()
+		query = dict(parse_qsl(parsed.query, keep_blank_values=True))
+		extension = str(query.get("extension", "")).lower().lstrip(".")
+		return path.endswith((".ts", ".mpegts")) or extension in ("ts", "mpegts")
+	except Exception:
+		return False
+
 def livePlay(name, type=None, group=None, retry='0', idx=None):
 	try:
 		retry = max(0, int(retry))
@@ -278,13 +289,18 @@ def livePlay(name, type=None, group=None, retry='0', idx=None):
 	infoLabels = {"title": title, "plot": "[B]%s[/B] - Stream %s von %s" % (name, i + 1, n)}
 	o = ListItem(name)
 	log("Spiele %s" % url)
-	# Live-TV laeuft ausschliesslich ueber inputstream.ffmpegdirect (ffmpeg-Backend);
-	# der lokale HLS-Proxy ist darauf ausgelegt.
+	# Live-TV laeuft ueber inputstream.ffmpegdirect. MPEG-TS ist kein Manifest-
+	# Stream und darf daher nicht als HLS/Timeshift deklariert werden.
+	is_mpeg_ts = is_mpeg_ts_url(url)
 	o.setProperty('inputstream', 'inputstream.ffmpegdirect')
 	o.setProperty('inputstream.ffmpegdirect.is_realtime_stream', 'true')
-	o.setProperty('inputstream.ffmpegdirect.stream_mode', 'timeshift')
 	o.setProperty('inputstream.ffmpegdirect.open_mode', 'ffmpeg')
-	o.setProperty('inputstream.ffmpegdirect.manifest_type', 'hls')
+	if is_mpeg_ts:
+		o.setMimeType('video/mp2t')
+	else:
+		o.setMimeType('application/x-mpegURL')
+		o.setProperty('inputstream.ffmpegdirect.stream_mode', 'timeshift')
+		o.setProperty('inputstream.ffmpegdirect.manifest_type', 'hls')
 	o.setProperty('inputstream.ffmpegdirect.protocol_whitelist','http,https,tcp,tls,crypto')
 	stream_opts = ':'.join(['http_persistent=1','multiple_requests=1','reconnect=1','reconnect_streamed=1','reconnect_delay_max=2','timeout=30000000'])
 	o.setProperty('inputstream.ffmpegdirect.stream_opts',stream_opts)
