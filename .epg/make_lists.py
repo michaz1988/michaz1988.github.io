@@ -13,6 +13,7 @@ import uuid
 from collections import defaultdict
 from datetime import datetime, timedelta
 from pathlib import Path
+from urllib.parse import urlsplit
 
 import boto3
 import requests
@@ -47,25 +48,80 @@ BLOGGER_DRIVE_LINK_PATTERN = re.compile(
 )
 
 
-def get_blogger_drive_links(page_url=BLOGGER_LIST_INDEX_URL):
-    """Return the IPTV and Stalker Google Drive links from one Blogger page."""
-    response = requests.get(page_url, headers=HEADERS, timeout=20)
-    response.raise_for_status()
+def extract_blogger_drive_links(content):
+    """Extract the typed Google Drive links from Blogger page HTML."""
     links = {}
-    for match in BLOGGER_DRIVE_LINK_PATTERN.finditer(response.text):
+    for match in BLOGGER_DRIVE_LINK_PATTERN.finditer(content):
         kind = match.group("kind").lower()
         url = html.unescape(match.group("url"))
         if kind in links and links[kind] != url:
             raise RuntimeError("Multiple %s Google Drive links found" % kind)
         links[kind] = url
-
-    missing = {"iptv", "stalker"} - set(links)
-    if missing:
-        raise RuntimeError(
-            "Could not obtain Blogger Google Drive link(s): %s"
-            % ", ".join(sorted(missing))
-        )
     return links
+
+
+def blogger_page_key(url):
+    """Return the stable Blogger page identifier without query parameters."""
+    parts = urlsplit(url)
+    return parts.netloc.lower(), parts.path.rstrip("/")
+
+
+def get_blogger_drive_links(page_url=BLOGGER_LIST_INDEX_URL):
+    """Return typed Drive links, including mobile-page and feed fallbacks."""
+    errors = []
+    mobile_separator = "&" if "?" in page_url else "?"
+    for candidate_url in (page_url, page_url + mobile_separator + "m=1"):
+        try:
+            response = requests.get(candidate_url, headers=HEADERS, timeout=20)
+            response.raise_for_status()
+            links = extract_blogger_drive_links(response.text)
+            missing = {"iptv", "stalker"} - set(links)
+            if not missing:
+                return links
+            errors.append(
+                "%s: link(s) missing: %s" %
+                (response.url, ", ".join(sorted(missing)))
+            )
+        except requests.RequestException as exc:
+            errors.append("%s: %s" % (candidate_url, exc))
+
+    page_parts = urlsplit(page_url)
+    feed_url = (
+        "%s://%s/feeds/pages/default?alt=json&max-results=100" %
+        (page_parts.scheme, page_parts.netloc)
+    )
+    try:
+        response = requests.get(feed_url, headers=HEADERS, timeout=20)
+        response.raise_for_status()
+        target_key = blogger_page_key(page_url)
+        for entry in response.json().get("feed", {}).get("entry", []):
+            alternate_urls = [
+                item.get("href", "")
+                for item in entry.get("link", [])
+                if item.get("rel") == "alternate"
+            ]
+            if target_key not in {
+                blogger_page_key(url) for url in alternate_urls
+            }:
+                continue
+            content = entry.get("content", {}).get("$t", "")
+            links = extract_blogger_drive_links(content)
+            missing = {"iptv", "stalker"} - set(links)
+            if not missing:
+                return links
+            errors.append(
+                "%s: matching page missing link(s): %s" %
+                (feed_url, ", ".join(sorted(missing)))
+            )
+            break
+        else:
+            errors.append("%s: matching page missing" % feed_url)
+    except (requests.RequestException, ValueError) as exc:
+        errors.append("Blogger feed: %s" % exc)
+
+    raise RuntimeError(
+        "Could not obtain Blogger Google Drive links: " + "; ".join(errors)
+    )
 
 
 def get_blogger_hidden_link(page_url):
