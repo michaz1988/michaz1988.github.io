@@ -1,3 +1,6 @@
+2026.09.08
+- Live-TV: Anzeige der Stream-Herkunft (STALKER/VAVOO/2ix2) im Titel (z.B. "VOX (1/12 VAVOO)"), im Plot sowie bei manueller Quellenauswahl und im Auto-Retry-Dialog.
+
 2026.09.04.1
 - Stalker-MPEG-TS wird ueber einen lokalen HLS-Reconnect-Proxy wiedergegeben. Nach einem Upstream-EOF wird der Sender neu aufgeloest, der ueberlappende TS-Bereich anhand der Video-PTS uebersprungen und der Uebergang mit #EXT-X-DISCONTINUITY markiert.
 
