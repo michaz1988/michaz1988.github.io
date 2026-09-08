@@ -18,6 +18,140 @@ def get_stream_source(link):
 		return "STALKER"
 	return "VAVOO"
 
+TS_AUDIO_STREAM_TYPES = {0x03, 0x04, 0x0F, 0x11, 0x81, 0x87}
+TS_AUDIO_DESCRIPTOR_TYPES = {0x6A: 0x81, 0x7A: 0x87, 0x7C: 0x0F}
+TS_AUDIO_PROBE_BYTES = 512 * 1024
+
+def _ts_payload(packet):
+	if len(packet) != 188 or packet[0] != 0x47 or packet[1] & 0x80:
+		return None, False
+	if not packet[3] & 0x10:
+		return b"", bool(packet[1] & 0x40)
+	offset = 4
+	if packet[3] & 0x20:
+		offset += 1 + packet[4]
+	if offset > 188:
+		return None, False
+	return packet[offset:], bool(packet[1] & 0x40)
+
+def _ts_section(payload, payload_start):
+	if not payload_start or not payload:
+		return None
+	pointer = payload[0]
+	start = 1 + pointer
+	if start + 3 > len(payload):
+		return None
+	length = 3 + (((payload[start + 1] & 0x0F) << 8) | payload[start + 2])
+	if length < 8 or start + length > len(payload):
+		return None
+	return payload[start:start + length]
+
+def _ts_audio_pids(data, sync):
+	pmt_pids = set()
+	audio = {}
+	packets = [data[pos:pos + 188] for pos in range(sync, len(data) - 187, 188)]
+	for packet in packets:
+		pid = ((packet[1] & 0x1F) << 8) | packet[2]
+		if pid != 0:
+			continue
+		payload, start = _ts_payload(packet)
+		section = _ts_section(payload, start)
+		if not section or section[0] != 0x00:
+			continue
+		end = len(section) - 4
+		for pos in range(8, end - 3, 4):
+			program = (section[pos] << 8) | section[pos + 1]
+			if program:
+				pmt_pids.add(((section[pos + 2] & 0x1F) << 8) | section[pos + 3])
+	for packet in packets:
+		pid = ((packet[1] & 0x1F) << 8) | packet[2]
+		if pid not in pmt_pids:
+			continue
+		payload, start = _ts_payload(packet)
+		section = _ts_section(payload, start)
+		if not section or section[0] != 0x02 or len(section) < 16:
+			continue
+		program_info_length = ((section[10] & 0x0F) << 8) | section[11]
+		pos = 12 + program_info_length
+		end = len(section) - 4
+		while pos + 5 <= end:
+			stream_type = section[pos]
+			stream_pid = ((section[pos + 1] & 0x1F) << 8) | section[pos + 2]
+			info_length = ((section[pos + 3] & 0x0F) << 8) | section[pos + 4]
+			descriptors = section[pos + 5:pos + 5 + info_length]
+			desc_pos = 0
+			descriptor_type = None
+			while desc_pos + 2 <= len(descriptors):
+				tag = descriptors[desc_pos]
+				size = descriptors[desc_pos + 1]
+				if tag in TS_AUDIO_DESCRIPTOR_TYPES:
+					descriptor_type = TS_AUDIO_DESCRIPTOR_TYPES[tag]
+				desc_pos += 2 + size
+			if stream_type in TS_AUDIO_STREAM_TYPES:
+				audio[stream_pid] = stream_type
+			elif stream_type == 0x06 and descriptor_type is not None:
+				audio[stream_pid] = descriptor_type
+			pos += 5 + info_length
+	return packets, audio
+
+def _valid_audio_frame(data, stream_type):
+	# PES header entfernen; mehrere Sync-Treffer verhindern, dass ein zufaelliges
+	# Bytepaar als funktionierende Audiospur gilt.
+	if data.startswith(b"\x00\x00\x01") and len(data) >= 9:
+		data = data[9 + data[8]:]
+	hits = 0
+	for pos in range(max(0, len(data) - 7)):
+		valid = False
+		if stream_type in (0x81, 0x87, 0x06) and data[pos:pos + 2] == b"\x0b\x77":
+			valid = data[pos + 5] >> 3 <= 16
+		elif stream_type == 0x0F and data[pos] == 0xFF and data[pos + 1] & 0xF6 == 0xF0:
+			freq = (data[pos + 2] >> 2) & 0x0F
+			channels = ((data[pos + 2] & 1) << 2) | (data[pos + 3] >> 6)
+			valid = freq < 13 and channels > 0
+		elif stream_type == 0x11 and data[pos] == 0x56 and data[pos + 1] & 0xE0 == 0xE0:
+			valid = True
+		elif stream_type in (0x03, 0x04) and data[pos] == 0xFF and data[pos + 1] & 0xE0 == 0xE0:
+			version = (data[pos + 1] >> 3) & 3
+			layer = (data[pos + 1] >> 1) & 3
+			bitrate = data[pos + 2] >> 4
+			rate = (data[pos + 2] >> 2) & 3
+			valid = version != 1 and layer != 0 and 0 < bitrate < 15 and rate != 3
+		if valid:
+			hits += 1
+			if hits >= 2:
+				return True
+	return False
+
+def _mpeg_ts_has_audio(data):
+	"""True/False fuer MPEG-TS, None wenn die Daten kein MPEG-TS sind."""
+	sync = next((offset for offset in range(min(188, len(data)))
+		if all(pos < len(data) and data[pos] == 0x47
+			for pos in (offset, offset + 188, offset + 376, offset + 564))), None)
+	if sync is None:
+		return None
+	packets, audio_pids = _ts_audio_pids(data, sync)
+	if not audio_pids:
+		return False
+	payloads = {pid: bytearray() for pid in audio_pids}
+	for packet in packets:
+		pid = ((packet[1] & 0x1F) << 8) | packet[2]
+		if pid not in payloads:
+			continue
+		payload, _ = _ts_payload(packet)
+		if payload:
+			payloads[pid].extend(payload)
+	return any(_valid_audio_frame(bytes(payloads[pid]), stream_type)
+		for pid, stream_type in audio_pids.items())
+
+def _read_probe(response, limit=TS_AUDIO_PROBE_BYTES):
+	data = bytearray()
+	for chunk in response.iter_content(16384):
+		if chunk:
+			data.extend(chunk)
+		if len(data) >= limit:
+			break
+	return bytes(data[:limit])
+
 def test_m3u8(url, headers=None, verify=True):
 	headers = headers or {}
 	response = None
@@ -25,7 +159,13 @@ def test_m3u8(url, headers=None, verify=True):
 		response = request("GET", url, headers=headers, timeout=10, stream=True, retries=0, verify=verify)
 		response.raise_for_status()
 		is_hls = "m3u8" in url.lower() or "/hls/" in url.lower() or "mpegurl" in response.headers.get("Content-Type", "").lower()
-		if getSetting("live_m3u8_test") != "true" or not is_hls:
+		if getSetting("live_m3u8_test") != "true":
+			return True
+		if not is_hls:
+			probe = _read_probe(response)
+			has_audio = _mpeg_ts_has_audio(probe)
+			if has_audio is False:
+				raise ValueError("MPEG-TS enthält keine verwertbaren Audiodaten")
 			return True
 
 		playlist_url = url
@@ -46,11 +186,15 @@ def test_m3u8(url, headers=None, verify=True):
 				continue
 
 			segment_headers = dict(headers)
-			segment_headers["Range"] = "bytes=0-1023"
+			segment_headers["Range"] = "bytes=0-%s" % (TS_AUDIO_PROBE_BYTES - 1)
 			response = request("GET", target, headers=segment_headers, timeout=10, stream=True, retries=0, verify=verify)
 			response.raise_for_status()
-			if not next(response.iter_content(1), b""):
+			probe = _read_probe(response)
+			if not probe:
 				raise ValueError("M3U8-Mediensegment ist leer")
+			has_audio = _mpeg_ts_has_audio(probe)
+			if has_audio is False:
+				raise ValueError("M3U8-Mediensegment enthält keine verwertbaren Audiodaten")
 			return True
 	except Exception:
 		log("M3U8-Streamtest fehlgeschlagen\n%s" % format_exc())
