@@ -3,6 +3,21 @@ from vavoo.utils import *
 
 chanicons = ['13thstreet.png', '3sat.png', 'animalplanet.png', 'anixe.png', 'ard.png', 'ardalpha.png', 'arte.png', 'atv.png', 'atv2.png', 'automotorsport.png', 'axnblack.png', 'axnwhite.png', 'br.png', 'cartoonito.png', 'cartoonnetwork.png', 'comedycentral.png', 'curiositychannel.png', 'fix&foxi.png', 'dazn1.png', 'dazn2.png', 'deluxemusic.png', 'nationalgeographic.png', 'dmax.png', 'eurosport1.png', 'eurosport2.png', 'nickjunior.png', 'superrtl.png', 'heimatkanal.png', 'history.png', 'hr.png', 'jukebox.png', 'kabel1doku.png', 'pro7.png', 'pro7maxx.png', 'pro7fun.png', 'rtl2.png', 'kika.png', 'kinowelt.png', 'mdr.png', 'universaltv.png', 'discovery.png', 'mtv.png', 'n24doku.png', 'natgeowild.png', 'sky1.png', 'ndr.png', 'nickelodeon.png', 'nitro.png', 'romancetv.png', 'ntv.png', 'one.png', 'orf1.png', 'orf2.png', 'orf3.png', 'orfsportplus.png', 'phoenix.png', 'geotv.png', 'puls24.png', 'puls4.png', 'rbb.png', 'ric.png', 'motorvision.png', 'rtl.png', 'rtlcrime.png', 'rtlliving.png', 'kabel1.png', 'rtlpassion.png', 'rtlup.png', 'sat1.png', 'sat1emotions.png', 'sat1gold.png', 'servustv.png', 'silverline.png', 'sixx.png', 'skyatlantic.png', 'skycinemaaction.png', 'skycinemaclassics.png', 'skycinemafamily.png', 'skycinemahighlights.png', 'skycinemapremieren.png', 'skycrime.png', 'skydocumentaries.png', 'skykrimi.png', 'skynature.png', 'skyreplay.png', 'skyshowcase.png', 'spiegelgeschichte.png', 'kabel1classics.png', 'sport1.png', 'sportdigital.png', 'swr.png', 'syfy.png', 'tagesschau24.png', 'tele5.png', 'tlc.png', 'toggoplus.png', 'crime+investigation.png', 'vox.png', 'voxup.png', 'warnertvcomedy.png', 'warnertvfilm.png', 'warnertvserie.png', 'wdr.png', 'welt.png', 'weltderwunder.png', 'zdf.png', 'zdfinfo.png', 'zdfneo.png', 'zeeone.png', 'skycinemathriller.png']
 
+def get_stream_source(link):
+	if not link:
+		return ""
+	if isinstance(link, dict):
+		if link.get("source") in ("lite", "2ix2") or link.get("stream_type") in ("2ix2", "nydus"):
+			return "2ix2"
+		return "STALKER"
+	elif isinstance(link, str):
+		if "vavoo" in link.lower():
+			return "VAVOO"
+		elif "2ix2" in link.lower() or "nydus" in link.lower():
+			return "2ix2"
+		return "STALKER"
+	return "VAVOO"
+
 def test_m3u8(url, headers=None, verify=True):
 	headers = headers or {}
 	response = None
@@ -137,7 +152,8 @@ def get_stalker_channels(genres=False):
 		channel = {
 			"cmd": item["cmd"],
 			"use_http_tmp_link": item.get("use_http_tmp_link", 0),
-			"use_load_balancing": item.get("use_load_balancing", 0)
+			"use_load_balancing": item.get("use_load_balancing", 0),
+			"source": "stalker"
 		}
 		if channel not in sta_channels[name]:
 			sta_channels[name].append(channel)
@@ -261,11 +277,11 @@ def livePlay(name, type=None, group=None, retry='0', idx=None):
 				i = (last.get("num", -1) + 1) % n
 		elif mode == "1":
 			if not handle_wait(name):  # Dialog aufrufen
-				sel = selectDialog(["STREAM %s" % x for x in range(1, n + 1)])
+				sel = selectDialog(["STREAM %s (%s)" % (x, get_stream_source(m[x - 1])) for x in range(1, n + 1)])
 				if sel < 0: return
 				i = sel
 		else:
-			sel = selectDialog(["STREAM %s" % x for x in range(1, n + 1)])
+			sel = selectDialog(["STREAM %s (%s)" % (x, get_stream_source(m[x - 1])) for x in range(1, n + 1)])
 			if sel < 0: return
 			i = sel
 
@@ -283,7 +299,8 @@ def livePlay(name, type=None, group=None, retry='0', idx=None):
 	if not is_retry:
 		set_cache("last", {"idn": name, "num": i}, 2)
 	# Titel/Plot NACH der Aufloesung -> zeigt die tatsaechlich verwendete Quelle
-	title = "%s (%s/%s)" % (name, i + 1, n) if n > 1 else name
+	src = get_stream_source(m[i])
+	title = "%s (%s/%s %s)" % (name, i + 1, n, src) if n > 1 else ("%s (%s)" % (name, src) if src else name)
 
 	url_is_proxy = "127.0.0.1" in url
 	want_retry = getSetting("live_auto_retry") == "true"
@@ -294,7 +311,8 @@ def livePlay(name, type=None, group=None, retry='0', idx=None):
 	if want_retry or url_is_proxy:
 		from vavoo.player import LivePlayer
 		live_player = LivePlayer()
-	infoLabels = {"title": title, "plot": "[B]%s[/B] - Stream %s von %s" % (name, i + 1, n)}
+	plot_title = "[B]%s[/B] - Stream %s von %s (%s)" % (name, i + 1, n, src) if n > 1 else ("[B]%s[/B] (%s)" % (name, src) if src else "[B]%s[/B]" % name)
+	infoLabels = {"title": title, "plot": plot_title}
 	o = ListItem(name)
 	log("Spiele %s" % url)
 	# Live-TV laeuft ueber inputstream.ffmpegdirect. MPEG-TS ist kein Manifest-
@@ -339,9 +357,10 @@ def livePlay(name, type=None, group=None, retry='0', idx=None):
 		return
 
 	next_i = (i + 1) % n
-	log("Live-TV-Stream %s -> naechste Quelle %s/%s (Versuch %s/%s)" % (result, next_i + 1, n, retry + 1, max_retries))
+	next_src = get_stream_source(m[next_i])
+	log("Live-TV-Stream %s -> naechste Quelle %s/%s (%s) (Versuch %s/%s)" % (result, next_i + 1, n, next_src, retry + 1, max_retries))
 	if n > 1:
-		dialog.notification("VAVOO.TO", "Wechsle zu Stream %s/%s" % (next_i + 1, n), xbmcgui.NOTIFICATION_INFO, 2000)
+		dialog.notification("VAVOO.TO", "Wechsle zu Stream %s/%s (%s)" % (next_i + 1, n, next_src), xbmcgui.NOTIFICATION_INFO, 2000)
 	try:
 		if live_player.isPlaying():
 			live_player.stop()
