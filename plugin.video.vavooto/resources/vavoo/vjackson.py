@@ -49,18 +49,25 @@ def group_tv(params):
 		gruppen = portal.genres()
 		for title, groupid in  gruppen.items():
 			addDir2(title.encode().decode("ascii", errors="ignore"), "DefaultAddonPVRClient", "channels", type="stalker", group=groupid)
+	elif params.get("type")=="lite":
+		from vavoo import vjlive
+		vjlive.channels(None, "lite", None)
+		return
 	else:
 		active_sources = []
 		if getSetting("vavoo") == "true":
 			active_sources.append(("VAVOO - GRUPPEN", "vavoo"))
 		if getSetting("stalker") == "true":
 			active_sources.append(("STALKER - GRUPPEN", "stalker"))
+		if getSetting("lite") == "true":
+			active_sources.append(("LITETV - ALLE SENDER", "lite"))
 
 		if len(active_sources) > 1:
 			for title, stype in active_sources:
 				addDir2(title, "DefaultAddonPVRClient", "group_tv", type=stype)
 		elif len(active_sources) == 1:
 			group_tv({"type": active_sources[0][1]})
+			return
 		else:
 			return
 	end()
