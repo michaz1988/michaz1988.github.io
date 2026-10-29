@@ -1,14 +1,14 @@
+# -*- coding: utf-8 -*-
 # flake8: noqa
 from collections import deque
 import logging
-from typing import Optional
 
 from .exceptions import InvalidTableIndex
 
 log = logging.getLogger(__name__)
 
 
-def table_entry_size(name: bytes, value: bytes) -> int:
+def table_entry_size(name, value):
     """
     Calculates the size of a single entry
 
@@ -105,15 +105,13 @@ class HeaderTable:
 
     STATIC_TABLE_LENGTH = len(STATIC_TABLE)
 
-    STATIC_TABLE_MAPPING: dict[bytes, tuple[int, dict[bytes, int]]]
-
-    def __init__(self) -> None:
+    def __init__(self):
         self._maxsize = HeaderTable.DEFAULT_SIZE
         self._current_size = 0
         self.resized = False
-        self.dynamic_entries: deque[tuple[bytes, bytes]] = deque()
+        self.dynamic_entries = deque()
 
-    def get_by_index(self, index: int) -> tuple[bytes, bytes]:
+    def get_by_index(self, index):
         """
         Returns the entry specified by index
 
@@ -137,14 +135,14 @@ class HeaderTable:
 
         raise InvalidTableIndex("Invalid table index %d" % original_index)
 
-    def __repr__(self) -> str:
+    def __repr__(self):
         return "HeaderTable(%d, %s, %r)" % (
             self._maxsize,
             self.resized,
             self.dynamic_entries
         )
 
-    def add(self, name: bytes, value: bytes) -> None:
+    def add(self, name, value):
         """
         Adds a new entry to the table
 
@@ -162,7 +160,7 @@ class HeaderTable:
             self._current_size += size
             self._shrink()
 
-    def search(self, name: bytes, value: bytes) -> Optional[tuple[int, bytes, Optional[bytes]]]:
+    def search(self, name, value):
         """
         Searches the table for the entry specified by name
         and value
@@ -192,11 +190,11 @@ class HeaderTable:
         return partial
 
     @property
-    def maxsize(self) -> int:
+    def maxsize(self):
         return self._maxsize
 
     @maxsize.setter
-    def maxsize(self, newmax: int) -> None:
+    def maxsize(self, newmax):
         newmax = int(newmax)
         log.debug("Resizing header table to %d from %d", newmax, self._maxsize)
         oldmax = self._maxsize
@@ -208,7 +206,7 @@ class HeaderTable:
         elif oldmax > newmax:
             self._shrink()
 
-    def _shrink(self) -> None:
+    def _shrink(self):
         """
         Shrinks the dynamic table to be at or below maxsize
         """
@@ -220,14 +218,14 @@ class HeaderTable:
         self._current_size = cursize
 
 
-def _build_static_table_mapping() -> dict[bytes, tuple[int, dict[bytes, int]]]:
+def _build_static_table_mapping():
     """
     Build static table mapping from header name to tuple with next structure:
     (<minimal index of header>, <mapping from header value to it index>).
 
     static_table_mapping used for hash searching.
     """
-    static_table_mapping: dict[bytes, tuple[int, dict[bytes, int]]] = {}
+    static_table_mapping = {}
     for index, (name, value) in enumerate(HeaderTable.STATIC_TABLE, 1):
         header_name_search_result = static_table_mapping.setdefault(name, (index, {}))
         header_name_search_result[1][value] = index

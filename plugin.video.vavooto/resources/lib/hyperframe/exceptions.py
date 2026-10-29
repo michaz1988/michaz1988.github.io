@@ -1,7 +1,10 @@
+# -*- coding: utf-8 -*-
 """
-Exceptions that can be thrown by hyperframe.
+hyperframe/exceptions
+~~~~~~~~~~~~~~~~~~~~~
+
+Defines the exceptions that can be thrown by hyperframe.
 """
-from __future__ import annotations
 
 
 class HyperframeError(Exception):
@@ -19,7 +22,6 @@ class UnknownFrameError(HyperframeError):
     .. versionchanged:: 6.0.0
         Changed base class from `ValueError` to :class:`HyperframeError`
     """
-
     def __init__(self, frame_type: int, length: int) -> None:
         #: The type byte of the unknown frame that was received.
         self.frame_type = frame_type
@@ -29,7 +31,8 @@ class UnknownFrameError(HyperframeError):
 
     def __str__(self) -> str:
         return (
-            f"UnknownFrameError: Unknown frame type 0x{self.frame_type:X} received, length {self.length} bytes"
+            "UnknownFrameError: Unknown frame type 0x%X received, "
+            "length %d bytes" % (self.frame_type, self.length)
         )
 
 
@@ -40,6 +43,7 @@ class InvalidPaddingError(HyperframeError):
     .. versionchanged:: 6.0.0
         Changed base class from `ValueError` to :class:`HyperframeError`
     """
+    pass
 
 
 class InvalidFrameError(HyperframeError):
@@ -51,6 +55,7 @@ class InvalidFrameError(HyperframeError):
     .. versionchanged:: 6.0.0
         Changed base class from `ValueError` to :class:`HyperframeError`
     """
+    pass
 
 
 class InvalidDataError(HyperframeError):
@@ -59,3 +64,4 @@ class InvalidDataError(HyperframeError):
 
     .. versionadded:: 6.0.0
     """
+    pass

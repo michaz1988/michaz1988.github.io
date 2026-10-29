@@ -1,37 +1,31 @@
+# -*- coding: utf-8 -*-
 """
-Exceptions used in hpack.
+hyper/http20/exceptions
+~~~~~~~~~~~~~~~~~~~~~~~
+
+This defines exceptions used in the HTTP/2 portion of hyper.
 """
-from __future__ import annotations
 
 
 class HPACKError(Exception):
     """
     The base class for all ``hpack`` exceptions.
     """
-
+    pass
 
 
 class HPACKDecodingError(HPACKError):
     """
     An error has been encountered while performing HPACK decoding.
     """
+    pass
 
 
-
-class InvalidTableIndexError(HPACKDecodingError):
+class InvalidTableIndex(HPACKDecodingError):
     """
     An invalid table index was received.
-
-    .. versionadded:: 4.1.0
     """
-
-class InvalidTableIndex(InvalidTableIndexError):  # noqa: N818
-    """
-    An invalid table index was received.
-
-    .. deprecated:: 4.1.0
-       Renamed to :class:`InvalidTableIndexError`, use it instead.
-    """
+    pass
 
 
 class OversizedHeaderListError(HPACKDecodingError):
@@ -41,6 +35,7 @@ class OversizedHeaderListError(HPACKDecodingError):
 
     .. versionadded:: 2.3.0
     """
+    pass
 
 
 class InvalidTableSizeError(HPACKDecodingError):
@@ -51,3 +46,4 @@ class InvalidTableSizeError(HPACKDecodingError):
 
     .. versionadded:: 3.0.0
     """
+    pass

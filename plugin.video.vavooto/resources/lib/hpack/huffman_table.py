@@ -1,11 +1,14 @@
+# -*- coding: utf-8 -*-
 """
-Implementation of a Huffman decoding table for HTTP/2.
+hpack/huffman_table
+~~~~~~~~~~~~~~~~~~~
 
-This is essentially a Python port of the work originally done for nghttp2's
-Huffman decoding. For this reason, while this file is made available under the
-MIT license as is the rest of this module, this file is undoubtedly a
-derivative work of the nghttp2 file ``nghttp2_hd_huffman_data.c``, obtained
-from https://github.com/tatsuhiro-t/nghttp2/ at commit
+This implementation of a Huffman decoding table for HTTP/2 is essentially a
+Python port of the work originally done for nghttp2's Huffman decoding. For
+this reason, while this file is made available under the MIT license as is the
+rest of this module, this file is undoubtedly a derivative work of the nghttp2
+file ``nghttp2_hd_huffman_data.c``, obtained from
+https://github.com/tatsuhiro-t/nghttp2/ at commit
 d2b55ad1a245e1d1964579fa3fac36ebf3939e72. That work is made available under
 the Apache 2.0 license under the following terms:
 
@@ -67,21 +70,19 @@ relatively well, particularly on implementations like PyPy where the cost of
 loops at the Python-level is not too expensive. The total number of loop
 iterations is 4x the number of bytes passed to the decoder.
 """
-from __future__ import annotations
-
 from .exceptions import HPACKDecodingError
 
 
 # This defines the state machine "class" at the top of the file. The reason we
 # do this is to keep the terrifing monster state table at the *bottom* of the
 # file so you don't have to actually *look* at the damn thing.
-def decode_huffman(huffman_string: bytes | bytearray | memoryview | None) -> bytes:
+def decode_huffman(huffman_string):
     """
     Given a bytestring of Huffman-encoded data for HPACK, returns a bytestring
     of the decompressed data.
     """
     if not huffman_string:
-        return b""
+        return b''
 
     state = 0
     flags = 0
@@ -101,8 +102,7 @@ def decode_huffman(huffman_string: bytes | bytearray | memoryview | None) -> byt
         state, flags, output_byte = HUFFMAN_TABLE[index]
 
         if flags & HUFFMAN_FAIL:
-            msg = "Invalid Huffman string"
-            raise HPACKDecodingError(msg)
+            raise HPACKDecodingError("Invalid Huffman String")
 
         if flags & HUFFMAN_EMIT_SYMBOL:
             decoded_bytes.append(output_byte)
@@ -111,15 +111,13 @@ def decode_huffman(huffman_string: bytes | bytearray | memoryview | None) -> byt
         state, flags, output_byte = HUFFMAN_TABLE[index]
 
         if flags & HUFFMAN_FAIL:
-            msg = "Invalid Huffman string"
-            raise HPACKDecodingError(msg)
+            raise HPACKDecodingError("Invalid Huffman String")
 
         if flags & HUFFMAN_EMIT_SYMBOL:
             decoded_bytes.append(output_byte)
 
     if not (flags & HUFFMAN_COMPLETE):
-        msg = "Incomplete Huffman string"
-        raise HPACKDecodingError(msg)
+        raise HPACKDecodingError("Incomplete Huffman string")
 
     return bytes(decoded_bytes)
 

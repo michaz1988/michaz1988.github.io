@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 h2/windows
 ~~~~~~~~~~
@@ -11,9 +12,10 @@ the user has already used. It then implements a basic algorithm that attempts
 to manage the flow control window without user input, trying to ensure that it
 does not emit too many WINDOW_UPDATE frames.
 """
-from __future__ import annotations
+from __future__ import division
 
 from .exceptions import FlowControlError
+
 
 # The largest acceptable value for a HTTP/2 flow control window.
 LARGEST_FLOW_CONTROL_WINDOW = 2**31 - 1
@@ -26,14 +28,13 @@ class WindowManager:
     :param max_window_size: The maximum size of the flow control window.
     :type max_window_size: ``int``
     """
-
-    def __init__(self, max_window_size: int) -> None:
+    def __init__(self, max_window_size):
         assert max_window_size <= LARGEST_FLOW_CONTROL_WINDOW
         self.max_window_size = max_window_size
         self.current_window_size = max_window_size
         self._bytes_processed = 0
 
-    def window_consumed(self, size: int) -> None:
+    def window_consumed(self, size):
         """
         We have received a certain number of bytes from the remote peer. This
         necessarily shrinks the flow control window!
@@ -46,10 +47,9 @@ class WindowManager:
         """
         self.current_window_size -= size
         if self.current_window_size < 0:
-            msg = "Flow control window shrunk below 0"
-            raise FlowControlError(msg)
+            raise FlowControlError("Flow control window shrunk below 0")
 
-    def window_opened(self, size: int) -> None:
+    def window_opened(self, size):
         """
         The flow control window has been incremented, either because of manual
         flow control management or because of the user changing the flow
@@ -67,12 +67,15 @@ class WindowManager:
         self.current_window_size += size
 
         if self.current_window_size > LARGEST_FLOW_CONTROL_WINDOW:
-            msg = f"Flow control window mustn't exceed {LARGEST_FLOW_CONTROL_WINDOW}"
-            raise FlowControlError(msg)
+            raise FlowControlError(
+                "Flow control window mustn't exceed %d" %
+                LARGEST_FLOW_CONTROL_WINDOW
+            )
 
-        self.max_window_size = max(self.current_window_size, self.max_window_size)
+        if self.current_window_size > self.max_window_size:
+            self.max_window_size = self.current_window_size
 
-    def process_bytes(self, size: int) -> int | None:
+    def process_bytes(self, size):
         """
         The application has informed us that it has processed a certain number
         of bytes. This may cause us to want to emit a window update frame. If
@@ -89,7 +92,7 @@ class WindowManager:
         self._bytes_processed += size
         return self._maybe_update_window()
 
-    def _maybe_update_window(self) -> int | None:
+    def _maybe_update_window(self):
         """
         Run the algorithm.
 
@@ -124,8 +127,11 @@ class WindowManager:
         # Note that, even though we may increment less than _bytes_processed,
         # we still want to set it to zero whenever we emit an increment. This
         # is because we'll always increment up to the maximum we can.
-        if ((self.current_window_size == 0) and (
-                self._bytes_processed > min(1024, self.max_window_size // 4))) or self._bytes_processed >= (self.max_window_size // 2):
+        if (self.current_window_size == 0) and (
+                self._bytes_processed > min(1024, self.max_window_size // 4)):
+            increment = min(self._bytes_processed, max_increment)
+            self._bytes_processed = 0
+        elif self._bytes_processed >= (self.max_window_size // 2):
             increment = min(self._bytes_processed, max_increment)
             self._bytes_processed = 0
 

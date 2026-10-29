@@ -1,23 +1,30 @@
+# -*- coding: utf-8 -*-
 """
+hpack
+~~~~~
+
 HTTP/2 header encoding for Python.
 """
-from __future__ import annotations
-
-from .exceptions import HPACKDecodingError, HPACKError, InvalidTableIndex, InvalidTableIndexError, InvalidTableSizeError, OversizedHeaderListError
-from .hpack import Decoder, Encoder
+from .hpack import Encoder, Decoder
 from .struct import HeaderTuple, NeverIndexedHeaderTuple
+from .exceptions import (
+    HPACKError,
+    HPACKDecodingError,
+    InvalidTableIndex,
+    OversizedHeaderListError,
+    InvalidTableSizeError
+)
 
 __all__ = [
-    "Decoder",
-    "Encoder",
-    "HPACKDecodingError",
-    "HPACKError",
-    "HeaderTuple",
-    "InvalidTableIndex",
-    "InvalidTableIndexError",
-    "InvalidTableSizeError",
-    "NeverIndexedHeaderTuple",
-    "OversizedHeaderListError",
+    'Encoder',
+    'Decoder',
+    'HeaderTuple',
+    'NeverIndexedHeaderTuple',
+    'HPACKError',
+    'HPACKDecodingError',
+    'InvalidTableIndex',
+    'OversizedHeaderListError',
+    'InvalidTableSizeError',
 ]
 
-__version__ = "4.2.0"
+__version__ = '4.0.0'

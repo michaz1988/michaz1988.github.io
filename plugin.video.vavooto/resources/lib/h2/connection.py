@@ -1,76 +1,40 @@
+# -*- coding: utf-8 -*-
 """
 h2/connection
 ~~~~~~~~~~~~~
 
 An implementation of a HTTP/2 connection.
 """
-from __future__ import annotations
-
 import base64
-from enum import Enum, IntEnum
-from typing import TYPE_CHECKING, Any
 
-from hpack.exceptions import HPACKError, OversizedHeaderListError
-from hpack.hpack import Decoder, Encoder
+from enum import Enum, IntEnum
+
 from hyperframe.exceptions import InvalidPaddingError
 from hyperframe.frame import (
-    AltSvcFrame,
-    ContinuationFrame,
-    DataFrame,
-    ExtensionFrame,
-    Frame,
-    GoAwayFrame,
-    HeadersFrame,
-    PingFrame,
-    PriorityFrame,
-    PushPromiseFrame,
-    RstStreamFrame,
-    SettingsFrame,
-    WindowUpdateFrame,
+    GoAwayFrame, WindowUpdateFrame, HeadersFrame, DataFrame, PingFrame,
+    PushPromiseFrame, SettingsFrame, RstStreamFrame, PriorityFrame,
+    ContinuationFrame, AltSvcFrame, ExtensionFrame
 )
+from hpack.hpack import Encoder, Decoder
+from hpack.exceptions import HPACKError, OversizedHeaderListError
 
 from .config import H2Configuration
 from .errors import ErrorCodes, _error_code_from_int
 from .events import (
-    AlternativeServiceAvailable,
-    ConnectionTerminated,
-    Event,
-    InformationalResponseReceived,
-    PingAckReceived,
-    PingReceived,
-    PriorityUpdated,
-    RemoteSettingsChanged,
-    RequestReceived,
-    ResponseReceived,
-    SettingsAcknowledged,
-    TrailersReceived,
-    UnknownFrameReceived,
-    WindowUpdated,
+    WindowUpdated, RemoteSettingsChanged, PingReceived, PingAckReceived,
+    SettingsAcknowledged, ConnectionTerminated, PriorityUpdated,
+    AlternativeServiceAvailable, UnknownFrameReceived
 )
 from .exceptions import (
-    DenialOfServiceError,
-    FlowControlError,
-    FrameTooLargeError,
-    NoAvailableStreamIDError,
-    NoSuchStreamError,
-    ProtocolError,
-    RFC1122Error,
-    StreamClosedError,
-    StreamIDTooLowError,
-    TooManyStreamsError,
+    ProtocolError, NoSuchStreamError, FlowControlError, FrameTooLargeError,
+    TooManyStreamsError, StreamClosedError, StreamIDTooLowError,
+    NoAvailableStreamIDError, RFC1122Error, DenialOfServiceError
 )
 from .frame_buffer import FrameBuffer
-from .settings import ChangedSetting, SettingCodes, Settings
+from .settings import Settings, SettingCodes
 from .stream import H2Stream, StreamClosedBy
 from .utilities import SizeLimitDict, guard_increment_window
 from .windows import WindowManager
-
-if TYPE_CHECKING:  # pragma: no cover
-    from collections.abc import Callable, Iterable
-
-    from hpack.struct import Header, HeaderWeaklyTyped
-
-    from ._typing import Buffer
 
 
 class ConnectionState(Enum):
@@ -117,7 +81,6 @@ class H2ConnectionStateMachine:
     maintains very little state directly, instead focusing entirely on managing
     state transitions.
     """
-
     # For the purposes of this state machine we treat HEADERS and their
     # associated CONTINUATION frames as a single jumbo frame. The protocol
     # allows/requires this by preventing other frames from being interleved in
@@ -247,24 +210,24 @@ class H2ConnectionStateMachine:
             (None, ConnectionState.CLOSED),
     }
 
-    def __init__(self) -> None:
+    def __init__(self):
         self.state = ConnectionState.IDLE
 
-    def process_input(self, input_: ConnectionInputs) -> list[Event]:
+    def process_input(self, input_):
         """
         Process a specific input in the state machine.
         """
         if not isinstance(input_, ConnectionInputs):
-            msg = "Input must be an instance of ConnectionInputs"
-            raise ValueError(msg)  # noqa: TRY004
+            raise ValueError("Input must be an instance of ConnectionInputs")
 
         try:
             func, target_state = self._transitions[(self.state, input_)]
-        except KeyError as e:
+        except KeyError:
             old_state = self.state
             self.state = ConnectionState.CLOSED
-            msg = f"Invalid input {input_} in state {old_state}"
-            raise ProtocolError(msg) from e
+            raise ProtocolError(
+                "Invalid input %s in state %s" % (input_, old_state)
+            )
         else:
             self.state = target_state
             if func is not None:  # pragma: no cover
@@ -301,7 +264,6 @@ class H2Connection:
 
     :type config: :class:`H2Configuration <h2.config.H2Configuration>`
     """
-
     # The initial maximum outbound frame size. This can be changed by receiving
     # a settings frame.
     DEFAULT_MAX_OUTBOUND_FRAME_SIZE = 65535
@@ -322,9 +284,9 @@ class H2Connection:
     # Keep in memory limited amount of results for streams closes
     MAX_CLOSED_STREAMS = 2**16
 
-    def __init__(self, config: H2Configuration | None = None) -> None:
+    def __init__(self, config=None):
         self.state_machine = H2ConnectionStateMachine()
-        self.streams: dict[int, H2Stream] = {}
+        self.streams = {}
         self.highest_inbound_stream_id = 0
         self.highest_outbound_stream_id = 0
         self.encoder = Encoder()
@@ -337,7 +299,11 @@ class H2Connection:
         #: The configuration for this HTTP/2 connection object.
         #:
         #: .. versionadded:: 2.5.0
-        self.config = config or H2Configuration(client_side=True)
+        self.config = config
+        if self.config is None:
+            self.config = H2Configuration(
+                client_side=True,
+            )
 
         # Objects that store settings, including defaults.
         #
@@ -358,7 +324,7 @@ class H2Connection:
                 SettingCodes.MAX_CONCURRENT_STREAMS: 100,
                 SettingCodes.MAX_HEADER_LIST_SIZE:
                     self.DEFAULT_MAX_HEADER_LIST_SIZE,
-            },
+            }
         )
         self.remote_settings = Settings(client=not self.config.client_side)
 
@@ -381,7 +347,7 @@ class H2Connection:
 
         # A private variable to store a sequence of received header frames
         # until completion.
-        self._header_frames: list[Frame] = []
+        self._header_frames = []
 
         # Data that needs to be sent.
         self._data_to_send = bytearray()
@@ -392,17 +358,17 @@ class H2Connection:
         # Also used to determine whether we should consider a frame received
         # while a stream is closed as either a stream error or a connection
         # error.
-        self._closed_streams: dict[int, StreamClosedBy | None] = SizeLimitDict(
-            size_limit=self.MAX_CLOSED_STREAMS,
+        self._closed_streams = SizeLimitDict(
+            size_limit=self.MAX_CLOSED_STREAMS
         )
 
         # The flow control window manager for the connection.
         self._inbound_flow_control_window_manager = WindowManager(
-            max_window_size=self.local_settings.initial_window_size,
+            max_window_size=self.local_settings.initial_window_size
         )
 
         # When in doubt use dict-dispatch.
-        self._frame_dispatch_table: dict[type[Frame], Callable] = {  # type: ignore
+        self._frame_dispatch_table = {
             HeadersFrame: self._receive_headers_frame,
             PushPromiseFrame: self._receive_push_promise_frame,
             SettingsFrame: self._receive_settings_frame,
@@ -414,16 +380,16 @@ class H2Connection:
             GoAwayFrame: self._receive_goaway_frame,
             ContinuationFrame: self._receive_naked_continuation,
             AltSvcFrame: self._receive_alt_svc_frame,
-            ExtensionFrame: self._receive_unknown_frame,
+            ExtensionFrame: self._receive_unknown_frame
         }
 
-    def _prepare_for_sending(self, frames: list[Frame]) -> None:
+    def _prepare_for_sending(self, frames):
         if not frames:
             return
-        self._data_to_send += b"".join(f.serialize() for f in frames)
+        self._data_to_send += b''.join(f.serialize() for f in frames)
         assert all(f.body_len <= self.max_outbound_frame_size for f in frames)
 
-    def _open_streams(self, remainder: int) -> int:
+    def _open_streams(self, remainder):
         """
         A common method of counting number of open streams. Returns the number
         of streams that are open *and* that have (stream ID % 2) == remainder.
@@ -445,7 +411,7 @@ class H2Connection:
         return count
 
     @property
-    def open_outbound_streams(self) -> int:
+    def open_outbound_streams(self):
         """
         The current number of open outbound streams.
         """
@@ -453,7 +419,7 @@ class H2Connection:
         return self._open_streams(outbound_numbers)
 
     @property
-    def open_inbound_streams(self) -> int:
+    def open_inbound_streams(self):
         """
         The current number of open inbound streams.
         """
@@ -461,7 +427,7 @@ class H2Connection:
         return self._open_streams(inbound_numbers)
 
     @property
-    def inbound_flow_control_window(self) -> int:
+    def inbound_flow_control_window(self):
         """
         The size of the inbound flow control window for the connection. This is
         rarely publicly useful: instead, use :meth:`remote_flow_control_window
@@ -470,7 +436,7 @@ class H2Connection:
         """
         return self._inbound_flow_control_window_manager.current_window_size
 
-    def _begin_new_stream(self, stream_id: int, allowed_ids: AllowedStreamIDs) -> H2Stream:
+    def _begin_new_stream(self, stream_id, allowed_ids):
         """
         Initiate a new stream.
 
@@ -481,7 +447,7 @@ class H2Connection:
         :param allowed_ids: What kind of stream ID is allowed.
         """
         self.config.logger.debug(
-            "Attempting to initiate stream ID %d", stream_id,
+            "Attempting to initiate stream ID %d", stream_id
         )
         outbound = self._stream_id_is_outbound(stream_id)
         highest_stream_id = (
@@ -493,16 +459,18 @@ class H2Connection:
             raise StreamIDTooLowError(stream_id, highest_stream_id)
 
         if (stream_id % 2) != int(allowed_ids):
-            msg = "Invalid stream ID for peer."
-            raise ProtocolError(msg)
+            raise ProtocolError(
+                "Invalid stream ID for peer."
+            )
 
         s = H2Stream(
             stream_id,
             config=self.config,
             inbound_window_size=self.local_settings.initial_window_size,
-            outbound_window_size=self.remote_settings.initial_window_size,
+            outbound_window_size=self.remote_settings.initial_window_size
         )
         self.config.logger.debug("Stream ID %d created", stream_id)
+        s.max_inbound_frame_size = self.max_inbound_frame_size
         s.max_outbound_frame_size = self.max_outbound_frame_size
 
         self.streams[stream_id] = s
@@ -515,7 +483,7 @@ class H2Connection:
 
         return s
 
-    def initiate_connection(self) -> None:
+    def initiate_connection(self):
         """
         Provides any data that needs to be sent at the start of the connection.
         Must be called for both clients and servers.
@@ -523,20 +491,20 @@ class H2Connection:
         self.config.logger.debug("Initializing connection")
         self.state_machine.process_input(ConnectionInputs.SEND_SETTINGS)
         if self.config.client_side:
-            preamble = b"PRI * HTTP/2.0\r\n\r\nSM\r\n\r\n"
+            preamble = b'PRI * HTTP/2.0\r\n\r\nSM\r\n\r\n'
         else:
-            preamble = b""
+            preamble = b''
 
         f = SettingsFrame(0)
         for setting, value in self.local_settings.items():
             f.settings[setting] = value
         self.config.logger.debug(
-            "Send Settings frame: %s", self.local_settings,
+            "Send Settings frame: %s", self.local_settings
         )
 
         self._data_to_send += preamble + f.serialize()
 
-    def initiate_upgrade_connection(self, settings_header: bytes | None = None) -> bytes | None:
+    def initiate_upgrade_connection(self, settings_header=None):
         """
         Call to initialise the connection object for use with an upgraded
         HTTP/2 connection (i.e. a connection negotiated using the
@@ -570,7 +538,7 @@ class H2Connection:
         :rtype: ``bytes`` or ``None``
         """
         self.config.logger.debug(
-            "Upgrade connection. Current settings: %s", self.local_settings,
+            "Upgrade connection. Current settings: %s", self.local_settings
         )
 
         frame_data = None
@@ -591,7 +559,7 @@ class H2Connection:
             # the state machine, but ignoring the return value.
             settings_header = base64.urlsafe_b64decode(settings_header)
             f = SettingsFrame(0)
-            f.parse_body(memoryview(settings_header))
+            f.parse_body(settings_header)
             self._receive_settings_frame(f)
 
         # Set up appropriate state. Stream 1 in a half-closed state:
@@ -609,7 +577,7 @@ class H2Connection:
         self.streams[1].upgrade(self.config.client_side)
         return frame_data
 
-    def _get_or_create_stream(self, stream_id: int, allowed_ids: AllowedStreamIDs) -> H2Stream:
+    def _get_or_create_stream(self, stream_id, allowed_ids):
         """
         Gets a stream by its stream ID. Will create one if one does not already
         exist. Use allowed_ids to circumvent the usual stream ID rules for
@@ -623,7 +591,7 @@ class H2Connection:
         except KeyError:
             return self._begin_new_stream(stream_id, allowed_ids)
 
-    def _get_stream_by_id(self, stream_id: int | None) -> H2Stream:
+    def _get_stream_by_id(self, stream_id):
         """
         Gets a stream by its stream ID. Raises NoSuchStreamError if the stream
         ID does not correspond to a known stream and is higher than the current
@@ -632,11 +600,9 @@ class H2Connection:
         .. versionchanged:: 2.0.0
            Removed this function from the public API.
         """
-        if not stream_id:
-            raise NoSuchStreamError(-1)  # pragma: no cover
         try:
             return self.streams[stream_id]
-        except KeyError as e:
+        except KeyError:
             outbound = self._stream_id_is_outbound(stream_id)
             highest_stream_id = (
                 self.highest_outbound_stream_id if outbound else
@@ -644,10 +610,11 @@ class H2Connection:
             )
 
             if stream_id > highest_stream_id:
-                raise NoSuchStreamError(stream_id) from e
-            raise StreamClosedError(stream_id) from e
+                raise NoSuchStreamError(stream_id)
+            else:
+                raise StreamClosedError(stream_id)
 
-    def get_next_available_stream_id(self) -> int:
+    def get_next_available_stream_id(self):
         """
         Returns an integer suitable for use as the stream ID for the next
         stream created by this endpoint. For server endpoints, this stream ID
@@ -676,21 +643,16 @@ class H2Connection:
         else:
             next_stream_id = self.highest_outbound_stream_id + 2
         self.config.logger.debug(
-            "Next available stream ID %d", next_stream_id,
+            "Next available stream ID %d", next_stream_id
         )
         if next_stream_id > self.HIGHEST_ALLOWED_STREAM_ID:
-            msg = "Exhausted allowed stream IDs"
-            raise NoAvailableStreamIDError(msg)
+            raise NoAvailableStreamIDError("Exhausted allowed stream IDs")
 
         return next_stream_id
 
-    def send_headers(self,
-                     stream_id: int,
-                     headers: Iterable[HeaderWeaklyTyped],
-                     end_stream: bool = False,
-                     priority_weight: int | None = None,
-                     priority_depends_on: int | None = None,
-                     priority_exclusive: bool | None = None) -> None:
+    def send_headers(self, stream_id, headers, end_stream=False,
+                     priority_weight=None, priority_depends_on=None,
+                     priority_exclusive=None):
         """
         Send headers on a given stream.
 
@@ -782,33 +744,32 @@ class H2Connection:
             on the stream given in ``priority_depends_on`` for priority
             purposes. See :meth:`prioritize
             <h2.connection.H2Connection.prioritize>` for more about how this
-            field works. Defaults to ``None``, which means that no priority
+            field workds. Defaults to ``None``, which means that no priority
             information will be sent.
         :type priority_depends_on: ``bool`` or ``None``
 
         :returns: Nothing
         """
         self.config.logger.debug(
-            "Send headers on stream ID %d", stream_id,
+            "Send headers on stream ID %d", stream_id
         )
 
         # Check we can open the stream.
         if stream_id not in self.streams:
             max_open_streams = self.remote_settings.max_concurrent_streams
-            value = self.open_outbound_streams # take a copy due to the property accessor having side affects
-            if (value + 1) > max_open_streams:
-                msg = f"Max outbound streams is {max_open_streams}, {value} open"
-                raise TooManyStreamsError(msg)
+            if (self.open_outbound_streams + 1) > max_open_streams:
+                raise TooManyStreamsError(
+                    "Max outbound streams is %d, %d open" %
+                    (max_open_streams, self.open_outbound_streams)
+                )
 
         self.state_machine.process_input(ConnectionInputs.SEND_HEADERS)
         stream = self._get_or_create_stream(
-            stream_id, AllowedStreamIDs(self.config.client_side),
+            stream_id, AllowedStreamIDs(self.config.client_side)
         )
-
-        frames: list[Frame] = []
-        frames.extend(stream.send_headers(
-            headers, self.encoder, end_stream,
-        ))
+        frames = stream.send_headers(
+            headers, self.encoder, end_stream
+        )
 
         # We may need to send priority information.
         priority_present = (
@@ -819,27 +780,20 @@ class H2Connection:
 
         if priority_present:
             if not self.config.client_side:
-                msg = "Servers SHOULD NOT prioritize streams."
-                raise RFC1122Error(msg)
+                raise RFC1122Error("Servers SHOULD NOT prioritize streams.")
 
             headers_frame = frames[0]
-            assert isinstance(headers_frame, HeadersFrame)
-
-            headers_frame.flags.add("PRIORITY")
+            headers_frame.flags.add('PRIORITY')
             frames[0] = _add_frame_priority(
                 headers_frame,
                 priority_weight,
                 priority_depends_on,
-                priority_exclusive,
+                priority_exclusive
             )
 
         self._prepare_for_sending(frames)
 
-    def send_data(self,
-                  stream_id: int,
-                  data: bytes | memoryview,
-                  end_stream: bool = False,
-                  pad_length: Any = None) -> None:
+    def send_data(self, stream_id, data, end_stream=False, pad_length=None):
         """
         Send data on a given stream.
 
@@ -874,32 +828,34 @@ class H2Connection:
         :returns: Nothing
         """
         self.config.logger.debug(
-            "Send data on stream ID %d with len %d", stream_id, len(data),
+            "Send data on stream ID %d with len %d", stream_id, len(data)
         )
         frame_size = len(data)
         if pad_length is not None:
             if not isinstance(pad_length, int):
-                msg = "pad_length must be an int"
-                raise TypeError(msg)
+                raise TypeError("pad_length must be an int")
             if pad_length < 0 or pad_length > 255:
-                msg = "pad_length must be within range: [0, 255]"
-                raise ValueError(msg)
+                raise ValueError("pad_length must be within range: [0, 255]")
             # Account for padding bytes plus the 1-byte padding length field.
             frame_size += pad_length + 1
         self.config.logger.debug(
-            "Frame size on stream ID %d is %d", stream_id, frame_size,
+            "Frame size on stream ID %d is %d", stream_id, frame_size
         )
 
-        if frame_size > 0 and frame_size > self.local_flow_control_window(stream_id):
-            msg = f"Cannot send {frame_size} bytes, flow control window is {self.local_flow_control_window(stream_id)}"
-            raise FlowControlError(msg)
-        if frame_size > self.max_outbound_frame_size:
-            msg = f"Cannot send frame size {frame_size}, max frame size is {self.max_outbound_frame_size}"
-            raise FrameTooLargeError(msg)
+        if frame_size > self.local_flow_control_window(stream_id):
+            raise FlowControlError(
+                "Cannot send %d bytes, flow control window is %d." %
+                (frame_size, self.local_flow_control_window(stream_id))
+            )
+        elif frame_size > self.max_outbound_frame_size:
+            raise FrameTooLargeError(
+                "Cannot send frame size %d, max frame size is %d" %
+                (frame_size, self.max_outbound_frame_size)
+            )
 
         self.state_machine.process_input(ConnectionInputs.SEND_DATA)
         frames = self.streams[stream_id].send_data(
-            data, end_stream, pad_length=pad_length,
+            data, end_stream, pad_length=pad_length
         )
 
         self._prepare_for_sending(frames)
@@ -907,11 +863,11 @@ class H2Connection:
         self.outbound_flow_control_window -= frame_size
         self.config.logger.debug(
             "Outbound flow control window size is %d",
-            self.outbound_flow_control_window,
+            self.outbound_flow_control_window
         )
-        assert self.outbound_flow_control_window >= 0 or frame_size == 0
+        assert self.outbound_flow_control_window >= 0
 
-    def end_stream(self, stream_id: int) -> None:
+    def end_stream(self, stream_id):
         """
         Cleanly end a given stream.
 
@@ -921,17 +877,13 @@ class H2Connection:
         :param stream_id: The ID of the stream to end.
         :type stream_id: ``int``
         :returns: Nothing
-        :raises NoSuchStreamError: If the stream ID does not correspond to a
-            known stream and is higher than the current maximum stream ID.
-        :raises StreamClosedError: If the stream ID corresponds to a stream
-            that has been closed.
         """
         self.config.logger.debug("End stream ID %d", stream_id)
         self.state_machine.process_input(ConnectionInputs.SEND_DATA)
-        frames = self._get_stream_by_id(stream_id).end_stream()
+        frames = self.streams[stream_id].end_stream()
         self._prepare_for_sending(frames)
 
-    def increment_flow_control_window(self, increment: int, stream_id: int | None = None) -> None:
+    def increment_flow_control_window(self, increment, stream_id=None):
         """
         Increment a flow control window, optionally for a single stream. Allows
         the remote peer to send more data.
@@ -950,20 +902,22 @@ class H2Connection:
         :raises: ``ValueError``
         """
         if not (1 <= increment <= self.MAX_WINDOW_INCREMENT):
-            msg = f"Flow control increment must be between 1 and {self.MAX_WINDOW_INCREMENT}"
-            raise ValueError(msg)
+            raise ValueError(
+                "Flow control increment must be between 1 and %d" %
+                self.MAX_WINDOW_INCREMENT
+            )
 
         self.state_machine.process_input(ConnectionInputs.SEND_WINDOW_UPDATE)
 
         if stream_id is not None:
             stream = self.streams[stream_id]
             frames = stream.increase_flow_control_window(
-                increment,
+                increment
             )
 
             self.config.logger.debug(
                 "Increase stream ID %d flow control window by %d",
-                stream_id, increment,
+                stream_id, increment
             )
         else:
             self._inbound_flow_control_window_manager.window_opened(increment)
@@ -972,15 +926,12 @@ class H2Connection:
             frames = [f]
 
             self.config.logger.debug(
-                "Increase connection flow control window by %d", increment,
+                "Increase connection flow control window by %d", increment
             )
 
         self._prepare_for_sending(frames)
 
-    def push_stream(self,
-                    stream_id: int,
-                    promised_stream_id: int,
-                    request_headers: Iterable[HeaderWeaklyTyped]) -> None:
+    def push_stream(self, stream_id, promised_stream_id, request_headers):
         """
         Push a response to the client by sending a PUSH_PROMISE frame.
 
@@ -1003,12 +954,11 @@ class H2Connection:
         :returns: Nothing
         """
         self.config.logger.debug(
-            "Send Push Promise frame on stream ID %d", stream_id,
+            "Send Push Promise frame on stream ID %d", stream_id
         )
 
         if not self.remote_settings.enable_push:
-            msg = "Remote peer has disabled stream push"
-            raise ProtocolError(msg)
+            raise ProtocolError("Remote peer has disabled stream push")
 
         self.state_machine.process_input(ConnectionInputs.SEND_PUSH_PROMISE)
         stream = self._get_stream_by_id(stream_id)
@@ -1019,21 +969,20 @@ class H2Connection:
         # this shortcut works because only servers can push and the state
         # machine will enforce this.
         if (stream_id % 2) == 0:
-            msg = "Cannot recursively push streams."
-            raise ProtocolError(msg)
+            raise ProtocolError("Cannot recursively push streams.")
 
         new_stream = self._begin_new_stream(
-            promised_stream_id, AllowedStreamIDs.EVEN,
+            promised_stream_id, AllowedStreamIDs.EVEN
         )
         self.streams[promised_stream_id] = new_stream
 
         frames = stream.push_stream_in_band(
-            promised_stream_id, request_headers, self.encoder,
+            promised_stream_id, request_headers, self.encoder
         )
         new_frames = new_stream.locally_pushed()
         self._prepare_for_sending(frames + new_frames)
 
-    def ping(self, opaque_data: bytes | str) -> None:
+    def ping(self, opaque_data):
         """
         Send a PING frame.
 
@@ -1044,15 +993,14 @@ class H2Connection:
         self.config.logger.debug("Send Ping frame")
 
         if not isinstance(opaque_data, bytes) or len(opaque_data) != 8:
-            msg = f"Invalid value for ping data: {opaque_data!r}"
-            raise ValueError(msg)
+            raise ValueError("Invalid value for ping data: %r" % opaque_data)
 
         self.state_machine.process_input(ConnectionInputs.SEND_PING)
         f = PingFrame(0)
         f.opaque_data = opaque_data
         self._prepare_for_sending([f])
 
-    def reset_stream(self, stream_id: int, error_code: ErrorCodes | int = 0) -> None:
+    def reset_stream(self, stream_id, error_code=0):
         """
         Reset a stream.
 
@@ -1075,10 +1023,9 @@ class H2Connection:
         frames = stream.reset_stream(error_code)
         self._prepare_for_sending(frames)
 
-    def close_connection(self,
-                         error_code: ErrorCodes | int = 0,
-                         additional_data: bytes | None = None,
-                         last_stream_id: int | None = None) -> None:
+    def close_connection(self, error_code=0, additional_data=None,
+                         last_stream_id=None):
+
         """
         Close a connection, emitting a GOAWAY frame.
 
@@ -1107,11 +1054,11 @@ class H2Connection:
             stream_id=0,
             last_stream_id=last_stream_id,
             error_code=error_code,
-            additional_data=(additional_data or b""),
+            additional_data=(additional_data or b'')
         )
         self._prepare_for_sending([f])
 
-    def update_settings(self, new_settings: dict[SettingCodes | int, int]) -> None:
+    def update_settings(self, new_settings):
         """
         Update the local settings. This will prepare and emit the appropriate
         SETTINGS frame.
@@ -1119,7 +1066,7 @@ class H2Connection:
         :param new_settings: A dictionary of {setting: new value}
         """
         self.config.logger.debug(
-            "Update connection settings to %s", new_settings,
+            "Update connection settings to %s", new_settings
         )
         self.state_machine.process_input(ConnectionInputs.SEND_SETTINGS)
         self.local_settings.update(new_settings)
@@ -1128,9 +1075,9 @@ class H2Connection:
         self._prepare_for_sending([s])
 
     def advertise_alternative_service(self,
-                                      field_value: bytes | str,
-                                      origin: bytes | None = None,
-                                      stream_id: int | None = None) -> None:
+                                      field_value,
+                                      origin=None,
+                                      stream_id=None):
         """
         Notify a client about an available Alternative Service.
 
@@ -1185,15 +1132,13 @@ class H2Connection:
         :returns: Nothing.
         """
         if not isinstance(field_value, bytes):
-            msg = "Field must be bytestring."
-            raise ValueError(msg)  # noqa: TRY004
+            raise ValueError("Field must be bytestring.")
 
         if origin is not None and stream_id is not None:
-            msg = "Must not provide both origin and stream_id"
-            raise ValueError(msg)
+            raise ValueError("Must not provide both origin and stream_id")
 
         self.state_machine.process_input(
-            ConnectionInputs.SEND_ALTERNATIVE_SERVICE,
+            ConnectionInputs.SEND_ALTERNATIVE_SERVICE
         )
 
         if origin is not None:
@@ -1201,18 +1146,15 @@ class H2Connection:
             f = AltSvcFrame(stream_id=0)
             f.origin = origin
             f.field = field_value
-            frames: list[Frame] = [f]
+            frames = [f]
         else:
             stream = self._get_stream_by_id(stream_id)
             frames = stream.advertise_alternative_service(field_value)
 
         self._prepare_for_sending(frames)
 
-    def prioritize(self,
-                   stream_id: int,
-                   weight: int | None = None,
-                   depends_on: int | None = None,
-                   exclusive: bool | None = None) -> None:
+    def prioritize(self, stream_id, weight=None, depends_on=None,
+                   exclusive=None):
         """
         Notify a server about the priority of a stream.
 
@@ -1276,19 +1218,18 @@ class H2Connection:
         :type exclusive: ``bool``
         """
         if not self.config.client_side:
-            msg = "Servers SHOULD NOT prioritize streams."
-            raise RFC1122Error(msg)
+            raise RFC1122Error("Servers SHOULD NOT prioritize streams.")
 
         self.state_machine.process_input(
-            ConnectionInputs.SEND_PRIORITY,
+            ConnectionInputs.SEND_PRIORITY
         )
 
         frame = PriorityFrame(stream_id)
-        frame_prio = _add_frame_priority(frame, weight, depends_on, exclusive)
+        frame = _add_frame_priority(frame, weight, depends_on, exclusive)
 
-        self._prepare_for_sending([frame_prio])
+        self._prepare_for_sending([frame])
 
-    def local_flow_control_window(self, stream_id: int) -> int:
+    def local_flow_control_window(self, stream_id):
         """
         Returns the maximum amount of data that can be sent on stream
         ``stream_id``.
@@ -1312,10 +1253,10 @@ class H2Connection:
         stream = self._get_stream_by_id(stream_id)
         return min(
             self.outbound_flow_control_window,
-            stream.outbound_flow_control_window,
+            stream.outbound_flow_control_window
         )
 
-    def remote_flow_control_window(self, stream_id: int) -> int:
+    def remote_flow_control_window(self, stream_id):
         """
         Returns the maximum amount of data the remote peer can send on stream
         ``stream_id``.
@@ -1339,10 +1280,10 @@ class H2Connection:
         stream = self._get_stream_by_id(stream_id)
         return min(
             self.inbound_flow_control_window,
-            stream.inbound_flow_control_window,
+            stream.inbound_flow_control_window
         )
 
-    def acknowledge_received_data(self, acknowledged_size: int, stream_id: int) -> None:
+    def acknowledge_received_data(self, acknowledged_size, stream_id):
         """
         Inform the :class:`H2Connection <h2.connection.H2Connection>` that a
         certain number of flow-controlled bytes have been processed, and that
@@ -1362,16 +1303,17 @@ class H2Connection:
         """
         self.config.logger.debug(
             "Ack received data on stream ID %d with size %d",
-            stream_id, acknowledged_size,
+            stream_id, acknowledged_size
         )
         if stream_id <= 0:
-            msg = f"Stream ID {stream_id} is not valid for acknowledge_received_data"
-            raise ValueError(msg)
+            raise ValueError(
+                "Stream ID %d is not valid for acknowledge_received_data" %
+                stream_id
+            )
         if acknowledged_size < 0:
-            msg = "Cannot acknowledge negative data"
-            raise ValueError(msg)
+            raise ValueError("Cannot acknowledge negative data")
 
-        frames: list[Frame] = []
+        frames = []
 
         conn_manager = self._inbound_flow_control_window_manager
         conn_increment = conn_manager.process_bytes(acknowledged_size)
@@ -1390,12 +1332,12 @@ class H2Connection:
             # No point incrementing the windows of closed streams.
             if stream.open:
                 frames.extend(
-                    stream.acknowledge_received_data(acknowledged_size),
+                    stream.acknowledge_received_data(acknowledged_size)
                 )
 
         self._prepare_for_sending(frames)
 
-    def data_to_send(self, amount: int | None = None) -> bytes:
+    def data_to_send(self, amount=None):
         """
         Returns some data for sending out of the internal data buffer.
 
@@ -1414,11 +1356,12 @@ class H2Connection:
             data = bytes(self._data_to_send)
             self._data_to_send = bytearray()
             return data
-        data = bytes(self._data_to_send[:amount])
-        self._data_to_send = self._data_to_send[amount:]
-        return data
+        else:
+            data = bytes(self._data_to_send[:amount])
+            self._data_to_send = self._data_to_send[amount:]
+            return data
 
-    def clear_outbound_data_buffer(self) -> None:
+    def clear_outbound_data_buffer(self):
         """
         Clears the outbound data buffer, such that if this call was immediately
         followed by a call to
@@ -1430,7 +1373,7 @@ class H2Connection:
         """
         self._data_to_send = bytearray()
 
-    def _acknowledge_settings(self) -> list[Frame]:
+    def _acknowledge_settings(self):
         """
         Acknowledge settings that have been received.
 
@@ -1464,10 +1407,10 @@ class H2Connection:
                 stream.max_outbound_frame_size = setting.new_value
 
         f = SettingsFrame(0)
-        f.flags.add("ACK")
+        f.flags.add('ACK')
         return [f]
 
-    def _flow_control_change_from_settings(self, old_value: int | None, new_value: int) -> None:
+    def _flow_control_change_from_settings(self, old_value, new_value):
         """
         Update flow control windows in response to a change in the value of
         SETTINGS_INITIAL_WINDOW_SIZE.
@@ -1477,15 +1420,15 @@ class H2Connection:
         increment the *connection* flow control window, per section 6.9.2 of
         RFC 7540.
         """
-        delta = new_value - (old_value or 0)
+        delta = new_value - old_value
 
         for stream in self.streams.values():
             stream.outbound_flow_control_window = guard_increment_window(
                 stream.outbound_flow_control_window,
-                delta,
+                delta
             )
 
-    def _inbound_flow_control_change_from_settings(self, old_value: int | None, new_value: int) -> None:
+    def _inbound_flow_control_change_from_settings(self, old_value, new_value):
         """
         Update remote flow control windows in response to a change in the value
         of SETTINGS_INITIAL_WINDOW_SIZE.
@@ -1493,35 +1436,34 @@ class H2Connection:
         When this setting is changed, it automatically updates all remote flow
         control windows by the delta in the settings values.
         """
-        delta = new_value - (old_value or 0)
+        delta = new_value - old_value
 
         for stream in self.streams.values():
             stream._inbound_flow_control_change_from_settings(delta)
 
-    def receive_data(self, data: Buffer) -> list[Event]:
+    def receive_data(self, data):
         """
         Pass some received HTTP/2 data to the connection for handling.
 
         :param data: The data received from the remote peer on the network.
-        :type data: An object implementing the buffer protocol.
+        :type data: ``bytes``
         :returns: A list of events that the remote peer triggered by sending
             this data.
         """
         self.config.logger.trace(
-            "Process received data on connection. Received data: %r", data,
+            "Process received data on connection. Received data: %r", data
         )
 
-        events: list[Event] = []
+        events = []
         self.incoming_buffer.add_data(data)
         self.incoming_buffer.max_frame_size = self.max_inbound_frame_size
 
         try:
             for frame in self.incoming_buffer:
                 events.extend(self._receive_frame(frame))
-        except InvalidPaddingError as e:
+        except InvalidPaddingError:
             self._terminate_connection(ErrorCodes.PROTOCOL_ERROR)
-            msg = "Received frame with invalid padding."
-            raise ProtocolError(msg) from e
+            raise ProtocolError("Received frame with invalid padding.")
         except ProtocolError as e:
             # For whatever reason, receiving the frame caused a protocol error.
             # We should prepare to emit a GoAway frame before throwing the
@@ -1532,14 +1474,13 @@ class H2Connection:
 
         return events
 
-    def _receive_frame(self, frame: Frame) -> list[Event]:
+    def _receive_frame(self, frame):
         """
         Handle a frame received on the connection.
 
         .. versionchanged:: 2.0.0
            Removed from the public API.
         """
-        events: list[Event]
         self.config.logger.trace("Received frame: %s", repr(frame))
         try:
             # I don't love using __class__ here, maybe reconsider it.
@@ -1571,7 +1512,7 @@ class H2Connection:
                 events = []
             elif self._stream_is_closed_by_end(e.stream_id):
                 # Closed by END_STREAM is a connection error.
-                raise StreamClosedError(e.stream_id) from e
+                raise StreamClosedError(e.stream_id)
             else:
                 # Closed implicitly, also a connection error, but of type
                 # PROTOCOL_ERROR.
@@ -1581,7 +1522,7 @@ class H2Connection:
 
         return events
 
-    def _terminate_connection(self, error_code: ErrorCodes) -> None:
+    def _terminate_connection(self, error_code):
         """
         Terminate the connection early. Used in error handling blocks to send
         GOAWAY frames.
@@ -1592,7 +1533,7 @@ class H2Connection:
         self.state_machine.process_input(ConnectionInputs.SEND_GOAWAY)
         self._prepare_for_sending([f])
 
-    def _receive_headers_frame(self, frame: HeadersFrame) -> tuple[list[Frame], list[Event]]:
+    def _receive_headers_frame(self, frame):
         """
         Receive a headers frame on the connection.
         """
@@ -1600,10 +1541,11 @@ class H2Connection:
         # stream ID is valid.
         if frame.stream_id not in self.streams:
             max_open_streams = self.local_settings.max_concurrent_streams
-            value = self.open_inbound_streams # take a copy due to the property accessor having side affects
-            if (value + 1) > max_open_streams:
-                msg = f"Max inbound streams is {max_open_streams}, {value} open"
-                raise TooManyStreamsError(msg)
+            if (self.open_inbound_streams + 1) > max_open_streams:
+                raise TooManyStreamsError(
+                    "Max outbound streams is %d, %d open" %
+                    (max_open_streams, self.open_outbound_streams)
+                )
 
         # Let's decode the headers. We handle headers as bytes internally up
         # until we hang them off the event, at which point we may optionally
@@ -1611,45 +1553,41 @@ class H2Connection:
         headers = _decode_headers(self.decoder, frame.data)
 
         events = self.state_machine.process_input(
-            ConnectionInputs.RECV_HEADERS,
+            ConnectionInputs.RECV_HEADERS
         )
         stream = self._get_or_create_stream(
-            frame.stream_id, AllowedStreamIDs(not self.config.client_side),
+            frame.stream_id, AllowedStreamIDs(not self.config.client_side)
         )
         frames, stream_events = stream.receive_headers(
             headers,
-            "END_STREAM" in frame.flags,
-            self.config.header_encoding,
+            'END_STREAM' in frame.flags,
+            self.config.header_encoding
         )
 
-        if "PRIORITY" in frame.flags:
+        if 'PRIORITY' in frame.flags:
             p_frames, p_events = self._receive_priority_frame(frame)
-            expected_frame_types = (RequestReceived, ResponseReceived, TrailersReceived, InformationalResponseReceived)
-            assert isinstance(stream_events[0], expected_frame_types)
-            assert isinstance(p_events[0], PriorityUpdated)
             stream_events[0].priority_updated = p_events[0]
             stream_events.extend(p_events)
             assert not p_frames
 
         return frames, events + stream_events
 
-    def _receive_push_promise_frame(self, frame: PushPromiseFrame) -> tuple[list[Frame], list[Event]]:
+    def _receive_push_promise_frame(self, frame):
         """
         Receive a push-promise frame on the connection.
         """
         if not self.local_settings.enable_push:
-            msg = "Received pushed stream"
-            raise ProtocolError(msg)
+            raise ProtocolError("Received pushed stream")
 
         pushed_headers = _decode_headers(self.decoder, frame.data)
 
         events = self.state_machine.process_input(
-            ConnectionInputs.RECV_PUSH_PROMISE,
+            ConnectionInputs.RECV_PUSH_PROMISE
         )
 
         try:
             stream = self._get_stream_by_id(frame.stream_id)
-        except NoSuchStreamError as e:
+        except NoSuchStreamError:
             # We need to check if the parent stream was reset by us. If it was
             # then we presume that the PUSH_PROMISE was in flight when we reset
             # the parent stream. Rather than accept the new stream, just reset
@@ -1665,8 +1603,7 @@ class H2Connection:
                 f.error_code = ErrorCodes.REFUSED_STREAM
                 return [f], events
 
-            msg = "Attempted to push on closed stream."
-            raise ProtocolError(msg) from e
+            raise ProtocolError("Attempted to push on closed stream.")
 
         # We need to prevent peers pushing streams in response to streams that
         # they themselves have already pushed: see #163 and RFC 7540 § 6.6. The
@@ -1674,8 +1611,7 @@ class H2Connection:
         # this shortcut works because only servers can push and the state
         # machine will enforce this.
         if (frame.stream_id % 2) == 0:
-            msg = "Cannot recursively push streams."
-            raise ProtocolError(msg)
+            raise ProtocolError("Cannot recursively push streams.")
 
         try:
             frames, stream_events = stream.receive_push_promise_in_band(
@@ -1692,66 +1628,61 @@ class H2Connection:
             return [f], events
 
         new_stream = self._begin_new_stream(
-            frame.promised_stream_id, AllowedStreamIDs.EVEN,
+            frame.promised_stream_id, AllowedStreamIDs.EVEN
         )
         self.streams[frame.promised_stream_id] = new_stream
         new_stream.remotely_pushed(pushed_headers)
 
         return frames, events + stream_events
 
-    def _handle_data_on_closed_stream(self,
-                                      events: list[Event],
-                                      exc: StreamClosedError,
-                                      frame: DataFrame) -> tuple[list[Frame], list[Event]]:
+    def _handle_data_on_closed_stream(self, events, exc, frame):
         # This stream is already closed - and yet we received a DATA frame.
         # The received DATA frame counts towards the connection flow window.
         # We need to manually to acknowledge the DATA frame to update the flow
         # window of the connection. Otherwise the whole connection stalls due
         # the inbound flow window being 0.
-        frames: list[Frame] = []
+        frames = []
         conn_manager = self._inbound_flow_control_window_manager
         conn_increment = conn_manager.process_bytes(
-            frame.flow_controlled_length,
+            frame.flow_controlled_length
         )
-
         if conn_increment:
-            window_update_frame = WindowUpdateFrame(0)
-            window_update_frame.window_increment = conn_increment
-            frames.append(window_update_frame)
+            f = WindowUpdateFrame(0)
+            f.window_increment = conn_increment
+            frames.append(f)
             self.config.logger.debug(
                 "Received DATA frame on closed stream %d - "
                 "auto-emitted a WINDOW_UPDATE by %d",
-                frame.stream_id, conn_increment,
+                frame.stream_id, conn_increment
             )
-
-        rst_stream_frame = RstStreamFrame(exc.stream_id)
-        rst_stream_frame.error_code = exc.error_code
-        frames.append(rst_stream_frame)
+        f = RstStreamFrame(exc.stream_id)
+        f.error_code = exc.error_code
+        frames.append(f)
         self.config.logger.debug(
-            "Stream %s already CLOSED or cleaned up - auto-emitted a RST_FRAME",
-            frame.stream_id,
+            "Stream %d already CLOSED or cleaned up - "
+            "auto-emitted a RST_FRAME" % frame.stream_id
         )
         return frames, events + exc._events
 
-    def _receive_data_frame(self, frame: DataFrame) -> tuple[list[Frame], list[Event]]:
+    def _receive_data_frame(self, frame):
         """
         Receive a data frame on the connection.
         """
         flow_controlled_length = frame.flow_controlled_length
 
         events = self.state_machine.process_input(
-            ConnectionInputs.RECV_DATA,
+            ConnectionInputs.RECV_DATA
         )
         self._inbound_flow_control_window_manager.window_consumed(
-            flow_controlled_length,
+            flow_controlled_length
         )
 
         try:
             stream = self._get_stream_by_id(frame.stream_id)
             frames, stream_events = stream.receive_data(
                 frame.data,
-                "END_STREAM" in frame.flags,
-                flow_controlled_length,
+                'END_STREAM' in frame.flags,
+                flow_controlled_length
             )
         except StreamClosedError as e:
             # This stream is either marked as CLOSED or already gone from our
@@ -1760,16 +1691,16 @@ class H2Connection:
 
         return frames, events + stream_events
 
-    def _receive_settings_frame(self, frame: SettingsFrame) -> tuple[list[Frame], list[Event]]:
+    def _receive_settings_frame(self, frame):
         """
         Receive a SETTINGS frame on the connection.
         """
         events = self.state_machine.process_input(
-            ConnectionInputs.RECV_SETTINGS,
+            ConnectionInputs.RECV_SETTINGS
         )
 
         # This is an ack of the local settings.
-        if "ACK" in frame.flags:
+        if 'ACK' in frame.flags:
             changed_settings = self._local_settings_acked()
             ack_event = SettingsAcknowledged()
             ack_event.changed_settings = changed_settings
@@ -1777,19 +1708,17 @@ class H2Connection:
             return [], events
 
         # Add the new settings.
-        for setting, value in frame.settings.items():
-            self.remote_settings.validate_received_setting(setting, value)
         self.remote_settings.update(frame.settings)
         events.append(
             RemoteSettingsChanged.from_settings(
-                self.remote_settings, frame.settings,
-            ),
+                self.remote_settings, frame.settings
+            )
         )
         frames = self._acknowledge_settings()
 
         return frames, events
 
-    def _receive_window_update_frame(self, frame: WindowUpdateFrame) -> tuple[list[Frame], list[Event]]:
+    def _receive_window_update_frame(self, frame):
         """
         Receive a WINDOW_UPDATE frame on the connection.
         """
@@ -1797,14 +1726,14 @@ class H2Connection:
         # If we reach in here, we can assume a valid value.
 
         events = self.state_machine.process_input(
-            ConnectionInputs.RECV_WINDOW_UPDATE,
+            ConnectionInputs.RECV_WINDOW_UPDATE
         )
 
         if frame.stream_id:
             try:
                 stream = self._get_stream_by_id(frame.stream_id)
                 frames, stream_events = stream.receive_window_update(
-                    frame.window_increment,
+                    frame.window_increment
                 )
             except StreamClosedError:
                 return [], events
@@ -1812,65 +1741,67 @@ class H2Connection:
             # Increment our local flow control window.
             self.outbound_flow_control_window = guard_increment_window(
                 self.outbound_flow_control_window,
-                frame.window_increment,
+                frame.window_increment
             )
 
             # FIXME: Should we split this into one event per active stream?
-            window_updated_event = WindowUpdated(stream_id=0, delta=frame.window_increment)
+            window_updated_event = WindowUpdated()
+            window_updated_event.stream_id = 0
+            window_updated_event.delta = frame.window_increment
             stream_events = [window_updated_event]
             frames = []
 
         return frames, events + stream_events
 
-    def _receive_ping_frame(self, frame: PingFrame) -> tuple[list[Frame], list[Event]]:
+    def _receive_ping_frame(self, frame):
         """
         Receive a PING frame on the connection.
         """
         events = self.state_machine.process_input(
-            ConnectionInputs.RECV_PING,
+            ConnectionInputs.RECV_PING
         )
-        frames: list[Frame] = []
+        flags = []
 
-        evt: PingReceived | PingAckReceived
-        if "ACK" in frame.flags:
-            evt = PingAckReceived(ping_data=frame.opaque_data)
+        if 'ACK' in frame.flags:
+            evt = PingAckReceived()
         else:
-            evt = PingReceived(ping_data=frame.opaque_data)
+            evt = PingReceived()
 
             # automatically ACK the PING with the same 'opaque data'
             f = PingFrame(0)
-            f.flags.add("ACK")
+            f.flags = {'ACK'}
             f.opaque_data = frame.opaque_data
-            frames.append(f)
+            flags.append(f)
 
+        evt.ping_data = frame.opaque_data
         events.append(evt)
 
-        return frames, events
+        return flags, events
 
-    def _receive_rst_stream_frame(self, frame: RstStreamFrame) -> tuple[list[Frame], list[Event]]:
+    def _receive_rst_stream_frame(self, frame):
         """
         Receive a RST_STREAM frame on the connection.
         """
         events = self.state_machine.process_input(
-            ConnectionInputs.RECV_RST_STREAM,
+            ConnectionInputs.RECV_RST_STREAM
         )
         try:
             stream = self._get_stream_by_id(frame.stream_id)
         except NoSuchStreamError:
             # The stream is missing. That's ok, we just do nothing here.
-            stream_frames: list[Frame] = []
-            stream_events: list[Event] = []
+            stream_frames = []
+            stream_events = []
         else:
             stream_frames, stream_events = stream.stream_reset(frame)
 
         return stream_frames, events + stream_events
 
-    def _receive_priority_frame(self, frame: HeadersFrame | PriorityFrame) -> tuple[list[Frame], list[Event]]:
+    def _receive_priority_frame(self, frame):
         """
         Receive a PRIORITY frame on the connection.
         """
         events = self.state_machine.process_input(
-            ConnectionInputs.RECV_PRIORITY,
+            ConnectionInputs.RECV_PRIORITY
         )
 
         event = PriorityUpdated()
@@ -1884,18 +1815,19 @@ class H2Connection:
 
         # A stream may not depend on itself.
         if event.depends_on == frame.stream_id:
-            msg = f"Stream {frame.stream_id} may not depend on itself"
-            raise ProtocolError(msg)
+            raise ProtocolError(
+                "Stream %d may not depend on itself" % frame.stream_id
+            )
         events.append(event)
 
         return [], events
 
-    def _receive_goaway_frame(self, frame: GoAwayFrame) -> tuple[list[Frame], list[Event]]:
+    def _receive_goaway_frame(self, frame):
         """
         Receive a GOAWAY frame on the connection.
         """
         events = self.state_machine.process_input(
-            ConnectionInputs.RECV_GOAWAY,
+            ConnectionInputs.RECV_GOAWAY
         )
 
         # Clear the outbound data buffer: we cannot send further data now.
@@ -1905,12 +1837,13 @@ class H2Connection:
         new_event = ConnectionTerminated()
         new_event.error_code = _error_code_from_int(frame.error_code)
         new_event.last_stream_id = frame.last_stream_id
-        new_event.additional_data = frame.additional_data or None
+        new_event.additional_data = (frame.additional_data
+                                     if frame.additional_data else None)
         events.append(new_event)
 
         return [], events
 
-    def _receive_naked_continuation(self, frame: ContinuationFrame) -> None:
+    def _receive_naked_continuation(self, frame):
         """
         A naked CONTINUATION frame has been received. This is always an error,
         but the type of error it is depends on the state of the stream and must
@@ -1919,10 +1852,9 @@ class H2Connection:
         """
         stream = self._get_stream_by_id(frame.stream_id)
         stream.receive_continuation()
-        msg = "Should not be reachable"  # pragma: no cover
-        raise AssertionError(msg)  # pragma: no cover
+        assert False, "Should not be reachable"
 
-    def _receive_alt_svc_frame(self, frame: AltSvcFrame) -> tuple[list[Frame], list[Event]]:
+    def _receive_alt_svc_frame(self, frame):
         """
         An ALTSVC frame has been received. This frame, specified in RFC 7838,
         is used to advertise alternative places where the same service can be
@@ -1932,7 +1864,7 @@ class H2Connection:
         0, and its semantics are different in each case.
         """
         events = self.state_machine.process_input(
-            ConnectionInputs.RECV_ALTERNATIVE_SERVICE,
+            ConnectionInputs.RECV_ALTERNATIVE_SERVICE
         )
         frames = []
 
@@ -1967,7 +1899,7 @@ class H2Connection:
 
         return frames, events
 
-    def _receive_unknown_frame(self, frame: ExtensionFrame) -> tuple[list[Frame], list[Event]]:
+    def _receive_unknown_frame(self, frame):
         """
         We have received a frame that we do not understand. This is almost
         certainly an extension frame, though it's impossible to be entirely
@@ -1978,12 +1910,13 @@ class H2Connection:
         """
         # All we do here is log.
         self.config.logger.debug(
-            "Received unknown extension frame (ID %d)", frame.stream_id,
+            "Received unknown extension frame (ID %d)", frame.stream_id
         )
-        event = UnknownFrameReceived(frame=frame)
+        event = UnknownFrameReceived()
+        event.frame = frame
         return [], [event]
 
-    def _local_settings_acked(self) -> dict[SettingCodes | int, ChangedSetting]:
+    def _local_settings_acked(self):
         """
         Handle the local settings being ACKed, update internal state.
         """
@@ -2012,14 +1945,14 @@ class H2Connection:
 
         return changes
 
-    def _stream_id_is_outbound(self, stream_id: int) -> bool:
+    def _stream_id_is_outbound(self, stream_id):
         """
         Returns ``True`` if the stream ID corresponds to an outbound stream
         (one initiated by this peer), returns ``False`` otherwise.
         """
         return (stream_id % 2 == int(self.config.client_side))
 
-    def _stream_closed_by(self, stream_id: int) -> StreamClosedBy | None:
+    def _stream_closed_by(self, stream_id):
         """
         Returns how the stream was closed.
 
@@ -2034,30 +1967,27 @@ class H2Connection:
             return self._closed_streams[stream_id]
         return None
 
-    def _stream_is_closed_by_reset(self, stream_id: int) -> bool:
+    def _stream_is_closed_by_reset(self, stream_id):
         """
         Returns ``True`` if the stream was closed by sending or receiving a
         RST_STREAM frame. Returns ``False`` otherwise.
         """
         return self._stream_closed_by(stream_id) in (
-            StreamClosedBy.RECV_RST_STREAM, StreamClosedBy.SEND_RST_STREAM,
+            StreamClosedBy.RECV_RST_STREAM, StreamClosedBy.SEND_RST_STREAM
         )
 
-    def _stream_is_closed_by_end(self, stream_id: int) -> bool:
+    def _stream_is_closed_by_end(self, stream_id):
         """
         Returns ``True`` if the stream was closed by sending or receiving an
         END_STREAM flag in a HEADERS or DATA frame. Returns ``False``
         otherwise.
         """
         return self._stream_closed_by(stream_id) in (
-            StreamClosedBy.RECV_END_STREAM, StreamClosedBy.SEND_END_STREAM,
+            StreamClosedBy.RECV_END_STREAM, StreamClosedBy.SEND_END_STREAM
         )
 
 
-def _add_frame_priority(frame: PriorityFrame | HeadersFrame,
-                        weight: int | None = None,
-                        depends_on: int | None = None,
-                        exclusive: bool | None = None) -> PriorityFrame | HeadersFrame:
+def _add_frame_priority(frame, weight=None, depends_on=None, exclusive=None):
     """
     Adds priority data to a given frame. Does not change any flags set on that
     frame: if the caller is adding priority information to a HEADERS frame they
@@ -2069,17 +1999,20 @@ def _add_frame_priority(frame: PriorityFrame | HeadersFrame,
     """
     # A stream may not depend on itself.
     if depends_on == frame.stream_id:
-        msg = f"Stream {frame.stream_id} may not depend on itself"
-        raise ProtocolError(msg)
+        raise ProtocolError(
+            "Stream %d may not depend on itself" % frame.stream_id
+        )
 
     # Weight must be between 1 and 256.
     if weight is not None:
         if weight > 256 or weight < 1:
-            msg = f"Weight must be between 1 and 256, not {weight}"
-            raise ProtocolError(msg)
-        # Weight is an integer between 1 and 256, but the byte only allows
-        # 0 to 255: subtract one.
-        weight -= 1
+            raise ProtocolError(
+                "Weight must be between 1 and 256, not %d" % weight
+            )
+        else:
+            # Weight is an integer between 1 and 256, but the byte only allows
+            # 0 to 255: subtract one.
+            weight -= 1
 
     # Set defaults for anything not provided.
     weight = weight if weight is not None else 15
@@ -2093,7 +2026,7 @@ def _add_frame_priority(frame: PriorityFrame | HeadersFrame,
     return frame
 
 
-def _decode_headers(decoder: Decoder, encoded_header_block: bytes) -> Iterable[Header]:
+def _decode_headers(decoder, encoded_header_block):
     """
     Decode a HPACK-encoded header block, translating HPACK exceptions into
     sensible h2 errors.
@@ -2107,11 +2040,9 @@ def _decode_headers(decoder: Decoder, encoded_header_block: bytes) -> Iterable[H
         # This is a symptom of a HPACK bomb attack: the user has
         # disregarded our requirements on how large a header block we'll
         # accept.
-        msg = f"Oversized header block: {e}"
-        raise DenialOfServiceError(msg) from e
+        raise DenialOfServiceError("Oversized header block: %s" % e)
     except (HPACKError, IndexError, TypeError, UnicodeDecodeError) as e:
         # We should only need HPACKError here, but versions of HPACK older
         # than 2.1.0 throw all three others as well. For maximum
         # compatibility, catch all of them.
-        msg = f"Error decoding header block: {e}"
-        raise ProtocolError(msg) from e
+        raise ProtocolError("Error decoding header block: %s" % e)
