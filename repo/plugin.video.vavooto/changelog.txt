@@ -1,3 +1,6 @@
+2026.10.29.1
+- Live-TV: Unter "Gruppen" gibt es jetzt den Punkt "LITETV - ALLE SENDER" (ohne Untergruppen).
+
 2026.10.29
 - Fix: Python-Pakete in resources/lib (httpx, httpcore, h11, h2, hpack, hyperframe) fuer Python 3.8 (Kodi) neu gebaut; behebt "TypeError: type object is not subscriptable" beim Proxy (Issue #110).
 
