@@ -398,13 +398,15 @@
   </extension>
 </addon>
 
-<addon id="script.module.xstreamscraper" name="xStream Scraper" provider-name="michaz1988" version="2026.11.01.1">
+<addon id="script.module.xstreamscraper" name="xStream Scraper" provider-name="michaz1988" version="2026.11.01.2">
 	<requires>
 		<import addon="xbmc.python" version="3.0.0"/>
 		<import addon="plugin.video.vavooto"/>
         <import addon="script.module.requests"/>
         <import addon="script.module.resolveurl"/>
         <import addon="plugin.video.xstream"/>
+        <!-- Kodi folgt nur Abhaengigkeiten von Modul-Add-ons: was xStream importiert, muss hier stehen. -->
+        <import addon="script.module.pyaes"/>
     </requires>
     <extension point="xbmc.python.pluginsource" library="main.py">
         <provides>video</provides>
