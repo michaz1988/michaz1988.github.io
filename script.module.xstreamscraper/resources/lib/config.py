@@ -9,8 +9,8 @@ from six.moves.urllib.parse import urlparse
 from xbmc import LOGINFO as LOGNOTICE, LOGERROR, LOGWARNING, log, executebuiltin, getCondVisibility, getInfoLabel
 
 class cConfig:
-	def __init__(self):
-		self.__addon = xbmcaddon.Addon(common.addonID)
+	def __init__(self, addon_id=None):
+		self.__addon = xbmcaddon.Addon(addon_id or common.addonID)
 		self.__aLanguage = self.__addon.getLocalizedString
 
 	def showSettingsWindow(self):
@@ -23,8 +23,14 @@ class cConfig:
 		else:
 			return default
 
+	def getSettingString(self, sName, default=''):
+		return str(self.getSetting(sName, default))
+
+	def getAddonInfo(self, sName):
+		return self.__addon.getAddonInfo(sName) or ''
+
 	def setSetting(self, id, value):
-		if id and value:
+		if id and value is not None:
 			self.__addon.setSetting(id, value)
 
 	def getLocalizedString(self, sCode):

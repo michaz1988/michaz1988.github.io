@@ -19,12 +19,32 @@ from resources.lib import common
 from resources.lib.tools import logger, cCache
 from xbmcvfs import translatePath
 
-from urllib.parse import quote, urlencode, urlparse, quote_plus
+from urllib.parse import quote, urlencode, urlparse, quote_plus, urljoin
 from urllib.error import HTTPError, URLError
 from urllib.request import HTTPHandler, HTTPSHandler, Request, HTTPCookieProcessor, build_opener, urlopen, HTTPRedirectHandler
 from http.cookiejar import LWPCookieJar, Cookie
 from http.client import HTTPException
 from random import choice
+from contextlib import contextmanager
+
+# Rueckgabewerte von request() im Fehlerfall, von den xStream-Seiten importiert.
+ERR_UNREACHABLE = 'SEITE NICHT ERREICHBAR'
+ERR_CLOUDFLARE = 'CLOUDFLARE-SCHUTZ AKTIV'
+ERR_DDOS = 'DDOS GUARD SCHUTZ'
+ERR_TIMEOUT = 'TIMEOUT'
+ERR_URL = 'URL FEHLER'
+REQUEST_ERRORS = (ERR_UNREACHABLE, ERR_CLOUDFLARE, ERR_DDOS, ERR_TIMEOUT, ERR_URL)
+
+
+@contextmanager
+def quietWindows():
+    # Der Scraper zeigt keine Fehlerfenster an, die Klammer aus xstream.gui.hoster bleibt wirkungslos.
+    yield
+
+
+def errorShown():
+    return False
+
 
 class IPHTTPSConnection(http.client.HTTPSConnection):
     def __init__(self, host, ip=None, port=None, timeout=socket._GLOBAL_DEFAULT_TIMEOUT, context=None):
@@ -74,6 +94,11 @@ class RedirectFilter(HTTPRedirectHandler):
                 #return None
         return HTTPRedirectHandler.redirect_request(self, req, fp, code, msg, hdrs, newurl)
 
+class _NoRedirect(HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, hdrs, newurl):
+        return None
+
+
 class cRequestHandler:
     # useful for e.g. tmdb request where multiple requests are made within a loop
     persistent_openers = {}
@@ -101,6 +126,7 @@ class cRequestHandler:
         self._cachePath = ''
         self._cookiePath = ''
         self._Status = ''
+        self._Protection = ''
         self._sResponseHeader = ''
         self._ssl_verify = ssl_verify
         self._bypass_dns = bypass_dns
@@ -128,6 +154,20 @@ class cRequestHandler:
 
     def getStatus(self):
         return self._Status
+
+    def getProtection(self):
+        return self._Protection
+
+    def requestJson(self):
+        # Liefert None statt einer Exception, wenn der Abruf scheitert oder kein JSON ankommt.
+        sContent = self.request()
+        if not sContent or sContent in REQUEST_ERRORS:
+            return None
+        try:
+            return json.loads(sContent)
+        except ValueError as e:
+            logger.error(' -> [requestHandler]: kein gueltiges JSON (%s) Url: %s' % (e, self._sUrl))
+            return None
 
     def removeNewLines(self, bRemoveNewLines):
         self.__bRemoveNewLines = bRemoveNewLines
@@ -272,34 +312,36 @@ class cRequestHandler:
                     opener.addheaders = [('User-agent', self._USER_AGENT), ('Referer', self._sUrl)]
                     oResponse = opener.open(self._sUrl, sParameters if len(sParameters) > 0 else None)
                     if not oResponse:
+                        self._Protection = 'ddos'
                         logger.error(' -> [requestHandler]: Failed DDOS-GUARD active: ' + self._sUrl)
-                        return 'DDOS GUARD SCHUTZ'
+                        return ERR_DDOS
                 elif 'cloudflare' in str(e.headers):
+                    self._Protection = 'cf'
                     if not self.ignoreErrors:
                         value = ('!!! CLOUDFLARE-SCHUTZ AKTIV !!! Weitere Informationen: ' + str(e.__class__.__name__) + ' : ' + str(e), str(traceback.format_exc().splitlines()[-3].split('addons')[-1]))
                         #xbmcgui.Dialog().ok(cConfig().getLocalizedString(30166), str(value))  # Error
                     logger.error(' -> [requestHandler]: Failed Cloudflare active: ' + self._sUrl)
-                    return 'CLOUDFLARE-SCHUTZ AKTIV' # Meldung geht als "e.doc" in die exception nach default.py
+                    return ERR_CLOUDFLARE # Meldung geht als "e.doc" in die exception nach default.py
                 else:
                     #if not self.ignoreErrors:
                         #xbmcgui.Dialog().ok('xStream', cConfig().getLocalizedString(30259) + ' {0} {1}'.format(self._sUrl, str(e)))
                     logger.error(' -> [requestHandler]: HTTPError ' + str(e) + ' Url: ' + self._sUrl)
-                    return 'SEITE NICHT ERREICHBAR'
+                    return ERR_UNREACHABLE
             else:
                 #if not self.ignoreErrors:
                     #xbmcgui.Dialog().ok('xStream', cConfig().getLocalizedString(30259) + ' {0} {1}'.format(self._sUrl, str(e)))
                 logger.error(' -> [requestHandler]: HTTPError ' + str(e) + ' Url: ' + self._sUrl)
-                return 'SEITE NICHT ERREICHBAR'
+                return ERR_UNREACHABLE
         except URLError as e:
             #if not self.ignoreErrors:
                 #xbmcgui.Dialog().ok('xStream', str(e.reason))
             logger.error(' -> [requestHandler]: URLError ' + str(e.reason) + ' Url: ' + self._sUrl)
-            return 'URL FEHLER'
+            return ERR_URL
         except HTTPException as e:
             #if not self.ignoreErrors:
                 #xbmcgui.Dialog().ok('xStream', str(e))
             logger.error(' -> [requestHandler]: HTTPException ' + str(e) + ' Url: ' + self._sUrl)
-            return 'TIMEOUT'
+            return ERR_TIMEOUT
 
         self._sResponseHeader = oResponse.info()
         
@@ -343,6 +385,49 @@ class cRequestHandler:
                 self.__writePersistentCache(self.getRequestUri(), sContent)
 
         return sContent
+
+    def getRedirectUrl(self):
+        # Loest genau einen Redirect auf und liefert nur das Location-Ziel, ohne die Zielseite zu laden.
+        cookieJar = LWPCookieJar(filename=self._cookiePath)
+        try:
+            cookieJar.load(ignore_discard=self.__bIgnoreDiscard, ignore_expires=self.__bIgnoreExpired)
+        except Exception as e:
+            logger.debug(e)
+        ip_override = self.__doh_request(self._sUrl) if self._bypass_dns and self.bypassDNSlock else None
+        handlers = self.__getDefaultHandler(self._ssl_verify, ip_override)
+        handlers += [HTTPHandler(), HTTPCookieProcessor(cookiejar=cookieJar), _NoRedirect()]
+        sParameters = None
+        if self.method == 'POST' and self.data is not None:
+            if isinstance(self.data, dict):
+                sParameters = urlencode(self.data).encode()
+            elif isinstance(self.data, str):
+                sParameters = self.data.encode()
+            else:
+                sParameters = self.data
+        oRequest = Request(self._sUrl, sParameters)
+        for key, value in self._headerEntries.items():
+            oRequest.add_header(key, value)
+        if sParameters and 'Content-Type' not in self._headerEntries:
+            oRequest.add_header('Content-Type', 'application/x-www-form-urlencoded')
+        cookieJar.add_cookie_header(oRequest)
+        try:
+            oResponse = build_opener(*handlers).open(oRequest, timeout=self.requestTimeout)
+            self._Status = str(oResponse.getcode())
+            return oResponse.geturl()
+        except HTTPError as e:
+            self._Status = str(e.code)
+            if 300 <= e.code < 400:
+                try:
+                    cookieJar.extract_cookies(e, oRequest)
+                    cookieJar.save(ignore_discard=self.__bIgnoreDiscard, ignore_expires=self.__bIgnoreExpired)
+                except Exception as err:
+                    logger.debug(err)
+                sLocation = e.headers.get('Location', '')
+                return urljoin(self._sUrl, sLocation) if sLocation else ''
+            logger.error(' -> [requestHandler]: HTTPError ' + str(e) + ' Url: ' + self._sUrl)
+        except (URLError, HTTPException, OSError) as e:
+            logger.error(' -> [requestHandler]: getRedirectUrl fehlgeschlagen: %s Url: %s' % (e, self._sUrl))
+        return ''
 
     def __setCookiePath(self):
         cookieFile = os.path.join(self._profilePath, 'cookies')
@@ -451,6 +536,12 @@ class cRequestHandler:
         if entry:
             logger.info('-> [requestHandler]: read html for %s from cache' % url)
         return entry
+
+    def dropCacheEntry(self):
+        try:
+            os.remove(os.path.join(self._cachePath, hashlib.md5(self.getRequestUri().encode('utf8')).hexdigest()))
+        except OSError:
+            pass
 
     @staticmethod
     def getFileAge(cacheFile):

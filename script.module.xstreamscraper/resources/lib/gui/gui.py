@@ -29,8 +29,12 @@ class cGui:
 			return
 		settings.aDirectory.append(self.__createItemUrl(oGuiElement,bIsFolder, copy.deepcopy(params)))
 
-	def addNextPage(self, site, function, params=''):
+	def addNextPage(self, site, function, params='', sPageInfo=''):
 		pass
+
+	@staticmethod
+	def pageInfo(iCurrent, iLast):
+		return ''
 
 	def createListItem(self, oGuiElement):
 		pass
@@ -86,9 +90,9 @@ class cGui:
 		return params.getAllParameters()
 
 	@staticmethod
-	def showKeyBoard(sDefaultText=""):
+	def showKeyBoard(sDefaultText="", sHeading=""):
 		# Create the keyboard object and display it modal
-		oKeyboard = xbmc.Keyboard(sDefaultText)
+		oKeyboard = xbmc.Keyboard(sDefaultText, sHeading)
 		oKeyboard.doModal()
 		# If key board is confirmed and there was text entered return the text
 		if oKeyboard.isConfirmed():
