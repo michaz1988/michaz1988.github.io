@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 import sys, xbmcaddon, xbmcplugin
 from xbmcgui import ListItem
-from resources.lib import tools
+from resources.lib import addonTools
 
 def main():
 	if not xbmcaddon.Addon().getSetting("firststart") == "true":
-		tools.repair(True)
+		addonTools.repair(True)
 		xbmcaddon.Addon().setSetting("firststart", "true")
-	else: tools.repair()
-	from six.moves.urllib.parse import parse_qsl
+	else: addonTools.repair()
+	from urllib.parse import parse_qsl
 	params = dict(parse_qsl(sys.argv[2][1:]))
 	tmdb_id = params.get("id")
 	title = params.get("title", "")
@@ -21,12 +21,9 @@ def main():
 		from resources.lib import scraper
 		scraper.play(type, tmdb_id, season, episode)
 	elif repair:
-		tools.repair(True)
+		addonTools.repair(True)
 	elif action:
-		xbmcaddon.Addon("plugin.video.themoviedb.helper").setSetting("players_url", "https://michaz1988.github.io/players.zip")
-		xbmc.executebuiltin('RunScript(plugin.video.themoviedb.helper, update_players)')
-		xbmcaddon.Addon("plugin.video.themoviedb.helper").setSetting("default_player_movies", "xstream.json play_movie")
-		xbmcaddon.Addon("plugin.video.themoviedb.helper").setSetting("default_player_episodes", "xstream.json play_episode")
+		addonTools.setup_tmdb_helper()
 	else: 
 		xbmcplugin.setContent(int(sys.argv[1]), "files")
 		xbmcplugin.addDirectoryItem(int(sys.argv[1]), "%s?action=true" %sys.argv[0], ListItem("TMDB-HELPER einrichten"), False)

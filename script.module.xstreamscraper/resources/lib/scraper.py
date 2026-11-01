@@ -1,53 +1,39 @@
 # -*- coding: utf-8 -*-
-import os, sys, xbmc, xbmcplugin, xbmcgui, xbmcaddon, requests, json, concurrent.futures, urllib3
-from six.moves.urllib.parse import parse_qsl, urlparse
-from resources.lib import tools, settings
+import os, sys, xbmc, xbmcplugin, xbmcgui, xbmcaddon, requests, concurrent.futures, urllib3
+from urllib.parse import parse_qsl
+from resources.lib import settings
+from resources.lib.xstreamBridge import sourcesFolder
 from resources.lib.gui.gui import cGui
-import resources
-import resources.lib
-import resources.lib.gui
-import resources.lib.handler
+from resources.lib.handler.requestHandler import cRequestHandler, quietWindows
+from resources.lib.logger import logger
+from resources.lib.tools import cParser
 settings.init()
-xstreamFolder = xbmcaddon.Addon("plugin.video.xstream").getAddonInfo("path")
-sourcesFolder = os.path.join(xstreamFolder, "sites")
-sys.path.append(sourcesFolder)
-sys.path.append(xstreamFolder)
-
-# The scraper ships compatibility replacements in its own resources package.
-# Keep those first, but also expose modules added by newer xStream versions.
-for package, folder in (
-	(resources, os.path.join(xstreamFolder, "resources")),
-	(resources.lib, os.path.join(xstreamFolder, "resources", "lib")),
-	(resources.lib.gui, os.path.join(xstreamFolder, "resources", "lib", "gui")),
-	(resources.lib.handler, os.path.join(xstreamFolder, "resources", "lib", "handler")),
-):
-	if folder not in package.__path__:
-		package.__path__.append(folder)
+api_key = "86dd18b04874d9c94afadde7993d94e3"
 session = requests.session()
 dialog = xbmcgui.DialogProgress()
 urllib3.disable_warnings()
 
 def showFailedNotification(msg="Keine Streams gefunden"):
-	tools.logger.info(msg)
-	xbmc.executebuiltin("Notification(%s,%s,%s,%s)" % ("xStream Scraper",msg,5000,tools.addonInfo("icon")))
+	logger.info(msg)
+	xbmc.executebuiltin("Notification(%s,%s,%s,%s)" % ("xStream Scraper",msg,5000,xbmcaddon.Addon().getAddonInfo("icon")))
 	o = xbmcgui.ListItem(xbmc.getInfoLabel("ListItem.Label"))
 	xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, o)
 
 def cleantitle(title):
-	a = tools.cParser.replace(r"(s\d\de\d\d|staffel \d+-\d+|\((\d{4})\))", "", title.lower())
-	return tools.cParser.replace("( |-|:)", "", a)
+	a = cParser.replace(r"(s\d\de\d\d|staffel \d+-\d+|\((\d{4})\))", "", title.lower())
+	return cParser.replace("( |-|:)", "", a)
 
 def _episode_number(result):
 	for key, value in result.items():
 		if "pisode" in key.lower():
-			episode = tools.cParser.replace("[^0-9]", "", str(value))
+			episode = cParser.replace("[^0-9]", "", str(value))
 			if episode:
 				return episode
 	if result.get("mediaType") == "episode":
 		for value in (result.get("sUrl"), result.get("url"), result.get("title")):
 			if not value:
 				continue
-			is_match, episode = tools.cParser.parseSingleResult(str(value), r"(?:episode|folge)[\s_-]*(\d+)")
+			is_match, episode = cParser.parseSingleResult(str(value), r"(?:episode|folge)[\s_-]*(\d+)")
 			if is_match:
 				return episode
 	return None
@@ -59,7 +45,7 @@ def get_episodes(sources, s, e):
 			site = source["site"]
 			dialog.update(int(count * 25 /len(sources)+50), "Filtere Seite %s..." % site)
 			if dialog.iscanceled(): return showFailedNotification("Abgebrochen")
-			tools.logger.info("Filtere %s" % site)
+			logger.info("Filtere %s" % site)
 			for result in plugin(source) or []:
 				if "pisode" in result.keys() or result.get("mediaType") == "episode":
 					episode = _episode_number(result)
@@ -74,9 +60,9 @@ def get_episodes(sources, s, e):
 								if episode and int(episode) == int(e):
 									episoden.append(results)
 		except Exception as e:
-			tools.logger.error(e)
+			logger.error(e)
 			import traceback
-			tools.logger.debug(traceback.format_exc())
+			logger.error(traceback.format_exc())
 	return episoden
 	
 def get_hosters(sources, isSerie, season, episode):
@@ -107,9 +93,9 @@ def _pluginSearch(pluginEntry, sSearchText, isSerie, oGui):
 		searchfunction = "_search"
 		function = getattr(plugin, searchfunction)(oGui, sSearchText)
 	except Exception as e:
-		tools.logger.error(pluginEntry["name"] + ": search failed, Error = %s" % e)
+		logger.error(pluginEntry["name"] + ": search failed, Error = %s" % e)
 		import traceback
-		tools.logger.debug(traceback.format_exc())
+		logger.error(traceback.format_exc())
 
 def plugin(source, force = False):
 	settings.aDirectory = []
@@ -126,7 +112,7 @@ def plugin(source, force = False):
 		return function
 	except Exception as e:
 		import traceback
-		tools.logger.error(traceback.format_exc())
+		logger.error(traceback.format_exc())
 
 def searchGlobal(sSearchText, searchtitles, isSerie, _type, _id, season, episode, searchYear):
     multi = 25 if isSerie else 50
@@ -155,12 +141,12 @@ def searchGlobal(sSearchText, searchtitles, isSerie, _type, _id, season, episode
             pluginEntry = future_to_plugin[future]
             try:
                 plugin_name = future.result()
-                tools.logger.info("Searching for %s at %s" % (sSearchText, plugin_name))
+                logger.info("Searching for %s at %s" % (sSearchText, plugin_name))
                 dialog.update(int(count * 25 / len(aPlugins)), "%s %s" % (plugin_name, " Suche abgeschlossen"))
                 if dialog.iscanceled():
                     return showFailedNotification("Abgebrochen")
             except Exception as e:
-                tools.logger.error(f"Fehler bei Plugin {pluginEntry['name']}: {e}")
+                logger.error(f"Fehler bei Plugin {pluginEntry['name']}: {e}")
 
     settings.collectMode = False
     total = len(oGui.searchResults)
@@ -177,13 +163,13 @@ def searchGlobal(sSearchText, searchtitles, isSerie, _type, _id, season, episode
         title, originaltitle, language, quality, mediaType, year = cleantitle(result.get("title")), result.get("title"), result.get("language"), result.get("quality"), result.get("mediaType"), result.get("year")
 
         if not year and (' (19' in title or ' (20' in title):
-            isMatch, aYear = tools.cParser.parse(title, r'(.*?)\(((19\d{2}|20\d{2}))\)')
+            isMatch, aYear = cParser.parse(title, r'(.*?)\(((19\d{2}|20\d{2}))\)')
             if isMatch:
                 title = aYear[0][0].strip()
                 year = aYear[0][1]
 
         if not year and ('*19' in title or '*20' in title):
-            isMatch, aYear = tools.cParser.parse(title, r'(.*?)\*((19\d{2}|20\d{2}))\*')
+            isMatch, aYear = cParser.parse(title, r'(.*?)\*((19\d{2}|20\d{2}))\*')
             if isMatch:
                 title = aYear[0][0].strip()
                 year = aYear[0][1]
@@ -198,10 +184,10 @@ def searchGlobal(sSearchText, searchtitles, isSerie, _type, _id, season, episode
             set_skip(" Wrong Media")
 
         if isSerie:
-            isMatch, found = tools.cParser.parseSingleResult(title, r"(season\d+|staffel\d+)")
+            isMatch, found = cParser.parseSingleResult(title, r"(season\d+|staffel\d+)")
             if isMatch:
                 title = title.replace(found, "")
-                ok, aMatches = tools.cParser.parseSingleResult(found, r"\d+")
+                ok, aMatches = cParser.parseSingleResult(found, r"\d+")
                 if ok and int(season) != int(aMatches):
                     set_skip(" Wrong Season")
 
@@ -214,7 +200,7 @@ def searchGlobal(sSearchText, searchtitles, isSerie, _type, _id, season, episode
         if not isSerie and year and int(searchYear) != 0 and int(year) == int(searchYear):
             pass
         else:
-            if tools.api_key:
+            if api_key:
                 if cleantitle(title) not in searchtitles:
                     set_skip(" Wrong Name")
             elif cleantitle(title) not in cleantitle(sSearchText):
@@ -232,8 +218,20 @@ def searchGlobal(sSearchText, searchtitles, isSerie, _type, _id, season, episode
 
     return sources
 
+def get_details(_type, _id):
+	url = "https://api.themoviedb.org/3/%s/%s?api_key=%s&language=de&region=DE&append_to_response=alternative_titles" % (_type, _id, api_key)
+	oRequest = cRequestHandler(url)
+	oRequest.cacheTime = 60 * 60 * 24 * 14
+	return oRequest.requestJson()
+
 def play(_type, _id, season, episode):
-	data = tools.get_data({"id":"%s.%s" % (_type, _id)})
+	# Keine blockierenden Fehlerfenster von xStream, solange der Scraper automatisch sucht.
+	with quietWindows():
+		return _search_and_play(_type, _id, season, episode)
+
+def _search_and_play(_type, _id, season, episode):
+	data = get_details(_type, _id)
+	if not data: return showFailedNotification("TMDB nicht erreichbar")
 	if _type == "tv": isSerie, name, releaseDate = True, data["name"], data["first_air_date"]
 	else: isSerie, name, releaseDate = False, data["title"], data["release_date"]
 	if xbmcaddon.Addon().getSetting('vavoo') == 'true':
@@ -277,12 +275,12 @@ def play(_type, _id, season, episode):
 			if not res.ok: raise Exception("Kann Seite nicht erreichen")
 			if "text" in res.headers.get("Content-Type","text"): raise Exception("Keine Videodatei")
 		except Exception as e:
-			tools.logger.error(e)
+			logger.error(e)
 			import traceback
-			tools.logger.debug(traceback.format_exc())
+			logger.error(traceback.format_exc())
 			continue
 		else:
-			tools.logger.info("Spiele :%s" % url)
+			logger.info("Spiele :%s" % url)
 			del resolver
 			dialog.close()
 			return _play(url)

@@ -1,4 +1,3 @@
-import xbmc
-from resources.lib import tools
+from resources.lib import addonTools
 
-tools.repair()
+addonTools.repair()

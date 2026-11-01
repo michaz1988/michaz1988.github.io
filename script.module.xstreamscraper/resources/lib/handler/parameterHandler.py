@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # Python 3
 
-import sys
 from resources.lib import settings
-from six.moves.urllib.parse import parse_qsl, urlsplit, unquote_plus, urlencode
+from urllib.parse import unquote_plus, urlencode
 
 
 class ParameterHandler:
