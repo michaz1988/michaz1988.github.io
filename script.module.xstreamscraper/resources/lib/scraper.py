@@ -10,6 +10,7 @@ from resources.lib.logger import logger
 from resources.lib.tools import cParser
 settings.init()
 api_key = "86dd18b04874d9c94afadde7993d94e3"
+PRIORITY_SITE = "serienstream"
 dialog = xbmcgui.DialogProgress()
 urllib3.disable_warnings()
 
@@ -77,6 +78,8 @@ def get_hosters(sources, isSerie, season, episode):
 			function = p[-1]
 			del p[-1]
 			for a in p:
+				# Die Seite liefert jede Folge auch auf Englisch und als Ger-Sub, unter demselben Hosternamen.
+				if site == PRIORITY_SITE and a.get("languageCode") != "(DE)": continue
 				a["site"] = site
 				a["function"] = function
 				if a["link"] not in temp:
@@ -114,7 +117,7 @@ def plugin(source, force = False):
 		import traceback
 		logger.error(traceback.format_exc())
 
-def searchGlobal(sSearchText, searchtitles, isSerie, _type, _id, season, episode, searchYear):
+def searchGlobal(sSearchText, searchtitles, isSerie, _type, _id, season, episode, searchYear, siteFilter=None):
     multi = 25 if isSerie else 50
     sources = []
     aPlugins = []
@@ -123,7 +126,7 @@ def searchGlobal(sSearchText, searchtitles, isSerie, _type, _id, season, episode
     ntitle = ""
 
     for w in [str(filename[:-3]) for filename in os.listdir(sourcesFolder) if " vod" not in filename and not filename.startswith('__') and filename.endswith('.py')]:
-        if xbmcaddon.Addon().getSetting(w) == "true":
+        if xbmcaddon.Addon().getSetting(w) == "true" and (not siteFilter or siteFilter(w)):
             if isSerie:
                 aPlugins.append({'id': w, 'name': w.capitalize()})
             elif w != "serienstream":
@@ -316,18 +319,27 @@ def _search_and_play(_type, _id, season, episode):
 	key = "tv.%s.%s.%s" % (_id, season, episode) if isSerie else "movie.%s" % _id
 	usedStreams = streamHistory.used(key)
 	tried = []
-	# Ungespielte VAVOO-Mirrors sparen die langsame Suche auf allen Seiten.
-	candidate, url = _first_working(streamHistory.order([m for m in mirrors if streamHistory.streamId(m) not in usedStreams], usedStreams), tried)
-	if not url:
-		searchYear=int(releaseDate[:4])
-		results = data.get("alternative_titles", {}).get("results")
-		searchtitles = [a["title"] for a in results] if results else []
-		searchtitles.append(name)
-		titles = [cleantitle(a) for a in searchtitles]
-		sources = searchGlobal(name.split(":")[0], titles, isSerie, _type, _id, season, episode, searchYear)
+	results = data.get("alternative_titles", {}).get("results")
+	searchtitles = [a["title"] for a in results] if results else []
+	searchtitles.append(name)
+	# Der deutsche TMDb-Titel kann einen Zusatz haben ("MobLand: Familie bis aufs Blut"), die Seite fuehrt das Original.
+	original = data.get("original_name") or data.get("original_title")
+	if original: searchtitles.append(original)
+	titles = [cleantitle(a) for a in searchtitles]
+	def find(siteFilter):
+		sources = searchGlobal(name.split(":")[0], titles, isSerie, _type, _id, season, episode, int(releaseDate[:4]), siteFilter)
 		hosters = get_hosters(sources, isSerie, season, episode) if sources else []
 		dialog.close()
-		candidates = hosters + [m for m in mirrors if m not in tried]
+		return sources, hosters
+	def fresh(candidates):
+		return [c for c in candidates if streamHistory.streamId(c) not in usedStreams]
+	hasPriority = isSerie and xbmcaddon.Addon().getSetting(PRIORITY_SITE) == "true"
+	priority = find(lambda site: site == PRIORITY_SITE)[1] if hasPriority else []
+	# Erst die ungespielten Streams der Vorrang-Seite und von VAVOO, das spart die langsame Suche auf allen Seiten.
+	candidate, url = _first_working(fresh(priority) + fresh(mirrors), tried)
+	if not url:
+		sources, hosters = find((lambda site: site != PRIORITY_SITE) if hasPriority else None)
+		candidates = hosters + [c for c in priority + mirrors if c not in tried]
 		if not candidates:
 			return showFailedNotification("keine Hoster" if sources else "keine Quellen")
 		candidate, url = _first_working(streamHistory.order(candidates, usedStreams), tried)
