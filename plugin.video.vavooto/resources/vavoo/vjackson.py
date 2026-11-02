@@ -249,7 +249,7 @@ def resolve(mirror):
 	log(mirror, header="Try to resolve:")
 	try: 
 		resolved = resolveurl.resolve(mirror["url"])
-		return resolved
+		if resolved: return resolved
 	except Exception:
 		pass
 	try:
@@ -257,7 +257,7 @@ def resolve(mirror):
 		_data = {"language":"de","region":"AT","url":mirror["url"],"clientVersion":"3.0.2"}
 		url = request_json("POST", "https://vavoo.to/mediahubmx-resolve.json", json=_data, headers=_headers, timeout=10, retries=1)["data"]["url"]
 		resolved = resolveurl.resolve(url)
-		return resolved
+		if resolved: return resolved
 	except Exception:
 		pass
 	try:

@@ -11,6 +11,7 @@ from resources.lib.tools import cParser
 settings.init()
 api_key = "86dd18b04874d9c94afadde7993d94e3"
 PRIORITY_SITE = "serienstream"
+MAX_FAILOVERS = 5
 
 class ProgressDialog:
 	"""Fortschritt als normales Fenster oder, je nach Einstellung, im Hintergrund.
@@ -40,11 +41,66 @@ class ProgressDialog:
 		self._dialog = None
 
 dialog = ProgressDialog()
+
+class PlaybackWatcher(xbmc.Player):
+	"""Beobachtet, ob ein Stream in Kodi wirklich startet. Der Test kann bestehen und das Oeffnen trotzdem scheitern."""
+	def __init__(self):
+		super().__init__()
+		self.state = None
+
+	def reset(self):
+		self.state = None
+
+	def onAVStarted(self):
+		self.state = "started"
+
+	def onPlayBackError(self):
+		self.state = "error"
+
+	def onPlayBackStopped(self):
+		self.state = self.state or "stopped"
+
+	def onPlayBackEnded(self):
+		self.state = self.state or "stopped"
+
+	def _wait(self, seconds):
+		monitor = xbmc.Monitor()
+		end = time.monotonic() + seconds
+		while self.state is None and time.monotonic() < end:
+			if monitor.waitForAbort(0.1): return
+
+	def failed(self):
+		"""True, wenn der naechste Stream dran ist. Stoppt der Nutzer die Wiedergabe, bleibt es dabei."""
+		self._wait(streamTest.LIMIT)
+		if self.state == "error":
+			# Kodi kann nach einem Fehler selbst weitermachen, etwa mit der naechsten Folge der Playlist.
+			if self.isPlaying(): return False
+			_close_error_dialog()
+			return True
+		if self.state is None and not xbmc.Monitor().abortRequested():
+			logger.info("Stream startet nicht innerhalb von %s Sekunden" % streamTest.LIMIT)
+			self.stop()
+			self._wait(3)
+			return True
+		return False
+
+def _close_error_dialog():
+	monitor = xbmc.Monitor()
+	end = time.monotonic() + 2
+	while time.monotonic() < end:
+		if xbmc.getCondVisibility("Window.IsActive(okdialog)"):
+			xbmc.executebuiltin("Dialog.Close(okdialog,true)")
+			return
+		if monitor.waitForAbort(0.1): return
+
+resolved = False
 urllib3.disable_warnings()
 
 def showFailedNotification(msg="Keine Streams gefunden"):
 	logger.info(msg)
 	xbmc.executebuiltin("Notification(%s,%s,%s,%s)" % ("xStream Scraper",msg,5000,xbmcaddon.Addon().getAddonInfo("icon")))
+	# Laeuft schon ein Nachfolge-Versuch, ist der Aufruf von Kodi laengst beantwortet.
+	if resolved: return
 	o = xbmcgui.ListItem(xbmc.getInfoLabel("ListItem.Label"))
 	xbmcplugin.setResolvedUrl(int(sys.argv[1]), False, o)
 
@@ -302,16 +358,20 @@ def _test(candidate):
 	streamTest.check(url, deadline)
 	return url
 
-def _first_working(candidates, tried):
-	"""Testet die Kandidaten der Reihe nach und liefert (Kandidat, URL) des ersten funktionierenden."""
-	total = len(candidates)
+def _first_working(queue, tried):
+	"""Testet die Warteschlange der Reihe nach und liefert (Kandidat, URL) des ersten funktionierenden.
+	Getestete Kandidaten verlassen die Schlange, ein zweiter Aufruf macht also beim naechsten weiter."""
+	total = len(queue)
 	if not total: return None, None
 	dialog.create("Suche gestartet ...", "Teste Streams")
 	import resolveurl # Der erste Import dauert und soll nicht vom Limit des ersten Streams abgehen.
 	timeout = socket.getdefaulttimeout()
 	socket.setdefaulttimeout(streamTest.LIMIT) # Damit auch aufgegebene Tests von selbst enden.
 	try:
-		for count, candidate in enumerate(candidates, 1):
+		count = 0
+		while queue:
+			candidate = queue.pop(0)
+			count += 1
 			tried.append(candidate)
 			dialog.update(int(count/total*100), "Teste Stream %s/%s\nSeite: %s\nLink: %s" % (count, total, candidate["site"], candidate["link"]))
 			if _cancelled(): raise Cancelled()
@@ -363,22 +423,39 @@ def _search_and_play(_type, _id, season, episode):
 	def fresh(candidates):
 		return [c for c in candidates if streamHistory.streamId(c) not in usedStreams]
 	hasPriority = isSerie and xbmcaddon.Addon().getSetting(PRIORITY_SITE) == "true"
-	priority = find(lambda site: site == PRIORITY_SITE)[1] if hasPriority else []
-	# Erst die ungespielten Streams der Vorrang-Seite und von VAVOO, das spart die langsame Suche auf allen Seiten.
-	candidate, url = _first_working(fresh(priority) + fresh(mirrors), tried)
-	if not url:
+	failure = ["Keine Streams gefunden"]
+	def streams():
+		priority = find(lambda site: site == PRIORITY_SITE)[1] if hasPriority else []
+		# Erst die ungespielten Streams der Vorrang-Seite und von VAVOO, das spart die langsame Suche auf allen Seiten.
+		queue = fresh(priority) + fresh(mirrors)
+		while True:
+			candidate, url = _first_working(queue, tried)
+			if not url: break
+			yield candidate, url
 		sources, hosters = find((lambda site: site != PRIORITY_SITE) if hasPriority else None)
-		candidates = hosters + [c for c in priority + mirrors if c not in tried]
-		if not candidates:
-			return showFailedNotification("keine Hoster" if sources else "keine Quellen")
-		candidate, url = _first_working(streamHistory.order(candidates, usedStreams), tried)
-	if not url: return showFailedNotification()
-	logger.info("Spiele :%s" % url)
-	_play(url)
-	streamHistory.remember(key, candidate)
+		queue = streamHistory.order(hosters + [c for c in priority + mirrors if c not in tried], usedStreams)
+		if not queue and not tried: failure[0] = "keine Hoster" if sources else "keine Quellen"
+		while True:
+			candidate, url = _first_working(queue, tried)
+			if not url: break
+			yield candidate, url
+	label = xbmc.getInfoLabel("ListItem.Label")
+	watcher = PlaybackWatcher()
+	attempts = 0
+	for candidate, url in streams():
+		logger.info("Spiele :%s" % url)
+		watcher.reset()
+		if attempts: _replay(watcher, url, label)
+		else: _play(url)
+		streamHistory.remember(key, candidate)
+		attempts += 1
+		if not watcher.failed(): return
+		logger.info("Stream startet nicht in Kodi (%s): %s" % (candidate["site"], candidate["link"]))
+		if attempts > MAX_FAILOVERS: break
+	showFailedNotification(failure[0])
 
-def _play(url):
-	o = xbmcgui.ListItem(xbmc.getInfoLabel("ListItem.Label"))
+def _listitem(url, label):
+	o = xbmcgui.ListItem(label)
 	o.setProperty("IsPlayable", "true")
 	if ".m3u8" in url:
 		o.setProperty("inputstream", "inputstream.adaptive")
@@ -387,8 +464,16 @@ def _play(url):
 			url, headers = url.split("|")
 			o.setProperty('inputstream.adaptive.common_headers', headers)
 			o.setProperty('inputstream.adaptive.stream_headers', headers)
-		#if "?" in url:
-			#url, params = url.split("?")
-			#o.setProperty('inputstream.adaptive.stream_params', params)
 	o.setPath(url)
+	return o, url
+
+def _play(url):
+	global resolved
+	o, _ = _listitem(url, xbmc.getInfoLabel("ListItem.Label"))
+	resolved = True
 	xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, o)
+
+def _replay(player, url, label):
+	# Der Aufruf von Kodi ist schon mit dem gescheiterten Stream beantwortet, also direkt abspielen.
+	o, path = _listitem(url, label)
+	player.play(path, o)
