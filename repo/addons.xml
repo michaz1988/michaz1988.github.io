@@ -75,7 +75,7 @@
     </extension>
 </addon>
 
-<addon id="plugin.video.vavooto" name="VAVOO.TO" version="2026.11.02" provider-name="kasi,michaz">
+<addon id="plugin.video.vavooto" name="VAVOO.TO" version="2026.11.02.1" provider-name="kasi,michaz">
 	<requires>
 		<import addon="xbmc.python" version="3.0.1"/>
 		<import addon="script.module.requests"/>
@@ -398,10 +398,10 @@
   </extension>
 </addon>
 
-<addon id="script.module.xstreamscraper" name="xStream Scraper" provider-name="michaz1988" version="2026.11.02.5">
+<addon id="script.module.xstreamscraper" name="xStream Scraper" provider-name="michaz1988" version="2026.11.02.6">
 	<requires>
 		<import addon="xbmc.python" version="3.0.0"/>
-		<import addon="plugin.video.vavooto" version="2026.11.02"/>
+		<import addon="plugin.video.vavooto" version="2026.11.02.1"/>
         <import addon="script.module.requests"/>
         <import addon="script.module.resolveurl"/>
         <import addon="plugin.video.xstream"/>
