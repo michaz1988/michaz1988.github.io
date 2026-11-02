@@ -358,9 +358,10 @@ def _test(candidate):
 	streamTest.check(url, deadline)
 	return url
 
-def _first_working(queue, tried):
+def _first_working(queue, tried, failures, skipFailed=False):
 	"""Testet die Warteschlange der Reihe nach und liefert (Kandidat, URL) des ersten funktionierenden.
-	Getestete Kandidaten verlassen die Schlange, ein zweiter Aufruf macht also beim naechsten weiter."""
+	Getestete Kandidaten verlassen die Schlange, ein zweiter Aufruf macht also beim naechsten weiter.
+	skipFailed laesst kuerzlich gescheiterte aus, sie kommen spaeter ueber die Gesamtliste dran."""
 	total = len(queue)
 	if not total: return None, None
 	dialog.create("Suche gestartet ...", "Teste Streams")
@@ -372,6 +373,7 @@ def _first_working(queue, tried):
 		while queue:
 			candidate = queue.pop(0)
 			count += 1
+			if skipFailed and failures.has(candidate): continue
 			tried.append(candidate)
 			dialog.update(int(count/total*100), "Teste Stream %s/%s\nSeite: %s\nLink: %s" % (count, total, candidate["site"], candidate["link"]))
 			if _cancelled(): raise Cancelled()
@@ -379,12 +381,17 @@ def _first_working(queue, tried):
 				url = streamTest.runLimited(lambda c=candidate: _test(c), cancelled=_cancelled)
 			except StreamTimeout as e:
 				logger.info("Stream uebersprungen (%s): %s" % (e, candidate["link"]))
+				failures.timedOut(candidate)
+				# Denselben Hoster nicht noch einmal abwarten, solange es andere Streams gibt.
+				queue.sort(key=failures.has)
 				continue
 			except Exception as e:
 				logger.info("Stream defekt (%s): %s" % (e, candidate["link"]))
+				failures.broken(candidate)
 				continue
 			if url: return candidate, url
 			logger.info("Stream nicht aufloesbar (%s): %s" % (candidate["site"], candidate["link"]))
+			failures.broken(candidate)
 	finally:
 		socket.setdefaulttimeout(timeout)
 		dialog.close()
@@ -424,19 +431,20 @@ def _search_and_play(_type, _id, season, episode):
 		return [c for c in candidates if streamHistory.streamId(c) not in usedStreams]
 	hasPriority = isSerie and xbmcaddon.Addon().getSetting(PRIORITY_SITE) == "true"
 	failure = ["Keine Streams gefunden"]
+	failures = streamHistory.Failures(key)
 	def streams():
 		priority = find(lambda site: site == PRIORITY_SITE)[1] if hasPriority else []
 		# Erst die ungespielten Streams der Vorrang-Seite und von VAVOO, das spart die langsame Suche auf allen Seiten.
 		queue = fresh(priority) + fresh(mirrors)
 		while True:
-			candidate, url = _first_working(queue, tried)
+			candidate, url = _first_working(queue, tried, failures, True)
 			if not url: break
 			yield candidate, url
 		sources, hosters = find((lambda site: site != PRIORITY_SITE) if hasPriority else None)
-		queue = streamHistory.order(hosters + [c for c in priority + mirrors if c not in tried], usedStreams)
+		queue = streamHistory.order(hosters + [c for c in priority + mirrors if c not in tried], usedStreams, failures.has)
 		if not queue and not tried: failure[0] = "keine Hoster" if sources else "keine Quellen"
 		while True:
-			candidate, url = _first_working(queue, tried)
+			candidate, url = _first_working(queue, tried, failures)
 			if not url: break
 			yield candidate, url
 	label = xbmc.getInfoLabel("ListItem.Label")
@@ -448,6 +456,7 @@ def _search_and_play(_type, _id, season, episode):
 		if attempts: _replay(watcher, url, label)
 		else: _play(url)
 		streamHistory.remember(key, candidate)
+		failures.worked(candidate)
 		attempts += 1
 		if not watcher.failed(): return
 		logger.info("Stream startet nicht in Kodi (%s): %s" % (candidate["site"], candidate["link"]))
