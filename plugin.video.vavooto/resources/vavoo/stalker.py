@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import unicodedata
 
 from vavoo.utils import *
@@ -487,22 +488,26 @@ def _probe_one(url, mac):
 	except Exception as exc:
 		return mac, ("NETWORK" if _stalker_net_error(exc) else "INVALID")
 
-def prefilter_macs(url, maclist, faultymaclist, limit=12):
-	"""Paralleler Handshake-Schnelltest. Rueckgabe: (status, good, expired, probed)."""
+def prefilter_macs(url, maclist, faultymaclist, limit=12, prog=None):
+	"""Handshake-Schnelltest, sortiert schnell die toten MACs aus. Rueckgabe: (status, good, expired, probed).
+	Laeuft mit wenigen Threads parallel, damit das Fenster nicht minutenlang auf einer MAC steht;
+	die eigentliche Entzerrung gegen Drosselung passiert ueber die Pause bei den vollen Pruefungen."""
 	pool = [m for m in maclist if m not in faultymaclist]
 	random.shuffle(pool)
 	pool = pool[:limit]
 	if not pool:
 		return "EMPTY", [], [], []
-	# Nacheinander statt parallel, mit kleiner Luecke: parallele Anfragen lassen das Portal die IP sperren.
-	# Die volle Pause (_stalker_pace) kommt erst bei den eigentlichen MAC-Pruefungen, der Vorfilter soll
-	# nicht an der Senderliste scheitern, sondern nur schnell die offensichtlich toten MACs aussortieren.
-	gap = min(_stalker_pace(), 0.5)
 	results = []
-	for i, m in enumerate(pool):
-		if i and gap and monitor.waitForAbort(gap):
-			break
-		results.append(_probe_one(url, m))
+	try:
+		with ThreadPoolExecutor(max_workers=min(3, len(pool))) as ex:
+			futures = [ex.submit(_probe_one, url, m) for m in pool]
+			for fut in as_completed(futures):
+				results.append(fut.result())
+				if prog is not None:
+					prog.update(min(35, int(len(results) * 35 / len(pool))), "Pruefe Mac Adressen %s/%s" % (len(results), len(pool)))
+	except Exception:
+		log(format_exc())
+		results = [_probe_one(url, m) for m in pool]
 	good, expired, net, bad = [], [], 0, 0
 	for mac, status in results:
 		if status == "OK":
@@ -538,7 +543,7 @@ def check_portal(url, maclist, silent=False):
 		budget = max(1, int(getSetting("stalker_retry")))
 	except (TypeError, ValueError):
 		budget = 10
-	batch_size = min(24, max(8, budget))
+	batch_size = min(12, max(8, budget))
 	# Jede vollstaendig getestete MAC zaehlt, egal woran sie scheitert: die Einstellung ist die Obergrenze.
 	budget = min(len(maclist), budget)
 
@@ -559,7 +564,7 @@ def check_portal(url, maclist, silent=False):
 		pool = [m for m in maclist if m not in tried]
 		if not pool:
 			break
-		status, good, expired, probed = prefilter_macs(url, pool, faultymaclist, batch_size)
+		status, good, expired, probed = prefilter_macs(url, pool, faultymaclist, batch_size, prog=(None if silent else progress))
 		tried.update(probed)
 		tried.update(faultymaclist)
 		faultymac[url] = faultymaclist
