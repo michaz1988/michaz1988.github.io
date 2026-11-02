@@ -11,7 +11,35 @@ from resources.lib.tools import cParser
 settings.init()
 api_key = "86dd18b04874d9c94afadde7993d94e3"
 PRIORITY_SITE = "serienstream"
-dialog = xbmcgui.DialogProgress()
+
+class ProgressDialog:
+	"""Fortschritt als normales Fenster oder, je nach Einstellung, im Hintergrund.
+	Das Hintergrund-Fenster kennt keinen Abbrechen-Knopf und zeigt nur eine Zeile."""
+	def __init__(self):
+		self._dialog = None
+		self._background = False
+		self._heading = ""
+
+	def create(self, heading, message=""):
+		self.close()
+		self._background = xbmcaddon.Addon().getSetting("progress_background") == "true"
+		self._heading = heading
+		self._dialog = xbmcgui.DialogProgressBG() if self._background else xbmcgui.DialogProgress()
+		self._dialog.create(heading, message)
+
+	def update(self, percent, message=""):
+		if not self._dialog: return
+		if self._background: self._dialog.update(percent, self._heading, message.replace("\n", " | "))
+		else: self._dialog.update(percent, message)
+
+	def iscanceled(self):
+		return bool(self._dialog) and not self._background and self._dialog.iscanceled()
+
+	def close(self):
+		if self._dialog: self._dialog.close()
+		self._dialog = None
+
+dialog = ProgressDialog()
 urllib3.disable_warnings()
 
 def showFailedNotification(msg="Keine Streams gefunden"):

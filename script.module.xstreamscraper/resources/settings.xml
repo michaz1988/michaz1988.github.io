@@ -5,6 +5,7 @@
  <category label="VIDEO">
   <setting default="1" id="stream_select" label="Stream Auswahl" type="enum" values="Hoster|Automatisch"/>
   <setting default="true" id="auto_try_next_stream" type="bool" subsetting="true" visible="eq(-1,0)" label="Automatisch nächsten ähnlichen Stream versuchen"/>
+  <setting default="false" id="progress_background" type="bool" label="Fortschritt im Hintergrund anzeigen"/>
  </category>
  <category label="VAVOO">
   <setting default="true" id="vavoo" label="Vavoo" type="bool"/>
