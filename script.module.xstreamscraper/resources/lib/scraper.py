@@ -312,8 +312,8 @@ def _search_and_play(_type, _id, season, episode):
 			if url: return _play(url)
 		else:
 			mirrors = _vavoo_mirrors(param)
-	# Pro Film bzw. Serie: dieselbe Folge noch einmal und die naechste Folge bekommen beide einen anderen Stream.
-	key = "%s.%s" % (_type, _id)
+	# Pro Film bzw. Folge: nur wer genau denselben Titel noch einmal startet, bekommt einen anderen Stream.
+	key = "tv.%s.%s.%s" % (_id, season, episode) if isSerie else "movie.%s" % _id
 	usedStreams = streamHistory.used(key)
 	tried = []
 	# Ungespielte VAVOO-Mirrors sparen die langsame Suche auf allen Seiten.

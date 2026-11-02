@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Merkt sich pro Film bzw. Serie die gespielten Streams, damit beim naechsten Mal ein anderer drankommt.
+# Merkt sich pro Film bzw. Folge die gespielten Streams, damit beim naechsten Mal ein anderer drankommt.
 import json, os, time, xbmcaddon, xbmcvfs
 from urllib.parse import urlparse
 from resources.lib.logger import logger
@@ -19,7 +19,7 @@ def _read():
 		return {}
 
 def streamId(candidate):
-	"""Seite und Hoster statt Link: der Link ist bei jeder Folge ein anderer."""
+	"""Seite und Hoster statt Link: manche Seiten liefern bei jedem Aufruf einen neuen Link."""
 	name = candidate.get("name") or urlparse(str(candidate.get("link"))).netloc
 	return ("%s|%s" % (candidate.get("site"), name)).lower()
 
