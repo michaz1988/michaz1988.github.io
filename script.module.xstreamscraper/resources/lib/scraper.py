@@ -324,6 +324,7 @@ def _first_working(candidates, tried):
 				logger.info("Stream defekt (%s): %s" % (e, candidate["link"]))
 				continue
 			if url: return candidate, url
+			logger.info("Stream nicht aufloesbar (%s): %s" % (candidate["site"], candidate["link"]))
 	finally:
 		socket.setdefaulttimeout(timeout)
 		dialog.close()
