@@ -470,6 +470,13 @@ def new_mac(silent=False):
 		return False
 	return check_portal(url, maclist, silent)
 	
+def _stalker_pace():
+	"""Sekunden Pause zwischen Portal-Anfragen, damit das Portal nicht drosselt. Leer = 2."""
+	try:
+		return max(0.0, float(getSetting("stalker_pace")))
+	except (TypeError, ValueError):
+		return 2.0
+
 def _probe_one(url, mac):
 	try:
 		return mac, StalkerPortal(url, mac, persist=False).probe()
@@ -483,13 +490,15 @@ def prefilter_macs(url, maclist, faultymaclist, limit=12):
 	pool = pool[:limit]
 	if not pool:
 		return "EMPTY", [], [], []
-	try:
-		# schonend: nur 2 gleichzeitig, sonst blockt das Portal die IP
-		with ThreadPoolExecutor(max_workers=min(2, len(pool))) as ex:
-			results = list(ex.map(lambda m: _probe_one(url, m), pool))
-	except Exception:
-		log(format_exc())
-		results = [_probe_one(url, m) for m in pool]
+	# Nacheinander statt parallel, mit kleiner Luecke: parallele Anfragen lassen das Portal die IP sperren.
+	# Die volle Pause (_stalker_pace) kommt erst bei den eigentlichen MAC-Pruefungen, der Vorfilter soll
+	# nicht an der Senderliste scheitern, sondern nur schnell die offensichtlich toten MACs aussortieren.
+	gap = min(_stalker_pace(), 0.5)
+	results = []
+	for i, m in enumerate(pool):
+		if i and gap and monitor.waitForAbort(gap):
+			break
+		results.append(_probe_one(url, m))
 	good, expired, net, bad = [], [], 0, 0
 	for mac, status in results:
 		if status == "OK":
@@ -530,6 +539,7 @@ def check_portal(url, maclist, silent=False):
 	budget = min(len(maclist), budget)
 
 	tried = set(faultymaclist)
+	pace = _stalker_pace()
 	checks = 0
 	no_stream_macs = []
 	nochan = 0
@@ -575,6 +585,8 @@ def check_portal(url, maclist, silent=False):
 			setSetting("portal_ok", "Vollstaendiger Test %s/%s" % (checks, budget))
 			setSetting("mac", mac)
 			set_cache("mac", mac)
+			if checks > 1 and pace and monitor.waitForAbort(pace):
+				break
 			chk = StalkerPortal(url, mac).check()
 			if chk == True:
 				if silent == False: progress.close()
