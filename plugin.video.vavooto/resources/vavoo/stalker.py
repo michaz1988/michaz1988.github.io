@@ -314,7 +314,7 @@ class StalkerPortal:
 			if not account_info or not isinstance(account_info, dict):
 				if getattr(self, "_net_error", False):
 					return "NETWORK"
-				setSetting("account_info", ""); return "ACCOUNT Infos Empty"
+				setSetting("account_info", ""); self.last_reason = "keine Account-Infos"; return "ACCOUNT Infos Empty"
 			log(account_info)
 			phone = account_info.get("phone")
 			if phone:
@@ -323,7 +323,7 @@ class StalkerPortal:
 				except Exception:
 					expired = False
 				if expired:
-					self._blacklist(); setSetting("account_info", ""); return "ACCOUNT Expired"
+					self._blacklist(); setSetting("account_info", ""); self.last_reason = "Account abgelaufen"; return "ACCOUNT Expired"
 			setSetting("account_info", ",".join("%s:%s" % (k, v) for k, v in account_info.items()))
 
 			chans = self.channels()
@@ -335,6 +335,7 @@ class StalkerPortal:
 				# Handshake + Account gingen durch -> MAC/Token ok, leere Senderliste =
 				# Portal gedrosselt/ueberlastet. MAC NICHT verbrennen.
 				log("Stalker check: Account ok, aber Senderliste leer (Portal gedrosselt?)")
+				self.last_reason = "leere Senderliste (Portal gedrosselt?)"
 				return "No Channels"
 			set_cache("sta_channels", chans, int(getSetting("stalk_cache")))
 
@@ -342,7 +343,8 @@ class StalkerPortal:
 			if g == "IP BLOCKED":
 				self._blocked(); return "IP BLOCKED"
 			if not g:
-				return "NETWORK" if getattr(self, "_net_error", False) else "No Genres"
+				if getattr(self, "_net_error", False): return "NETWORK"
+				self.last_reason = "keine Sendergruppen"; return "No Genres"
 
 			# Stream-Test: bis zu 5 zufaellige Sender - EINER muss echte Daten liefern.
 			# Login + Senderliste + Gruppen sind ok -> die MAC ist gueltig; scheitert nur
@@ -370,6 +372,8 @@ class StalkerPortal:
 						return "NETWORK"
 			if not stream_ok:
 				log("Stalker check: Portal/Login ok, aber kein Test-Stream abspielbar (%s)" % repr(last_err)[:120])
+				detail = last_err if isinstance(last_err, str) else (type(last_err).__name__ if last_err else "kein Stream")
+				self.last_reason = "Stream nicht abspielbar (%s)" % detail
 				return "No Stream"
 
 			setSetting("portal_ok", "Status OK")
@@ -541,6 +545,8 @@ def check_portal(url, maclist, silent=False):
 	tried = set(faultymaclist)
 	pace = _stalker_pace()
 	checks = 0
+	reason = ""
+	REASON_FALLBACK = {"No Stream": "Stream nicht abspielbar", "No Channels": "leere Senderliste", "No Genres": "keine Sendergruppen", "ACCOUNT Expired": "Account abgelaufen", "ACCOUNT Infos Empty": "keine Account-Infos"}
 	no_stream_macs = []
 	nochan = 0
 	saw_expired = False
@@ -581,13 +587,15 @@ def check_portal(url, maclist, silent=False):
 				progress.close(); return False
 			checks += 1
 			if silent == False:
-				progress.update(min(99, int(checks * 100 / max(budget, 1))), "Vollstaendiger Test %s/%s\n%s" % (checks, budget, mac))
-			setSetting("portal_ok", "Vollstaendiger Test %s/%s" % (checks, budget))
+				detail = ("\nvorige MAC: %s" % reason) if reason else ""
+				progress.update(min(99, int(checks * 100 / max(budget, 1))), "Teste MAC %s/%s\n%s%s" % (checks, budget, mac, detail))
+			setSetting("portal_ok", "Teste MAC %s/%s%s" % (checks, budget, (" - zuvor: %s" % reason) if reason else ""))
 			setSetting("mac", mac)
 			set_cache("mac", mac)
 			if checks > 1 and pace and monitor.waitForAbort(pace):
 				break
-			chk = StalkerPortal(url, mac).check()
+			portal = StalkerPortal(url, mac)
+			chk = portal.check()
 			if chk == True:
 				if silent == False: progress.close()
 				execute("Container.Refresh")
@@ -603,13 +611,14 @@ def check_portal(url, maclist, silent=False):
 					dialog.notification("VAVOO.TO", "Stalker-Portal nicht erreichbar", xbmcgui.NOTIFICATION_WARNING, 3000)
 				setSetting("portal_ok", "Portal nicht erreichbar")
 				return False
+			reason = getattr(portal, "last_reason", "") or REASON_FALLBACK.get(chk, chk)
 			if chk in ("No Stream", "No Channels"):
 				# MAC/Login ok, aber Portal liefert nicht (Stream gesperrt / Senderliste leer)
 				# -> weiter mit der naechsten MAC, MAC NICHT verbrennen
 				no_stream_macs.append(mac)
 				if chk == "No Channels": nochan += 1
 				if silent == False:
-					progress.update(min(99, int(checks * 100 / max(budget, 1))), "Login ok, Stream gesperrt - weiter  %s/%s" % (checks, budget))
+					progress.update(min(99, int(checks * 100 / max(budget, 1))), "Login ok - weiter: %s  %s/%s" % (reason, checks, budget))
 				continue
 			# No Channels / No Genres / ACCOUNT Expired  (check() hat ggf. schon geblacklistet)
 			if mac not in faultymaclist:
