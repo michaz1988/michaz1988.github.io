@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
-import os, sys, xbmc, xbmcplugin, xbmcgui, xbmcaddon, requests, concurrent.futures, urllib3
-from urllib.parse import parse_qsl
-from resources.lib import settings
+import os, socket, sys, time, xbmc, xbmcplugin, xbmcgui, xbmcaddon, concurrent.futures, urllib3
+from resources.lib import settings, streamTest
+from resources.lib.streamTest import Cancelled, StreamTimeout
 from resources.lib.xstreamBridge import sourcesFolder
+from resources.lib import streamHistory
 from resources.lib.gui.gui import cGui
 from resources.lib.handler.requestHandler import cRequestHandler, quietWindows
 from resources.lib.logger import logger
 from resources.lib.tools import cParser
 settings.init()
 api_key = "86dd18b04874d9c94afadde7993d94e3"
-session = requests.session()
 dialog = xbmcgui.DialogProgress()
 urllib3.disable_warnings()
 
@@ -44,7 +44,7 @@ def get_episodes(sources, s, e):
 		try:
 			site = source["site"]
 			dialog.update(int(count * 25 /len(sources)+50), "Filtere Seite %s..." % site)
-			if dialog.iscanceled(): return showFailedNotification("Abgebrochen")
+			if dialog.iscanceled(): raise Cancelled()
 			logger.info("Filtere %s" % site)
 			for result in plugin(source) or []:
 				if "pisode" in result.keys() or result.get("mediaType") == "episode":
@@ -70,7 +70,7 @@ def get_hosters(sources, isSerie, season, episode):
 	if isSerie: newsources = get_episodes(sources, season, episode)
 	for count, source in enumerate(newsources, 1):
 		site = source["site"]
-		if dialog.iscanceled(): return showFailedNotification("Abgebrochen")
+		if dialog.iscanceled(): raise Cancelled()
 		dialog.update(int(count * 25 /len(newsources)+75), "Suche nach Hostern auf %s" % source["site"])
 		p = plugin(source, True)
 		if p:
@@ -144,14 +144,14 @@ def searchGlobal(sSearchText, searchtitles, isSerie, _type, _id, season, episode
                 logger.info("Searching for %s at %s" % (sSearchText, plugin_name))
                 dialog.update(int(count * 25 / len(aPlugins)), "%s %s" % (plugin_name, " Suche abgeschlossen"))
                 if dialog.iscanceled():
-                    return showFailedNotification("Abgebrochen")
+                    raise Cancelled()
             except Exception as e:
                 logger.error(f"Fehler bei Plugin {pluginEntry['name']}: {e}")
 
     settings.collectMode = False
     total = len(oGui.searchResults)
     if total == 0:
-        return showFailedNotification("Nichts gefunden")
+        return []
 
     for count, result in enumerate(oGui.searchResults, 1):
         settings.skip = "Ok"
@@ -175,7 +175,7 @@ def searchGlobal(sSearchText, searchtitles, isSerie, _type, _id, season, episode
                 year = aYear[0][1]
 
         if dialog.iscanceled():
-            return showFailedNotification("Abgebrochen")
+            raise Cancelled()
 
         if language and language.lower() not in ["ger", "de", "deutsch"]:
             set_skip(" Wrong Language")
@@ -227,66 +227,114 @@ def get_details(_type, _id):
 def play(_type, _id, season, episode):
 	# Keine blockierenden Fehlerfenster von xStream, solange der Scraper automatisch sucht.
 	with quietWindows():
-		return _search_and_play(_type, _id, season, episode)
+		try:
+			return _search_and_play(_type, _id, season, episode)
+		except Cancelled:
+			dialog.close()
+			return showFailedNotification("Abgebrochen")
+
+def _cancelled():
+	return dialog.iscanceled() or xbmc.Monitor().abortRequested()
+
+def _vavoo_param(_type, _id, name, season, episode):
+	if _type == "movie": return {"id": "movie.%s" %_id, "n":name, "find":"true"}
+	return {"id": "series.%s" %_id, "n":name, "s": season, "e": episode, "find":"true"}
+
+def _vavoo_mirrors(param):
+	from vavoo import vjackson
+	try:
+		mirrors = streamTest.runLimited(lambda: vjackson.get_mirrors(param), cancelled=_cancelled) or []
+	except Exception as e:
+		logger.error("VAVOO: %s" % e)
+		return []
+	return [{"site": "vavoo", "name": a["hoster"], "link": a["url"], "mirror": a} for a in mirrors]
+
+def _manual_vavoo():
+	# Stream-Auswahl von Hand in den VAVOO-Einstellungen: dann entscheidet der Nutzer, nicht die Reihenfolge.
+	return xbmcaddon.Addon("plugin.video.vavooto").getSetting("stream_select") == "0"
+
+def _resolve(candidate):
+	if candidate.get("mirror"):
+		from vavoo import vjackson
+		return vjackson.resolve(candidate["mirror"])
+	if candidate.get("resolved"): return candidate["link"]
+	stream = plugin(candidate, True)[0]
+	if stream.get("resolved"): return stream["streamUrl"]
+	import resolveurl as resolver
+	return resolver.resolve(stream["streamUrl"])
+
+def _test(candidate):
+	"""Aufloesen und pruefen teilen sich dasselbe Zeitlimit. Liefert die spielbare URL oder None."""
+	deadline = time.monotonic() + streamTest.LIMIT
+	url = _resolve(candidate)
+	if not isinstance(url, str) or not url: return None
+	streamTest.check(url, deadline)
+	return url
+
+def _first_working(candidates, tried):
+	"""Testet die Kandidaten der Reihe nach und liefert (Kandidat, URL) des ersten funktionierenden."""
+	total = len(candidates)
+	if not total: return None, None
+	dialog.create("Suche gestartet ...", "Teste Streams")
+	import resolveurl # Der erste Import dauert und soll nicht vom Limit des ersten Streams abgehen.
+	timeout = socket.getdefaulttimeout()
+	socket.setdefaulttimeout(streamTest.LIMIT) # Damit auch aufgegebene Tests von selbst enden.
+	try:
+		for count, candidate in enumerate(candidates, 1):
+			tried.append(candidate)
+			dialog.update(int(count/total*100), "Teste Stream %s/%s\nSeite: %s\nLink: %s" % (count, total, candidate["site"], candidate["link"]))
+			if _cancelled(): raise Cancelled()
+			try:
+				url = streamTest.runLimited(lambda c=candidate: _test(c), cancelled=_cancelled)
+			except StreamTimeout as e:
+				logger.info("Stream uebersprungen (%s): %s" % (e, candidate["link"]))
+				continue
+			except Exception as e:
+				logger.info("Stream defekt (%s): %s" % (e, candidate["link"]))
+				continue
+			if url: return candidate, url
+	finally:
+		socket.setdefaulttimeout(timeout)
+		dialog.close()
+	return None, None
 
 def _search_and_play(_type, _id, season, episode):
 	data = get_details(_type, _id)
 	if not data: return showFailedNotification("TMDB nicht erreichbar")
 	if _type == "tv": isSerie, name, releaseDate = True, data["name"], data["first_air_date"]
 	else: isSerie, name, releaseDate = False, data["title"], data["release_date"]
+	mirrors = []
 	if xbmcaddon.Addon().getSetting('vavoo') == 'true':
-		from vavoo import vjackson
-		#url = xbmc.executebuiltin('RunPlugin(plugin://plugin.video.vavooto/?action=get&id=movie.%s&find=true)' % _id) if _type == "movie" else xbmc.executebuiltin('RunPlugin(plugin://plugin.video.vavooto/?action=get&id=%s.%s&s=%s&e=%s&find=true)' %(_type, _id,season, episode))
-		param = {"id": "movie.%s" %_id, "n":name, "find":"true"} if _type == "movie" else {"id": "series.%s" %_id, "n":name, "s": season, "e": episode,  "find":"true"}
-		url = vjackson.get(param)
-		if url: return _play(url)
-	searchYear=int(releaseDate[:4])
-	results = data.get("alternative_titles", {}).get("results")
-	searchtitles = [a["title"] for a in results] if results else []
-	searchtitles.append(name)
-	titles = [cleantitle(a) for a in searchtitles]
-	sources = searchGlobal(name.split(":")[0], titles, isSerie, _type, _id, season, episode, searchYear)
-	if not sources: return showFailedNotification("keine Quellen")
-	hosters = get_hosters(sources, isSerie, season, episode)
-	if not hosters: return showFailedNotification("keine Hoster")
-	total = len(hosters)
-	dialog.create("Suche gestartet ...", "Teste Streams")
-	for count, k in enumerate(hosters, 1):
-		dialog.update(int(count/total*100), "Teste Stream %s/%s\nSeite: %s\nLink: %s" % (count, total, k["site"], k["link"]))
-		if dialog.iscanceled(): return showFailedNotification("Abgebrochen")
-		import resolveurl as resolver
-		try:
-			if k.get("resolved"): url = k["link"]
-			else:
-				stream = plugin(k, True)[0]
-				url =  resolver.resolve(stream["streamUrl"])
-			if not isinstance(url, str): 
-				continue
-				#raise Exception("kein Link")
-			headers = {}; params = {}
-			newurl = url
-			if "|" in newurl:
-				newurl, headers = newurl.split("|")
-				headers = dict(parse_qsl(headers))
-			if "?" in newurl:
-				newurl, params = newurl.split("?")
-				params = dict(parse_qsl(params))
-			res = session.get(newurl, headers=headers, params=params, stream=True)
-			if not res.ok: raise Exception("Kann Seite nicht erreichen")
-			if "text" in res.headers.get("Content-Type","text"): raise Exception("Keine Videodatei")
-		except Exception as e:
-			logger.error(e)
-			import traceback
-			logger.error(traceback.format_exc())
-			continue
+		param = _vavoo_param(_type, _id, name, season, episode)
+		if _manual_vavoo():
+			from vavoo import vjackson
+			url = vjackson.get(param)
+			if url: return _play(url)
 		else:
-			logger.info("Spiele :%s" % url)
-			del resolver
-			dialog.close()
-			return _play(url)
-	del resolver
-	dialog.close()
-	return showFailedNotification()
+			mirrors = _vavoo_mirrors(param)
+	# Pro Film bzw. Serie: dieselbe Folge noch einmal und die naechste Folge bekommen beide einen anderen Stream.
+	key = "%s.%s" % (_type, _id)
+	usedStreams = streamHistory.used(key)
+	tried = []
+	# Ungespielte VAVOO-Mirrors sparen die langsame Suche auf allen Seiten.
+	candidate, url = _first_working(streamHistory.order([m for m in mirrors if streamHistory.streamId(m) not in usedStreams], usedStreams), tried)
+	if not url:
+		searchYear=int(releaseDate[:4])
+		results = data.get("alternative_titles", {}).get("results")
+		searchtitles = [a["title"] for a in results] if results else []
+		searchtitles.append(name)
+		titles = [cleantitle(a) for a in searchtitles]
+		sources = searchGlobal(name.split(":")[0], titles, isSerie, _type, _id, season, episode, searchYear)
+		hosters = get_hosters(sources, isSerie, season, episode) if sources else []
+		dialog.close()
+		candidates = hosters + [m for m in mirrors if m not in tried]
+		if not candidates:
+			return showFailedNotification("keine Hoster" if sources else "keine Quellen")
+		candidate, url = _first_working(streamHistory.order(candidates, usedStreams), tried)
+	if not url: return showFailedNotification()
+	logger.info("Spiele :%s" % url)
+	_play(url)
+	streamHistory.remember(key, candidate)
 
 def _play(url):
 	o = xbmcgui.ListItem(xbmc.getInfoLabel("ListItem.Label"))

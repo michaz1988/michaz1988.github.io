@@ -287,9 +287,8 @@ def checkstream(url):
 		return
 	else: return url
 
-def get(params):
-	manual = True if params.get("manual") == "true" else False
-	find = True if params.get("find") == "true" else False
+def get_mirrors(params):
+	"""Sortierte Mirrors des Titels mit deutscher Sprache, None wenn es keine gibt."""
 	params["site"] = "vavoo"
 	cacheOk, mirrors = get_cache(params)
 	_headers={"user-agent": "MediaHubMX/2", "content-type": "application/json; charset=utf-8", "content-length": "1898", "accept-encoding": "gzip", "mediahubmx-signature": getAuthSignature()}
@@ -304,31 +303,36 @@ def get(params):
 		url = "https://vavoo.to/mediahubmx-source.json"
 		mirrors = request_json("POST", url, json=_data, headers=_headers, timeout=10, retries=1)
 		set_cache(params, mirrors, 1)
+	if not mirrors: return None
+	newurllist = []
+	for i ,a in enumerate(mirrors, 1):
+		if not "de" in a.get('languages', []): continue
+		a["hoster"] = urlparse(a["url"]).netloc
+		if "streamz" in a["hoster"]: continue # den hoster kann man vergessen
+		quali = a.get("tag", "SD")
+		if quali == "1080p" or quali == "FHD":
+			if int(getSetting("stream_quali") or 0) > 0: continue
+			a["name"], a["weight"] = "%s %s" %(a["hoster"], "1080p"), 1080+random.randint(0, 9)
+		elif quali == "720p" or quali == "HD":
+			if int(getSetting("stream_quali") or 0) > 1: continue
+			a["name"], a["weight"] = "%s %s" %(a["hoster"], "720p"), 720+random.randint(0, 9)
+		else: a["name"], a["weight"] = a["hoster"], random.randint(0, 9)
+		newurllist.append({"name":a["name"], "weight":a["weight"], "hoster": a["hoster"], "url":a["url"]})
+	if not newurllist: return None
+	mirrors = list(sorted(newurllist, key=lambda x: x["weight"], reverse=True))
+	for i, a in enumerate(mirrors, 1): a["name"] = "%s. %s" % (i, a["name"])
+	return mirrors
+
+def get(params):
+	manual = True if params.get("manual") == "true" else False
+	find = True if params.get("find") == "true" else False
+	mirrors = get_mirrors(params)
 	if not mirrors:
 		log("Keine Mirrors gefunden")
 		if not find: showFailedNotification()
 		return
 	else:
-		newurllist, streamurl =[], None
-		for i ,a in enumerate(mirrors, 1):
-			if not "de" in a.get('languages', []): continue
-			a["hoster"] = urlparse(a["url"]).netloc
-			if "streamz" in a["hoster"]: continue # den hoster kann man vergessen
-			quali = a.get("tag", "SD")
-			if quali == "1080p" or quali == "FHD":
-				if int(getSetting("stream_quali") or 0) > 0: continue
-				a["name"], a["weight"] = "%s %s" %(a["hoster"], "1080p"), 1080+random.randint(0, 9)
-			elif quali == "720p" or quali == "HD":
-				if int(getSetting("stream_quali") or 0) > 1: continue
-				a["name"], a["weight"] = "%s %s" %(a["hoster"], "720p"), 720+random.randint(0, 9)
-			else: a["name"], a["weight"] = a["hoster"], random.randint(0, 9)
-			newurllist.append({"name":a["name"], "weight":a["weight"], "hoster": a["hoster"], "url":a["url"]})
-		mirrors = list(sorted(newurllist, key=lambda x: x["weight"], reverse=True)) if newurllist else None
-		if not mirrors:
-			log("Keine Mirrors gefunden")
-			if not find: showFailedNotification()
-			return
-		for i, a in enumerate(mirrors, 1): a["name"] = "%s. %s" % (i, a["name"])
+		streamurl = None
 		log(mirrors)
 		if getSetting("stream_select") == "0" or manual:
 			index = dialog.select("VAVOO", [ mirror["name"] for mirror in mirrors ])
