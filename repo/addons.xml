@@ -398,7 +398,7 @@
   </extension>
 </addon>
 
-<addon id="script.module.xstreamscraper" name="xStream Scraper" provider-name="michaz1988" version="2026.11.02.4">
+<addon id="script.module.xstreamscraper" name="xStream Scraper" provider-name="michaz1988" version="2026.11.02.5">
 	<requires>
 		<import addon="xbmc.python" version="3.0.0"/>
 		<import addon="plugin.video.vavooto" version="2026.11.02"/>
