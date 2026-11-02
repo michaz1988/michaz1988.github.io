@@ -522,22 +522,21 @@ def check_portal(url, maclist, silent=False):
 		progress.create("TESTE STALKER MAC ADRESSEN", "Pruefe Mac Adressen ...")
 	setSetting("portal_ok", "Teste Mac Adressen ...")
 	try:
-		budget = max(10, int(getSetting("stalker_retry")))
+		budget = max(1, int(getSetting("stalker_retry")))
 	except (TypeError, ValueError):
 		budget = 10
 	batch_size = min(24, max(8, budget))
-	# "Login ok, kein Stream" weiter durchprobieren: manuell grosszuegig, im Hintergrund knapp
-	stream_budget = min(len(maclist), budget if silent else max(30, budget * 2))
+	# Jede vollstaendig getestete MAC zaehlt, egal woran sie scheitert: die Einstellung ist die Obergrenze.
+	budget = min(len(maclist), budget)
 
 	tried = set(faultymaclist)
 	checks = 0
-	hard_checks = 0
 	no_stream_macs = []
 	nochan = 0
 	saw_expired = False
 
 	for _round in range(6):
-		if hard_checks >= budget or checks >= stream_budget or monitor.abortRequested():
+		if checks >= budget or monitor.abortRequested():
 			break
 		if silent == False and progress.iscanceled():
 			progress.close(); return False
@@ -566,15 +565,14 @@ def check_portal(url, maclist, silent=False):
 			continue
 
 		for mac in good:
-			if hard_checks >= budget or checks >= stream_budget or monitor.abortRequested():
+			if checks >= budget or monitor.abortRequested():
 				break
 			if silent == False and progress.iscanceled():
 				progress.close(); return False
 			checks += 1
 			if silent == False:
-				_lim = stream_budget if no_stream_macs else budget
-				progress.update(min(99, int(checks * 100 / max(_lim, 1))), "Vollstaendiger Test %s/%s\n%s" % (checks, _lim, mac))
-			setSetting("portal_ok", "Vollstaendiger Test %s/%s" % (checks, (stream_budget if no_stream_macs else budget)))
+				progress.update(min(99, int(checks * 100 / max(budget, 1))), "Vollstaendiger Test %s/%s\n%s" % (checks, budget, mac))
+			setSetting("portal_ok", "Vollstaendiger Test %s/%s" % (checks, budget))
 			setSetting("mac", mac)
 			set_cache("mac", mac)
 			chk = StalkerPortal(url, mac).check()
@@ -599,10 +597,9 @@ def check_portal(url, maclist, silent=False):
 				no_stream_macs.append(mac)
 				if chk == "No Channels": nochan += 1
 				if silent == False:
-					progress.update(min(99, int(checks * 100 / max(stream_budget, 1))), "Login ok, Stream gesperrt - weiter  %s/%s" % (checks, stream_budget))
+					progress.update(min(99, int(checks * 100 / max(budget, 1))), "Login ok, Stream gesperrt - weiter  %s/%s" % (checks, budget))
 				continue
 			# No Channels / No Genres / ACCOUNT Expired  (check() hat ggf. schon geblacklistet)
-			hard_checks += 1
 			if mac not in faultymaclist:
 				faultymaclist.append(mac)
 			faultymac[url] = faultymaclist
