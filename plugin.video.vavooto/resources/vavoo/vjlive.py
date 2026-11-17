@@ -497,9 +497,16 @@ def livePlay(name, type=None, group=None, retry='0', idx=None):
 	if not live_player:
 		return
 
-	# Stillstand 8s / kein Bild nach 12s -> Abriss, naechste Quelle.
+	# Stillstand / kein Bild nach eingestellter Zeit (Standard 1s / 12s) -> Abriss, naechste Quelle.
 	# "stopped"/"ended" ohne je gelaufenes Bild wird ebenfalls als Fehlstart gewertet.
-	result = live_player.wait_for_failure()
+	def _secs(key, default):
+		try:
+			return max(1, int(getSetting(key)))
+		except (TypeError, ValueError):
+			return default
+	result = live_player.wait_for_failure(
+		stall_seconds=_secs("live_stall_seconds", 1),
+		startup_seconds=_secs("live_startup_seconds", 12))
 	if result not in ("ended", "stalled", "startup_failed"):
 		# "stopped" / "abort" -> Nutzer hat beendet, kein Retry
 		log("Live-TV kein Retry noetig: %s" % result)
