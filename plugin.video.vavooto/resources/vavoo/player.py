@@ -94,7 +94,7 @@ class LivePlayer(player):
         except Exception:
             return 1
 
-    def wait_for_failure(self, stall_seconds=8, startup_seconds=12):
+    def wait_for_failure(self, stall_seconds=0.5, startup_seconds=12):
         started = time.time()
         last_progress = started
         last_time = None
@@ -113,7 +113,7 @@ class LivePlayer(player):
                     current = self.getTime()
                     if last_time is None:
                         last_time = current
-                    elif current - last_time > 0.25:
+                    elif current - last_time > 0.1:
                         last_time = current
                         last_progress = time.time()
                         progressed = True
@@ -131,5 +131,5 @@ class LivePlayer(player):
             elif time.time() - started >= startup_seconds:
                 return "startup_failed"
 
-            monitor.waitForAbort(1)
+            monitor.waitForAbort(0.1)
         return "abort"

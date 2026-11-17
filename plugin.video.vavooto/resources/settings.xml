@@ -7,7 +7,7 @@
     <setting default="true" id="live_m3u8_test" type="bool" label="M3U8 vor der Wiedergabe testen"/>
     <setting default="true" id="live_auto_retry" type="bool" label="Live-TV bei Streamabbruch automatisch neu verbinden"/>
     <setting default="3" id="live_retry_count" type="number" option="int" label="Neuverbindungsversuche (mind. Anzahl Quellen)" visible="eq(-1,true)"/>
-    <setting default="1" id="live_stall_seconds" type="number" option="int" label="Stream-Stillstand: Abbruch nach (Sek.)" visible="eq(-2,true)"/>
+    <setting default="500" id="live_stall_ms" type="number" option="int" label="Stream-Stillstand: Abbruch nach (Millisek.)" visible="eq(-2,true)"/>
     <setting default="12" id="live_startup_seconds" type="number" option="int" label="Stream-Start: Abbruch nach (Sek.)" visible="eq(-3,true)"/>
     <setting default="true" id="filter" type="bool" label="Kanalfilter verwenden"/>
     <setting label="Alle Favoriten entfernen" type="action" action="RunPlugin(plugin://plugin.video.vavooto/?action=delallTvFavorit)"/>
