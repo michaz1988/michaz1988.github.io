@@ -196,24 +196,30 @@ def test_m3u8(url, headers=None, verify=True):
 			if has_audio is False:
 				raise ValueError("M3U8-Mediensegment enthält keine verwertbaren Audiodaten")
 			return True
-	except Exception:
-		log("M3U8-Streamtest fehlgeschlagen\n%s" % format_exc())
+	except Exception as exc:
+		log("M3U8-Streamtest fehlgeschlagen: %s" % exc)
 		return False
 	finally:
 		if response is not None:
 			response.close()
 
 def resolve_link(link):
+	source = get_stream_source(link)
+	channel = link.get("name", "?") if isinstance(link, dict) else str(link)
 	if isinstance(link, dict):
 		if link.get("source") == "lite":
 			from vavoo.linear_lite import resolve_lite_stream
 			try:
 				stream_url, headers = resolve_lite_stream(link)
-				if stream_url and test_m3u8(stream_url, headers=dict(parse_qsl(headers)) if headers else None):
-					log("function resolve_link (lite) Status: OK")
+				if not stream_url:
+					log("Quelle übersprungen: %s (%s), Auflösung lieferte keine URL" % (channel, source))
+					return None, None
+				if test_m3u8(stream_url, headers=dict(parse_qsl(headers)) if headers else None):
+					log("Quelle verfügbar: %s (%s), Streamtest OK" % (channel, source))
 					return stream_url, headers
-			except Exception:
-				log(format_exc())
+				log("Quelle übersprungen: %s (%s), Streamtest fehlgeschlagen" % (channel, source))
+			except Exception as exc:
+				log("Quelle übersprungen: %s (%s), Auflösung fehlgeschlagen: %s" % (channel, source, exc))
 			return None, None
 		else:
 			from vavoo.stalker import StalkerPortal
@@ -226,8 +232,9 @@ def resolve_link(link):
 						from vavoo.live_proxy import get_stalker_proxy_url
 						return get_stalker_proxy_url(link, headers, channel), None
 					return link, "&".join([f"{k}={v}" for k, v in headers.items()])
-			except Exception:
-				log(format_exc())
+			except Exception as exc:
+				log("Quelle übersprungen: %s (%s), Auflösung oder Streamtest fehlgeschlagen: %s" % (channel, source, exc))
+			log("Quelle übersprungen: %s (%s), Auflösung oder Streamtest fehlgeschlagen" % (channel, source))
 			return None, None
 	elif not "vavoo" in str(link):
 		from vavoo.stalker import StalkerPortal
@@ -240,8 +247,9 @@ def resolve_link(link):
 					from vavoo.live_proxy import get_stalker_proxy_url
 					return get_stalker_proxy_url(link, headers, channel), None
 				return link, "&".join([f"{k}={v}" for k, v in headers.items()])
-		except Exception:
-			log(format_exc())
+		except Exception as exc:
+			log("Quelle übersprungen: %s (%s), Auflösung oder Streamtest fehlgeschlagen: %s" % (channel, source, exc))
+		log("Quelle übersprungen: %s (%s), Auflösung oder Streamtest fehlgeschlagen" % (channel, source))
 		return None, None
 	else:
 		_headers = {"user-agent": "MediaHubMX/2", "content-type": "application/json; charset=utf-8", "accept-encoding": "gzip", "mediahubmx-signature": getAuthSignature()}
@@ -255,8 +263,9 @@ def resolve_link(link):
 					from vavoo.live_proxy import get_vavoo_proxy_url
 					return get_vavoo_proxy_url(streamurl, link), None
 				return streamurl, None
-		except Exception:
-			log(format_exc())
+		except Exception as exc:
+			log("Quelle übersprungen: %s (%s), Auflösung oder Streamtest fehlgeschlagen: %s" % (channel, source, exc))
+		log("Quelle übersprungen: %s (%s), Auflösung oder Streamtest fehlgeschlagen" % (channel, source))
 		return None, None
 
 def get_stalker_channels(genres=False):
@@ -428,12 +437,14 @@ def livePlay(name, type=None, group=None, retry='0', idx=None):
 			sel = selectDialog(["STREAM %s (%s)" % (x, get_stream_source(m[x - 1])) for x in range(1, n + 1)])
 			if sel < 0: return
 			i = sel
+	log("Live-TV %s: starte Quelle %s/%s (%s)%s" % (name, i + 1, n, get_stream_source(m[i]), " (Auto-Retry)" if is_retry else ""))
 
 	# Quelle(n) aufloesen, bei Fehlschlag zur naechsten wandern
 	url = headers = None
 	for _ in range(n):
 		url, headers = resolve_link(m[i])
 		if url: break
+		log("Live-TV %s: Quelle %s/%s (%s) übersprungen; versuche nächste Quelle" % (name, i + 1, n, get_stream_source(m[i])))
 		i = (i + 1) % n
 	if not url:
 		showFailedNotification("Keine funktionierende Quelle")

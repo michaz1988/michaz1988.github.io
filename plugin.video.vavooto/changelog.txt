@@ -169,3 +169,4 @@
 - Pagination für Katalog, Genre-Auswahl und Suche an nextCursor angepasst.
 - TMDB-IDs aus der neuen API-Antwort werden für Filme und Serien normalisiert.
 - Alten CCAPI-Listen- und Cachepfad entfernt.
+- Live-TV: Beim Überspringen einer Quelle werden Sender, Quelle, Phase und Fehlergrund im Kodi-Log protokolliert.
