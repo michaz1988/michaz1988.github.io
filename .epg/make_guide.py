@@ -40,8 +40,12 @@ magentaDE_header = {'Host': 'api.prod.sngtv.magentatv.de',
 					'Connection': 'keep-alive',
 					'Upgrade-Insecure-Requests': '1'}
 
-def request_json(client, method, url, attempts=3, timeout=30, **kwargs):
-	"""Request JSON with bounded retries and a useful final error."""
+def request_json(client, method, url, attempts=5, timeout=30, **kwargs):
+	"""Request JSON with exponential backoff and a useful final error.
+
+	Network errors, HTTP 429 and 5xx are retried (2s, 4s, 8s, 16s ...).
+	Other 4xx answers will not change on a retry and fail immediately.
+	"""
 	error = None
 	for attempt in range(attempts):
 		try:
@@ -50,8 +54,11 @@ def request_json(client, method, url, attempts=3, timeout=30, **kwargs):
 			return response.json()
 		except (requests.RequestException, ValueError) as exc:
 			error = exc
+			status = getattr(getattr(exc, "response", None), "status_code", None)
+			if status is not None and 400 <= status < 500 and status != 429:
+				break
 			if attempt + 1 < attempts:
-				time.sleep(1 + attempt)
+				time.sleep(min(60, 2 ** (attempt + 1)))
 	raise RuntimeError("JSON request failed for %s: %s" % (url, error))
 
 
@@ -293,14 +300,16 @@ def main():
 		return broadcast_files
 
 	epg.append('\n<!--  SIMPLI TV PROGRAMME LIST -->')
-	api_headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0', 'Content-type': 'application/json;charset=utf-8', 'X-Api-Date-Format': 'iso', 'X-Api-Camel-Case': 'true', 'referer': 'https://streaming.simplitv.at/'}
+	api_headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0', 'Content-type': 'application/json;charset=utf-8', 'X-Api-Date-Format': 'iso', 'X-Api-Camel-Case': 'true', 'referer': 'https://streaming.simpli.at/', 'X-Tenant-Codename': 'simplitv'}
 	time_start, time_end = get_epgLength(days_to_grab, form="%Y-%m-%dT%H:%M:00.000Z")
-	epg_url = "https://api.app.simplitv.at/v1/EpgTile/FilterProgramTiles"
+	epg_url = "https://api.app.austrostream.at/v1/EpgTile/FilterProgramTiles"
 	epg_post = {"platformCodename": "www", "from": time_start, "to": time_end}
 	epg_resp = request_json(
 		requests, "post", epg_url, headers=api_headers, json=epg_post
 	)["programs"]
-	prg_url = "https://api.app.simplitv.at/v2/Tile/GetTiles"
+	if not epg_resp.get("puls24"):
+		raise RuntimeError("simpli API returned no PULS24 programmes (tenant/host changed?)")
+	prg_url = "https://api.app.austrostream.at/v2/Tile/GetTiles"
 	prg_post = {"platformCodename": "www", "requestedTiles": [{"id": a["id"]} for i in epg_resp.keys() for a in epg_resp[i] if i == "puls24"]}
 	epg_data = request_json(
 		requests, "post", prg_url, headers=api_headers, json=prg_post
