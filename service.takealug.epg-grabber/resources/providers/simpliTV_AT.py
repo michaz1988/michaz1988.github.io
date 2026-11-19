@@ -35,7 +35,8 @@ header = {
 	'Content-type': 'application/json;charset=utf-8',
 	'X-Api-Date-Format': 'iso',
 	'X-Api-Camel-Case': 'true',
-	'referer': 'https://streaming.simplitv.at/'}
+	'referer': 'https://streaming.simpli.at/',
+	'X-Tenant-Codename': 'simplitv'}
 
 def get_epgLength(days_to_grab):
 	# Calculate Date and Time
@@ -50,10 +51,10 @@ def get_epgLength(days_to_grab):
 def get_channellist():
 	temp = []
 	starttime, endtime = get_epgLength(0)
-	epg_url = "https://api.app.simplitv.at/v1/EpgTile/FilterProgramTiles"
+	epg_url = "https://api.app.austrostream.at/v1/EpgTile/FilterProgramTiles"
 	epg_post = {"platformCodename": "www", "from": starttime, "to": endtime}
 	epg_resp = requests.post(epg_url, headers=header, json=epg_post).json()["programs"]
-	prg_url = "https://api.app.simplitv.at/v2/Tile/GetTiles"
+	prg_url = "https://api.app.austrostream.at/v2/Tile/GetTiles"
 	prg_post = {"platformCodename": "www", "requestedTiles": [{"id": epg_resp[i][0]["id"]} for i in epg_resp.keys()]}
 	epg_data = requests.post(prg_url, headers=header, json=prg_post).json()["tiles"]
 	for channels in epg_data:
@@ -135,10 +136,10 @@ def create_xml_channels():
 
 def get_epg(contentID):
 	starttime, endtime = get_epgLength(days_to_grab)
-	epg_url = "https://api.app.simplitv.at/v1/EpgTile/FilterProgramTiles"
+	epg_url = "https://api.app.austrostream.at/v1/EpgTile/FilterProgramTiles"
 	epg_post = {"platformCodename": "www", "from": starttime, "to": endtime}
 	epg_resp = requests.post(epg_url, headers=header, json=epg_post).json()["programs"]
-	prg_url = "https://api.app.simplitv.at/v2/Tile/GetTiles"
+	prg_url = "https://api.app.austrostream.at/v2/Tile/GetTiles"
 	prg_post = {"platformCodename": "www", "requestedTiles": [{"id": a["id"]} for i in epg_resp.keys() for a in epg_resp[i] if i == contentID]}
 	return requests.post(prg_url, headers=header, json=prg_post).json()["tiles"]
 	
