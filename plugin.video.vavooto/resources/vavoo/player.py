@@ -74,9 +74,13 @@ class LivePlayer(player):
         player.__init__(self)
         self.ended = False
         self.stopped = False
+        self.error = False
 
     def onPlayBackEnded(self):
         self.ended = True
+
+    def onPlayBackError(self):
+        self.error = True
 
     def onPlayBackStopped(self):
         self.stopped = True
@@ -105,7 +109,7 @@ class LivePlayer(player):
         while not monitor.abortRequested():
             if self.stopped:
                 return "stopped"
-            if self.ended:
+            if self.ended or self.error:
                 return "ended"
             if time.time() >= deadline:
                 return "stalled"
@@ -119,12 +123,14 @@ class LivePlayer(player):
         progressed = False          # getTime() ist mindestens einmal echt weitergelaufen
 
         while not monitor.abortRequested():
-            if self.stopped or self.ended:
-                # Stop/End OHNE dass je ein Bild lief -> Quelle taugt nicht, naechste probieren.
-                # (Kodi feuert onPlayBackStopped auch, wenn ffmpeg selbst abbricht.)
-                if not progressed:
-                    return "startup_failed"
-                return "ended" if self.ended else "stopped"
+            if self.stopped:
+                # onPlayBackStopped kommt nur bei aktivem Stopp (Nutzer) - auch
+                # waehrend des Starts kein Wechsel. Quellfehler melden sich ueber
+                # onPlayBackError bzw. onPlayBackEnded.
+                return "stopped"
+            if self.error or self.ended:
+                # Fehler/Ende OHNE dass je ein Bild lief -> Quelle taugt nicht, naechste probieren.
+                return "ended" if progressed else "startup_failed"
 
             if self.isPlayingVideo():
                 try:
