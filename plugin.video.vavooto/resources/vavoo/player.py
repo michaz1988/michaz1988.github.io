@@ -94,6 +94,24 @@ class LivePlayer(player):
         except Exception:
             return 1
 
+    def _confirm_stall(self, grace):
+        """Vor einem Stillstand-Urteil kurz auf onPlayBackStopped/Ended warten.
+
+        Beim Druck auf Stopp friert getTime() ein bzw. isPlayingVideo() wird False,
+        bevor Kodi das Stopp-Event liefert. Ohne diese Wartezeit wuerde ein
+        Nutzer-Stopp als Abriss gewertet und die naechste Quelle gestartet.
+        """
+        deadline = time.time() + grace
+        while not monitor.abortRequested():
+            if self.stopped:
+                return "stopped"
+            if self.ended:
+                return "ended"
+            if time.time() >= deadline:
+                return "stalled"
+            monitor.waitForAbort(0.1)
+        return "abort"
+
     def wait_for_failure(self, stall_seconds=0.5, startup_seconds=12):
         started = time.time()
         last_progress = started
@@ -118,16 +136,20 @@ class LivePlayer(player):
                         last_progress = time.time()
                         progressed = True
                     elif progressed and self._speed() != 0 and time.time() - last_progress >= stall_seconds:
-                        return "stalled"
+                        result = self._confirm_stall(1.0)
+                        if result != "stalled" or self.isPlayingVideo():
+                            return result
+                        # Player waehrend der Wartezeit verschwunden -> wie unten behandeln
                     elif not progressed and time.time() - started >= startup_seconds:
                         return "startup_failed"
                 except Exception:
                     if time.time() - started >= startup_seconds:
                         return "startup_failed"
             elif progressed:
-                # lief schon, Bild jetzt ohne Event weg
+                # lief schon, Bild jetzt ohne Event weg -> meist Nutzer-Stopp, dessen
+                # Event noch unterwegs ist; daher laenger auf das Event warten.
                 if time.time() - last_progress >= stall_seconds:
-                    return "stalled"
+                    return self._confirm_stall(3.0)
             elif time.time() - started >= startup_seconds:
                 return "startup_failed"
 
