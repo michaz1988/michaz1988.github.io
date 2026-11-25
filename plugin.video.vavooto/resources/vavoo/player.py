@@ -95,20 +95,23 @@ class LivePlayer(player):
         current = self._playing_file()
         return bool(current) and current != self.own_file
 
-    def stop_and_settle(self, timeout=3.0):
+    def stop_and_settle(self, max_wait=20.0):
         """Eigenen Stream stoppen und das Stopp-Event abwarten.
 
         Ohne das Warten kaeme das Event der alten Quelle erst waehrend der
-        naechsten an und wuerde dort als Nutzer-Stopp gewertet. Gibt False
-        zurueck, wenn der Player in der Zeit nicht zur Ruhe kam.
+        naechsten an und wuerde dort als Nutzer-Stopp gewertet. Kodi kann zum
+        Schliessen viele Sekunden brauchen und blockiert dabei API-Aufrufe; die
+        Wartezeit zaehlt deshalb Abfragerunden (siehe _confirm_stall), nicht Uhrzeit.
+        Gibt False zurueck, wenn der Player in der Zeit nicht zur Ruhe kam.
         """
         if self.isPlaying():
             self.stop()
-            deadline = time.time() + timeout
-            while time.time() < deadline and not monitor.abortRequested():
-                if not self.isPlaying() and (self.stopped or self.ended or self.error):
+            rounds = max(1, int(round(max_wait / 0.1)))
+            while rounds > 0 and not monitor.abortRequested():
+                if self.stopped or self.ended or self.error:
                     break
                 monitor.waitForAbort(0.1)
+                rounds -= 1
         settled = not self.isPlaying()
         self.reset()
         return settled
@@ -141,9 +144,16 @@ class LivePlayer(player):
         Beim Druck auf Stopp friert getTime() ein bzw. isPlayingVideo() wird False,
         bevor Kodi das Stopp-Event liefert. Ohne diese Wartezeit wuerde ein
         Nutzer-Stopp als Abriss gewertet und die naechste Quelle gestartet.
+
+        Die Frist zaehlt Abfragerunden statt Uhrzeit: Waehrend Kodi den Player
+        schliesst, blockieren API-Aufrufe (z.B. getProperty) teils viele Sekunden,
+        und das Stopp-Event wird erst danach in waitForAbort zugestellt. Eine
+        Uhrzeit-Frist liefe in der Blockade ab, bevor das Event ankommt.
         """
-        deadline = time.time() + grace
+        full = max(1, int(round(grace / 0.1)))
+        rounds = full
         while not monitor.abortRequested():
+            round_start = time.time()
             if check:
                 reason = check()
                 if reason:
@@ -152,10 +162,23 @@ class LivePlayer(player):
                 return "stopped"
             if self.ended or self.error:
                 return "ended"
-            if time.time() >= deadline:
+            if rounds <= 0:
                 return "stalled"
+            rounds -= 1
             monitor.waitForAbort(0.1)
+            if time.time() - round_start > 1.0:
+                # Kodi war blockiert (meist: Player wird gerade geschlossen) ->
+                # Frist neu beginnen, damit das Stopp-Event noch ankommen kann.
+                rounds = full
         return "abort"
+
+    def user_stop_pending(self, wait=0.5):
+        """Ausstehende Player-Events abholen; True, wenn darunter ein Stopp war."""
+        rounds = max(1, int(round(wait / 0.1)))
+        while rounds > 0 and not self.stopped and not monitor.abortRequested():
+            monitor.waitForAbort(0.1)
+            rounds -= 1
+        return self.stopped
 
     def wait_for_failure(self, stall_seconds=0.5, startup_seconds=12, check=None, on_started=None):
         """Wiedergabe ueberwachen, bis sie endet oder abreisst.

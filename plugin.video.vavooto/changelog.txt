@@ -1,3 +1,8 @@
+2026.11.25.1
+- Live-TV: Stopp startet nicht mehr die nächste Quelle, wenn Kodi zum Schließen des Players länger braucht. Die Stillstand-Prüfung wartet das Stopp-Event jetzt auch dann ab, wenn Kodi währenddessen blockiert.
+- Live-TV-Proxy: Anfragen an hängende Quellen brechen nach 6 s ab statt nach 20 s; Kodi schließt den Player dadurch schneller.
+- Live-TV: Beim Quellenwechsel, Abbrechen oder Senderwechsel trennt der Proxy die Verbindungen der alten Quelle sofort, damit Kodi nicht auf sie wartet.
+
 2026.11.25
 - Live-TV: Der automatische Streamwechsel läuft jetzt im Vordergrund mit Fortschrittsdialog. „Abbrechen“, Stopp im Player oder ein anderer Sender beenden ihn sofort; im Hintergrund läuft nichts mehr weiter.
 - Live-TV: Nach einem Senderwechsel oder dem Start einer anderen Wiedergabe springt das Addon nicht mehr auf den alten Sender zurück.

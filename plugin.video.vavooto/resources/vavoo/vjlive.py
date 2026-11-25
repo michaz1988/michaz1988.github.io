@@ -478,7 +478,7 @@ def livePlay(name, type=None, group=None, retry='0', idx=None):
 	end()
 	if not live_player:
 		return
-	_watch_live(live_player, name, m, i, n, retry, max_retries, want_retry, session)
+	_watch_live(live_player, name, m, i, n, retry, max_retries, want_retry, session, url)
 
 
 def _live_listitem(name, url, headers, i, n, src):
@@ -537,12 +537,28 @@ def _resolve_cancelable(link, check):
 	return None, url, headers
 
 
-def _watch_live(live_player, name, m, i, n, attempt, max_retries, want_retry, session):
+def _close_proxy_session(url):
+	"""Lokale Proxy-Session der Quelle beenden, damit Kodi den Player sofort schliesst.
+
+	Haengt ffmpeg in einer Proxy-Anfrage, wartet Kodi beim Stoppen auf sie. Der
+	Proxy laeuft in diesem Prozess; ist er nicht geladen, gibt es nichts zu tun.
+	"""
+	proxy = sys.modules.get("vavoo.live_proxy")
+	if proxy is None or "127.0.0.1" not in str(url):
+		return
+	try:
+		proxy.close_session(proxy.session_id_from_url(url))
+	except Exception:
+		log(format_exc())
+
+
+def _watch_live(live_player, name, m, i, n, attempt, max_retries, want_retry, session, url=None):
 	"""Wiedergabe ueberwachen und bei Abriss im Vordergrund die Quelle wechseln.
 
 	Der Wechsel laeuft in diesem Prozess mit einem Fortschrittsdialog.
 	"Abbrechen" dort, Stopp im Player oder ein anderer Sender beenden die
 	Ueberwachung vollstaendig; es laeuft nichts im Hintergrund weiter.
+	url: Pfad der gerade gespielten Quelle (fuer das Beenden ihrer Proxy-Session).
 	"""
 	# Stillstand / kein Bild nach eingestellter Zeit (Standard 0,5s / 12s) -> Abriss, naechste Quelle.
 	# Fehler/Ende ohne je gelaufenes Bild = Fehlstart; Stopp durch den Nutzer nie.
@@ -553,7 +569,7 @@ def _watch_live(live_player, name, m, i, n, attempt, max_retries, want_retry, se
 			return default
 	stall_seconds = _secs("live_stall_ms", 500, 400) / 1000.0
 	startup_seconds = _secs("live_startup_seconds", 12)
-	state = {"dlg": None}
+	state = {"dlg": None, "url": url}
 
 	def close_dialog():
 		dlg, state["dlg"] = state["dlg"], None
@@ -590,11 +606,21 @@ def _watch_live(live_player, name, m, i, n, attempt, max_retries, want_retry, se
 			if result == "cancelled":
 				log("Live-TV %s: Streamwechsel vom Nutzer abgebrochen" % name)
 				close_dialog()
+				_close_proxy_session(state["url"])
 				live_player.stop_and_settle()
 				return
 			if result not in reasons:
-				# "stopped" / "replaced" / "abort" -> Nutzer hat beendet oder gewechselt
+				# "stopped" / "replaced" / "abort" -> Nutzer hat beendet oder gewechselt.
+				# Proxy-Session freigeben, damit Kodi den alten Stream sofort schliesst.
 				log("Live-TV kein Retry noetig: %s" % result)
+				_close_proxy_session(state["url"])
+				return
+			# Ein Nutzer-Stopp kann Kodi beim Schliessen lange blockieren; sein Event
+			# kommt dann erst nach dem Stillstand-Urteil. Vor jedem Wechsel daher
+			# ausstehende Events abholen und bei einem Stopp nichts mehr tun.
+			if live_player.user_stop_pending():
+				log("Live-TV %s: Stopp nach %s erkannt, kein Wechsel" % (name, result))
+				_close_proxy_session(state["url"])
 				return
 			if not (want_retry and attempt < max_retries):
 				log("Live-TV Retry erschoepft/deaktiviert (%s)" % result)
@@ -606,6 +632,9 @@ def _watch_live(live_player, name, m, i, n, attempt, max_retries, want_retry, se
 			attempt += 1
 			failed = "Stream %s/%s (%s) %s." % (i + 1, n, get_stream_source(m[i]), reasons[result])
 			show_dialog("%s\nWechsle zur nächsten Quelle ..." % failed)
+			# erst die Proxy-Verbindungen kappen, sonst wartet Kodi beim Stoppen auf
+			# die haengende Anfrage der kaputten Quelle
+			_close_proxy_session(state["url"])
 			settled = live_player.stop_and_settle()
 
 			def check_switch():
@@ -644,6 +673,7 @@ def _watch_live(live_player, name, m, i, n, attempt, max_retries, want_retry, se
 			show_dialog("%s\nStarte Stream %s/%s (%s) ..." % (failed, i + 1, n, src))
 			live_player.reset()
 			log("Spiele %s" % play_url.split("|", 1)[0])
+			state["url"] = play_url
 			live_player.play(play_url, o)
 	except Exception:
 		log("Live-TV %s: Streamwechsel fehlgeschlagen\n%s" % (name, format_exc()))

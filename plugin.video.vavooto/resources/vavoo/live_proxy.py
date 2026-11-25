@@ -6,6 +6,7 @@ import base64
 import math
 import time
 import threading
+import socket
 import socketserver
 from collections import OrderedDict
 from http.server import HTTPServer, BaseHTTPRequestHandler
@@ -33,6 +34,66 @@ STALKER_RESUME_TIMEOUT = 20.0
 
 _stalker_sessions = {}
 _stalker_sessions_lock = threading.Lock()
+
+# --- Beendete Sessions --------------------------------------------------------
+# Kodi schliesst den Player erst, wenn ffmpeg aus seiner laufenden Proxy-Anfrage
+# zurueckkehrt. Beendet das Addon eine Wiedergabe selbst (Quellenwechsel,
+# Abbruch, anderer Sender), trennt close_session() die offenen Verbindungen der
+# Session sofort und beantwortet weitere Anfragen mit 410, damit ffmpeg nicht
+# per Reconnect wieder beim Upstream landet.
+_closed_sids = OrderedDict()
+_sid_conns = {}
+_sid_lock = threading.Lock()
+
+# Zeitlimit fuer Anfragen, auf deren Antwort ffmpeg wartet. read gilt bis zum
+# ersten Byte bzw. zwischen zwei Datenbloecken, nicht fuer die Gesamtdauer;
+# grosse Segmente eines gesunden CDN sind davon nicht betroffen. Solange eine
+# Antwort haengt, haengt auch Kodi beim Stoppen.
+_request_timeout = None
+
+
+def _get_request_timeout():
+    global _request_timeout
+    if _request_timeout is None:
+        try:
+            import httpx
+            _request_timeout = httpx.Timeout(connect=4.0, read=6.0, write=4.0, pool=2.0)
+        except Exception:
+            _request_timeout = False
+    return _request_timeout or None
+
+
+def session_id_from_url(url):
+    """sid-Parameter einer lokalen Proxy-URL, sonst ''."""
+    try:
+        parsed = urllib.parse.urlsplit(str(url).split("|", 1)[0])
+        if parsed.hostname != "127.0.0.1":
+            return ""
+        return dict(urllib.parse.parse_qsl(parsed.query)).get("sid", "")
+    except Exception:
+        return ""
+
+
+def close_session(sid):
+    """Session beenden: offene ffmpeg-Verbindungen trennen, weitere Anfragen ablehnen."""
+    if not sid:
+        return
+    with _sid_lock:
+        _closed_sids[sid] = True
+        while len(_closed_sids) > 64:
+            _closed_sids.popitem(last=False)
+        conns = list(_sid_conns.get(sid, ()))
+    for conn in conns:
+        try:
+            conn.shutdown(socket.SHUT_RDWR)
+        except Exception:
+            pass
+    for sessions, lock in ((_vavoo_sessions, _vavoo_sessions_lock), (_stalker_sessions, _stalker_sessions_lock)):
+        with lock:
+            sess = sessions.get(sid)
+        if sess is not None:
+            sess.stop.set()
+    log("Proxy-Session %s beendet (%s offene Verbindungen getrennt)" % (sid, len(conns)))
 
 
 def get_httpx():
@@ -802,8 +863,9 @@ class UnifiedLiveProxyHandler(BaseHTTPRequestHandler):
 
     def _passthrough(self, client, url, req_headers, ctype):
         want_range = bool(self.headers.get("Range"))
+        headers_sent = False
         try:
-            with client.stream("GET", url, headers=req_headers) as r:
+            with client.stream("GET", url, headers=req_headers, timeout=_get_request_timeout()) as r:
                 if r.status_code != 200:
                     self._fail(502, "Upstream %s" % r.status_code)
                     return
@@ -815,6 +877,7 @@ class UnifiedLiveProxyHandler(BaseHTTPRequestHandler):
                     self.send_header("Accept-Ranges", "bytes")
                     self.send_header("Access-Control-Allow-Origin", "*")
                     self.end_headers()
+                    headers_sent = True
                     for chunk in r.iter_bytes():
                         if not chunk:
                             continue
@@ -827,7 +890,11 @@ class UnifiedLiveProxyHandler(BaseHTTPRequestHandler):
                     self._respond_bytes(r.read(), ctype)
         except Exception as exc:
             _neterr("Proxy Passthrough Fehler", exc)
-            self._fail(502, "Upstream Fehler")
+            if headers_sent:
+                # Body schon unterwegs -> keine Fehlerseite hinterherschreiben
+                self.close_connection = True
+            else:
+                self._fail(502, "Upstream Fehler")
 
     def _serve_session_segment(self, sess, seg_url):
         """Cache-Hit: sofort. Miss: waehrend des Downloads durchstreamen (kein
@@ -842,8 +909,9 @@ class UnifiedLiveProxyHandler(BaseHTTPRequestHandler):
         if not client:
             self._fail(502, "HTTP client unavailable")
             return
+        headers_sent = False
         try:
-            with client.stream("GET", seg_url, headers=sess.seg_headers) as r:
+            with client.stream("GET", seg_url, headers=sess.seg_headers, timeout=_get_request_timeout()) as r:
                 if r.status_code != 200:
                     self._fail(504, "Segment %s" % r.status_code)
                     return
@@ -863,6 +931,7 @@ class UnifiedLiveProxyHandler(BaseHTTPRequestHandler):
                 self.send_header("Accept-Ranges", "bytes")
                 self.send_header("Access-Control-Allow-Origin", "*")
                 self.end_headers()
+                headers_sent = True
                 buf = bytearray()
                 broken = False
                 for chunk in r.iter_bytes():
@@ -879,10 +948,14 @@ class UnifiedLiveProxyHandler(BaseHTTPRequestHandler):
                     sess._cache_put(seg_url, bytes(buf))
         except Exception as exc:
             _neterr("Segment-Stream Fehler", exc)
-            self._fail(504, "Segment nicht verfuegbar")
+            if headers_sent:
+                # Body schon unterwegs -> keine Fehlerseite hinterherschreiben
+                self.close_connection = True
+            else:
+                self._fail(504, "Segment nicht verfuegbar")
 
     # ---- Router ----
-    def do_GET(self):
+    def _route(self):
         try:
             parsed = urlparse(self.path)
             params = dict(parse_qsl(parsed.query))
@@ -1038,6 +1111,32 @@ class UnifiedLiveProxyHandler(BaseHTTPRequestHandler):
                 log("UnifiedLiveProxyHandler exception:\n%s" % format_exc())
             self._fail(500, "Internal Error")
             self.close_connection = True
+
+    def do_GET(self):
+        try:
+            sid = dict(parse_qsl(urlparse(self.path).query)).get("sid", "")
+        except Exception:
+            sid = ""
+        if sid:
+            with _sid_lock:
+                closed = sid in _closed_sids
+                if not closed:
+                    _sid_conns.setdefault(sid, set()).add(self.connection)
+            if closed:
+                # vom Addon beendet -> ffmpeg soll aufgeben, nicht neu verbinden
+                self._fail(410, "Session beendet")
+                self.close_connection = True
+                return
+        try:
+            self._route()
+        finally:
+            if sid:
+                with _sid_lock:
+                    conns = _sid_conns.get(sid)
+                    if conns is not None:
+                        conns.discard(self.connection)
+                        if not conns:
+                            _sid_conns.pop(sid, None)
 
     do_HEAD = do_GET
 
