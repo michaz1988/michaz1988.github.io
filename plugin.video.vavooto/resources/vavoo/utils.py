@@ -183,6 +183,12 @@ if time.time() - _last_auto_clear > 600:
 
 _AUTH_SIGNATURE_PROPERTY = "%s.auth_signature" % addonID
 _AUTH_SIGNATURE_SAFETY_MS = 30000
+# Beide Ping-Server liefern dasselbe signierte Token. www.vavoo.tv prueft beim
+# Android-Profil aber den App-Signatur-Hash und liefert fuer die VYPN-Signatur
+# "app.ok": false; deshalb bekommt es nur das Desktop-Profil (Electron wird
+# serverseitig nicht gegen die Signatur geprueft) als Ausweichziel.
+_PING_URL = "https://www.vypn.net/api/app/ping"
+_PING_URL_FALLBACK = "https://www.vavoo.tv/api/app/ping"
 # Hartes Gesamt-Zeitbudget ueber ALLE Signatur-Versuche (beide Profile zusammen).
 # Ohne das kann ein totes Netz die Funktion minutenlang blockieren
 # (5 Versuche x request(retries=3) x 15s Timeout x 2 Profile).
@@ -220,7 +226,7 @@ def _auth_signature_valid_until(signature):
 		return None
 	return valid_until
 
-def _request_auth_signature(payload_builder, headers, source, deadline):
+def _request_auth_signature(payload_builder, headers, source, deadline, urls):
 	attempt = 0
 	while True:
 		remaining = deadline - time.time()
@@ -228,17 +234,18 @@ def _request_auth_signature(payload_builder, headers, source, deadline):
 			log("MediaHubMX signature source %s: Zeitbudget erschoepft nach %s Versuchen" % (source, attempt))
 			return None, None
 		attempt += 1
+		url = urls[(attempt - 1) % len(urls)]
 		try:
 			req = request_json(
 				"POST",
-				"https://www.vypn.net/api/app/ping",
+				url,
 				json=payload_builder(),
 				headers=headers,
 				timeout=min(15, max(4, int(remaining))),
 				retries=1,
 				verify=False,
 			)
-			signature = req.get("sig") or req.get("addonSig") or req.get("signature") or req.get("mediahubmxSignature") or req.get("mediahubmx-signature")
+			signature = req.get("sig") or req.get("addonSig") or req.get("mhub") or req.get("signature") or req.get("mediahubmxSignature") or req.get("mediahubmx-signature")
 			valid_until = _auth_signature_valid_until(signature)
 			if valid_until:
 				log("Received valid MediaHubMX signature from %s, valid for %s seconds" % (source, int((valid_until - time.time() * 1000) / 1000)))
@@ -256,13 +263,13 @@ def getAuthSignature():
 	if cached_signature:
 		home.clearProperty(_AUTH_SIGNATURE_PROPERTY)
 	deadline = time.time() + _AUTH_SIGNATURE_TOTAL_BUDGET
-	for payload_builder, headers, source in (
-		(_build_payload, _headers, "desktop profile"),
-		(_build_backup_payload, _backup_headers, "Android backup profile"),
+	for payload_builder, headers, source, urls in (
+		(_build_payload, _headers, "desktop profile", (_PING_URL, _PING_URL_FALLBACK)),
+		(_build_backup_payload, _backup_headers, "Android backup profile", (_PING_URL,)),
 	):
 		if time.time() >= deadline:
 			break
-		signature, valid_until = _request_auth_signature(payload_builder, headers, source, deadline)
+		signature, valid_until = _request_auth_signature(payload_builder, headers, source, deadline, urls)
 		if signature:
 			home.setProperty(_AUTH_SIGNATURE_PROPERTY, signature)
 			return signature

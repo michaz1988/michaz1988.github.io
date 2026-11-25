@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
 from vavoo.utils import *
+import threading
+
+# Kennung der zuletzt gestarteten Live-Wiedergabe. Startet der Nutzer einen
+# anderen Sender, ueberschreibt dessen Aufruf die Kennung, und der Waechter des
+# alten Senders beendet sich, statt im Hintergrund weiterzuwechseln.
+_LIVE_SESSION_PROPERTY = "%s.live_session" % addonID
 
 chanicons = ['13thstreet.png', '3sat.png', 'animalplanet.png', 'anixe.png', 'ard.png', 'ardalpha.png', 'arte.png', 'atv.png', 'atv2.png', 'automotorsport.png', 'axnblack.png', 'axnwhite.png', 'br.png', 'cartoonito.png', 'cartoonnetwork.png', 'comedycentral.png', 'curiositychannel.png', 'fix&foxi.png', 'dazn1.png', 'dazn2.png', 'deluxemusic.png', 'nationalgeographic.png', 'dmax.png', 'eurosport1.png', 'eurosport2.png', 'nickjunior.png', 'superrtl.png', 'heimatkanal.png', 'history.png', 'hr.png', 'jukebox.png', 'kabel1doku.png', 'pro7.png', 'pro7maxx.png', 'pro7fun.png', 'rtl2.png', 'kika.png', 'kinowelt.png', 'mdr.png', 'universaltv.png', 'discovery.png', 'mtv.png', 'n24doku.png', 'natgeowild.png', 'sky1.png', 'ndr.png', 'nickelodeon.png', 'nitro.png', 'romancetv.png', 'ntv.png', 'one.png', 'orf1.png', 'orf2.png', 'orf3.png', 'orfsportplus.png', 'phoenix.png', 'geotv.png', 'puls24.png', 'puls4.png', 'rbb.png', 'ric.png', 'motorvision.png', 'rtl.png', 'rtlcrime.png', 'rtlliving.png', 'kabel1.png', 'rtlpassion.png', 'rtlup.png', 'sat1.png', 'sat1emotions.png', 'sat1gold.png', 'servustv.png', 'silverline.png', 'sixx.png', 'skyatlantic.png', 'skycinemaaction.png', 'skycinemaclassics.png', 'skycinemafamily.png', 'skycinemahighlights.png', 'skycinemapremieren.png', 'skycrime.png', 'skydocumentaries.png', 'skykrimi.png', 'skynature.png', 'skyreplay.png', 'skyshowcase.png', 'spiegelgeschichte.png', 'kabel1classics.png', 'sport1.png', 'sportdigital.png', 'swr.png', 'syfy.png', 'tagesschau24.png', 'tele5.png', 'tlc.png', 'toggoplus.png', 'crime+investigation.png', 'vox.png', 'voxup.png', 'warnertvcomedy.png', 'warnertvfilm.png', 'warnertvserie.png', 'wdr.png', 'welt.png', 'weltderwunder.png', 'zdf.png', 'zdfinfo.png', 'zdfneo.png', 'zeeone.png', 'skycinemathriller.png']
 
@@ -438,6 +444,10 @@ def livePlay(name, type=None, group=None, retry='0', idx=None):
 			if sel < 0: return
 			i = sel
 	log("Live-TV %s: starte Quelle %s/%s (%s)%s" % (name, i + 1, n, get_stream_source(m[i]), " (Auto-Retry)" if is_retry else ""))
+	# Ab hier gilt dieser Sender als aktuelle Live-Sitzung; ein noch laufender
+	# Waechter eines vorherigen Senders sieht die neue Kennung und gibt auf.
+	session = uuid.uuid4().hex
+	home.setProperty(_LIVE_SESSION_PROPERTY, session)
 
 	# Quelle(n) aufloesen, bei Fehlschlag zur naechsten wandern
 	url = headers = None
@@ -453,10 +463,6 @@ def livePlay(name, type=None, group=None, retry='0', idx=None):
 	# nur bei nutzer-initiiertem Start merken, nicht bei jedem Failover-Hop
 	if not is_retry:
 		set_cache("last", {"idn": name, "num": i}, 2)
-	# Titel/Plot NACH der Aufloesung -> zeigt die tatsaechlich verwendete Quelle
-	src = get_stream_source(m[i])
-	title = "%s (%s/%s %s)" % (name, i + 1, n, src) if n > 1 else ("%s (%s)" % (name, src) if src else name)
-
 	url_is_proxy = "127.0.0.1" in url
 	want_retry = getSetting("live_auto_retry") == "true"
 
@@ -466,10 +472,21 @@ def livePlay(name, type=None, group=None, retry='0', idx=None):
 	if want_retry or url_is_proxy:
 		from vavoo.player import LivePlayer
 		live_player = LivePlayer()
+	o, url = _live_listitem(name, url, headers, i, n, get_stream_source(m[i]))
+	log("Spiele %s" % url.split("|", 1)[0])
+	set_resolved(o)
+	end()
+	if not live_player:
+		return
+	_watch_live(live_player, name, m, i, n, retry, max_retries, want_retry, session)
+
+
+def _live_listitem(name, url, headers, i, n, src):
+	"""ListItem fuer eine aufgeloeste Live-Quelle; liefert (ListItem, Pfad)."""
+	# Titel/Plot NACH der Aufloesung -> zeigt die tatsaechlich verwendete Quelle
+	title = "%s (%s/%s %s)" % (name, i + 1, n, src) if n > 1 else ("%s (%s)" % (name, src) if src else name)
 	plot_title = "[B]%s[/B] - Stream %s von %s (%s)" % (name, i + 1, n, src) if n > 1 else ("[B]%s[/B] (%s)" % (name, src) if src else "[B]%s[/B]" % name)
-	infoLabels = {"title": title, "plot": plot_title}
 	o = ListItem(name)
-	log("Spiele %s" % url)
 	# Live-TV laeuft ueber inputstream.ffmpegdirect. MPEG-TS ist kein Manifest-
 	# Stream und darf daher nicht als HLS/Timeshift deklariert werden.
 	is_mpeg_ts = is_mpeg_ts_url(url)
@@ -491,12 +508,42 @@ def livePlay(name, type=None, group=None, retry='0', idx=None):
 	o.setPath(url)
 	o.setProperty("IsPlayable", "true")
 	info_tag = ListItemInfoTag(o, 'video')
-	info_tag.set_info(infoLabels)
-	set_resolved(o)
-	end()
-	if not live_player:
-		return
+	info_tag.set_info({"title": title, "plot": plot_title})
+	return o, url
 
+
+def _resolve_cancelable(link, check):
+	"""resolve_link in einem Thread, damit Abbrechen sofort greift.
+
+	Liefert (Grund, url, headers); Grund ist None oder das Ergebnis von check().
+	Ein abgebrochener Thread laeuft still zu Ende, sein Ergebnis wird verworfen.
+	"""
+	box = {}
+	def run():
+		try:
+			box["result"] = resolve_link(link)
+		except Exception:
+			log(format_exc())
+	worker = threading.Thread(target=run, daemon=True)
+	worker.start()
+	while worker.is_alive():
+		if monitor.waitForAbort(0.1):
+			return "abort", None, None
+		reason = check()
+		if reason:
+			return reason, None, None
+	result = box.get("result")
+	url, headers = result if isinstance(result, tuple) and len(result) == 2 else (None, None)
+	return None, url, headers
+
+
+def _watch_live(live_player, name, m, i, n, attempt, max_retries, want_retry, session):
+	"""Wiedergabe ueberwachen und bei Abriss im Vordergrund die Quelle wechseln.
+
+	Der Wechsel laeuft in diesem Prozess mit einem Fortschrittsdialog.
+	"Abbrechen" dort, Stopp im Player oder ein anderer Sender beenden die
+	Ueberwachung vollstaendig; es laeuft nichts im Hintergrund weiter.
+	"""
 	# Stillstand / kein Bild nach eingestellter Zeit (Standard 0,5s / 12s) -> Abriss, naechste Quelle.
 	# Fehler/Ende ohne je gelaufenes Bild = Fehlstart; Stopp durch den Nutzer nie.
 	def _secs(key, default, minimum=2):
@@ -504,35 +551,104 @@ def livePlay(name, type=None, group=None, retry='0', idx=None):
 			return max(minimum, int(getSetting(key)))
 		except (TypeError, ValueError):
 			return default
-	result = live_player.wait_for_failure(
-		stall_seconds=_secs("live_stall_ms", 500, 400) / 1000.0,
-		startup_seconds=_secs("live_startup_seconds", 12))
-	if result not in ("ended", "stalled", "startup_failed"):
-		# "stopped" / "abort" -> Nutzer hat beendet, kein Retry
-		log("Live-TV kein Retry noetig: %s" % result)
-		return
+	stall_seconds = _secs("live_stall_ms", 500, 400) / 1000.0
+	startup_seconds = _secs("live_startup_seconds", 12)
+	state = {"dlg": None}
 
-	if not (want_retry and retry < max_retries):
-		log("Live-TV Retry erschoepft/deaktiviert (%s)" % result)
-		if want_retry and n > 1:
-			dialog.notification("VAVOO.TO", "Alle Quellen fehlgeschlagen", xbmcgui.NOTIFICATION_WARNING, 3000)
-		return
+	def close_dialog():
+		dlg, state["dlg"] = state["dlg"], None
+		if dlg is not None:
+			try:
+				dlg.close()
+			except Exception:
+				pass
 
-	next_i = (i + 1) % n
-	next_src = get_stream_source(m[next_i])
-	log("Live-TV-Stream %s -> naechste Quelle %s/%s (%s) (Versuch %s/%s)" % (result, next_i + 1, n, next_src, retry + 1, max_retries))
-	if n > 1:
-		dialog.notification("VAVOO.TO", "Wechsle zu Stream %s/%s (%s)" % (next_i + 1, n, next_src), xbmcgui.NOTIFICATION_INFO, 2000)
+	def show_dialog(text):
+		percent = int(min(100, attempt * 100 / max(1, max_retries)))
+		if state["dlg"] is None:
+			dlg = DialogProgress()
+			dlg.create("VAVOO.TO - Streamwechsel", text)
+			state["dlg"] = dlg
+		state["dlg"].update(percent, text)
+
+	def check():
+		if home.getProperty(_LIVE_SESSION_PROPERTY) != session:
+			return "replaced"
+		dlg = state["dlg"]
+		if dlg is not None and dlg.iscanceled():
+			return "cancelled"
+		return None
+
+	reasons = {"stalled": "hängt", "ended": "ist abgebrochen", "startup_failed": "startet nicht"}
 	try:
-		if live_player.isPlaying():
-			live_player.stop()
-			monitor.waitForAbort(1)
+		while True:
+			# Waehrend die naechste Quelle startet, bleibt der Dialog offen und kann
+			# abgebrochen werden; beim ersten Bild schliesst er sich.
+			result = live_player.wait_for_failure(
+				stall_seconds=stall_seconds, startup_seconds=startup_seconds,
+				check=check, on_started=close_dialog)
+			if result == "cancelled":
+				log("Live-TV %s: Streamwechsel vom Nutzer abgebrochen" % name)
+				close_dialog()
+				live_player.stop_and_settle()
+				return
+			if result not in reasons:
+				# "stopped" / "replaced" / "abort" -> Nutzer hat beendet oder gewechselt
+				log("Live-TV kein Retry noetig: %s" % result)
+				return
+			if not (want_retry and attempt < max_retries):
+				log("Live-TV Retry erschoepft/deaktiviert (%s)" % result)
+				close_dialog()
+				if want_retry and n > 1:
+					dialog.notification("VAVOO.TO", "Alle Quellen fehlgeschlagen", xbmcgui.NOTIFICATION_WARNING, 3000)
+				return
+
+			attempt += 1
+			failed = "Stream %s/%s (%s) %s." % (i + 1, n, get_stream_source(m[i]), reasons[result])
+			show_dialog("%s\nWechsle zur nächsten Quelle ..." % failed)
+			settled = live_player.stop_and_settle()
+
+			def check_switch():
+				reason = check()
+				if reason:
+					return reason
+				# Eigener Stream ist gestoppt; spielt trotzdem etwas, hat der Nutzer
+				# etwas anderes gestartet.
+				if settled and live_player.isPlaying():
+					return "replaced"
+				return None
+
+			url = headers = None
+			for _ in range(n):
+				i = (i + 1) % n
+				src = get_stream_source(m[i])
+				log("Live-TV-Stream %s -> naechste Quelle %s/%s (%s) (Versuch %s/%s)" % (result, i + 1, n, src, attempt, max_retries))
+				show_dialog("%s\nPrüfe Stream %s/%s (%s) ..." % (failed, i + 1, n, src))
+				reason, url, headers = _resolve_cancelable(m[i], check_switch)
+				if reason:
+					log("Live-TV %s: Streamwechsel beendet (%s)" % (name, reason))
+					return
+				if url:
+					break
+				log("Live-TV %s: Quelle %s/%s (%s) übersprungen; versuche nächste Quelle" % (name, i + 1, n, src))
+			if not url:
+				close_dialog()
+				showFailedNotification("Keine funktionierende Quelle")
+				return
+
+			o, play_url = _live_listitem(name, url, headers, i, n, src)
+			reason = check_switch()
+			if reason:
+				log("Live-TV %s: Streamwechsel beendet (%s)" % (name, reason))
+				return
+			show_dialog("%s\nStarte Stream %s/%s (%s) ..." % (failed, i + 1, n, src))
+			live_player.reset()
+			log("Spiele %s" % play_url.split("|", 1)[0])
+			live_player.play(play_url, o)
 	except Exception:
-		log(format_exc())
-	params = {"name": name, "retry": str(retry + 1), "idx": str(next_i)}
-	if type: params["type"] = type
-	if group: params["group"] = group
-	live_player.play(url_for(params))
+		log("Live-TV %s: Streamwechsel fehlgeschlagen\n%s" % (name, format_exc()))
+	finally:
+		close_dialog()
 
 # edit kasi
 def channels(items=None, type=None, group=None):
