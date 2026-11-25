@@ -1,3 +1,46 @@
+2026.11.25.1
+- Live-TV: Stopp startet nicht mehr die nächste Quelle, wenn Kodi zum Schließen des Players länger braucht. Die Stillstand-Prüfung wartet das Stopp-Event jetzt auch dann ab, wenn Kodi währenddessen blockiert.
+- Live-TV-Proxy: Anfragen an hängende Quellen brechen nach 6 s ab statt nach 20 s; Kodi schließt den Player dadurch schneller.
+- Live-TV: Beim Quellenwechsel, Abbrechen oder Senderwechsel trennt der Proxy die Verbindungen der alten Quelle sofort, damit Kodi nicht auf sie wartet.
+
+2026.11.25
+- Live-TV: Der automatische Streamwechsel läuft jetzt im Vordergrund mit Fortschrittsdialog. „Abbrechen“, Stopp im Player oder ein anderer Sender beenden ihn sofort; im Hintergrund läuft nichts mehr weiter.
+- Live-TV: Nach einem Senderwechsel oder dem Start einer anderen Wiedergabe springt das Addon nicht mehr auf den alten Sender zurück.
+- MediaHubMX-Signatur: www.vavoo.tv dient als Ausweichserver für das Desktop-Profil; das alte Antwortfeld „mhub“ wird ebenfalls ausgewertet.
+
+2026.11.22.1
+- Live-TV: Ein Stopp während des Stream-Starts springt nicht mehr zur nächsten Quelle. Quellfehler werden über onPlayBackError bzw. onPlayBackEnded erkannt.
+
+2026.11.22
+- Live-TV: Ein Stopp durch den Nutzer startet nicht mehr die nächste Quelle; vor einem Stillstand-Urteil wird kurz auf das Stopp-Event gewartet.
+
+2026.11.17.3
+- Live-TV: Stillstanderkennung in Millisekunden einstellbar (Standard 500 ms).
+
+2026.11.17.2
+- Live-TV: Neue Einstellungen im Reiter TV für die Streamabbruch-Erkennung: Stream-Stillstand (Standard 1 s) und Stream-Start (Standard 12 s).
+
+2026.11.17.1
+- Live-TV: Beim Überspringen einer Quelle werden Sender, Quelle, Phase und Fehlergrund im Kodi-Log protokolliert.
+
+2026.11.02.5
+- Stalker: Der Vorfilter läuft wieder mit wenigen Threads parallel und zeigt den Zähler; „Prüfe Mac Adressen“ hängt bei zickigen Portalen nicht mehr minutenlang. Die Pause gegen Drosselung bleibt bei den eigentlichen MAC-Prüfungen.
+
+2026.11.02.4
+- Stalker: Beim Weiterschalten zur nächsten MAC zeigen Fortschritt und Portal-Status, woran die vorherige MAC scheiterte (z. B. „Stream nicht abspielbar (HTTP 456)“, „leere Senderliste“, „Account abgelaufen“).
+
+2026.11.02.3
+- Stalker: Neue Einstellung „STALKER Pause zwischen Anfragen“ (Standard 2 s). Die MAC-Prüfungen laufen mit dieser Pause nacheinander; die erste MAC mit funktionierendem Stream beendet den Test weiterhin sofort.
+
+2026.11.02.2
+- Stalker: Der MAC-Test hält die eingestellte Anzahl ein, auch Werte unter 10. Bisher galt bei „Login ok, Stream gesperrt“ intern ein Minimum von 30.
+
+2026.11.02.1
+- Auflösung gibt bei einem leeren Ergebnis nicht mehr auf, sondern nutzt die weiteren Wege; damit laufen auch dood.yt-Links der Form /w/.
+
+2026.11.02
+- Neue Funktion get_mirrors für den xStream Scraper; die VAVOO-Mirrors laufen dort in der Stream-Reihenfolge mit.
+
 2026.10.29.1
 - Live-TV: Unter "Gruppen" gibt es jetzt den Punkt "LITETV - ALLE SENDER" (ohne Untergruppen).
 
@@ -169,4 +212,3 @@
 - Pagination für Katalog, Genre-Auswahl und Suche an nextCursor angepasst.
 - TMDB-IDs aus der neuen API-Antwort werden für Filme und Serien normalisiert.
 - Alten CCAPI-Listen- und Cachepfad entfernt.
-- Live-TV: Beim Überspringen einer Quelle werden Sender, Quelle, Phase und Fehlergrund im Kodi-Log protokolliert.
